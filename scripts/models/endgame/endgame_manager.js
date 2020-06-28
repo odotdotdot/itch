@@ -141,6 +141,28 @@ class EndGameMgmt{
             console.log({key: CURRENT_KEY
                        , bpm: this.endGameOrbs[i].bpm
                        , noteEventListForServer: noteEventListForServer});
+            var smf = new JZZ.MIDI.SMF(0, 96);
+            var trk = new JZZ.MIDI.SMF.MTrk();
+            smf.push(trk);
+            var endOfTrackInClicks = 0;
+            noteEventListForServer.forEach(  e => {
+              if(e.pitch != 0xff){
+                trk.add(e.startTick, JZZ.MIDI.noteOn(0, e.pitch, e.velocity))
+                trk.add(e.startTick + e.duration, JZZ.MIDI.noteOff(0, e.pitch))
+                if(e.startTick + e.duration > endOfTrackInClicks)
+                  endOfTrackInClicks = e.startTick + e.duration;
+              }
+            });
+            trk.add(endOfTrackInClicks, JZZ.MIDI.smfEndOfTrack());
+
+            var file = new File( [smf.dump()], "out.mid", {type: "audio/midi"});
+            saveAs(file);
+
+
+            console.log(smf.toString());
+
+
+
             foundHotEndGameOrb = true;}
 
     if(foundHotEndGameOrb == false){

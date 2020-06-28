@@ -7,7 +7,7 @@ class MidiNoteEvent{
   } = {}){
   this.startTick = 32 * (time + offset);
   this.pitch = pitch;
-  this.duration = "T" + duration.toString();
+  this.duration = duration;
   this.velocity = velocity;
 }
 }
