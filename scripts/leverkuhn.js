@@ -1,9 +1,9 @@
 let SERIAL_RECORD, MIDI_RECORD = 0xffffffff, THEORY_RECORD, STARTING_KEY = 10, CURRENT_KEY = 10,
     HOME_KEY = 5, OPPONENT_HOME_KEY = 21, TEMPO_DRAG = false, THROW_ACTION = false, IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 8, TOTAL_BARS = 2;
+    GAME_DURATION_IN_TURNS = 2, TOTAL_BARS = 2, VOICE_MOVEMENT = false, END_GAME = false,
+    GAME_IS_NOT_YET_OVER = true, TPN = 3;
 let W, H, CX, CY;
 let fonts;
-let VOICE_MOVEMENT = false;
 let hexes = [];
 let voix = [];
 let blossom;
@@ -17,7 +17,8 @@ let composer;
             }
   }
   function setup(){
-    let p = createCanvas(windowWidth, windowHeight); p.id('p')
+    let p = createCanvas(windowWidth, windowHeight); p.id('p');
+    Tone.Transport.PPQ = 4;
 
     _init_geometry();
     _init_styling();
@@ -37,39 +38,48 @@ let composer;
     opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
     homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
     scoreKeeper = new ScoreKeeper();
+    cpu = new ComputerOpponent({homeKey:OPPONENT_HOME_KEY});
 
     SERIAL_RECORD = serial();
   }
   function draw(){
+    if(!END_GAME){
+        background(colors.background);
 
-    background(colors.background);
+        fill(colors.outline)
+        hexes.forEach( e => { e.display(); });
 
-    fill(colors.outline)
-    hexes.forEach( e => { e.display(); });
+        cd.display();
+        sd.display();
+        voix.forEach( e => { e.display(); });
 
-    cd.display();
-    sd.display();
-    voix.forEach( e => { e.display(); });
+        //orbs
+            lesserOrbs.forEach( e =>{ e.orbit(); e.display();} )
+            currentKeyOrb.orbit();currentKeyOrb.display();
+            opponentKeyOrb.orbit();opponentKeyOrb.display();
+            if(!THROW_ACTION){
+              homeKeyOrb.friction();
+              homeKeyOrb.orbit();
+            }
+            if(THROW_ACTION){
+              homeKeyOrb.drag();
+            }
+            homeKeyOrb.display();
 
-    //orbs
-        lesserOrbs.forEach( e =>{ e.orbit(); e.display();} )
-        currentKeyOrb.orbit();currentKeyOrb.display();
-        opponentKeyOrb.orbit();opponentKeyOrb.display();
-        if(!THROW_ACTION){
-          homeKeyOrb.friction();
-          homeKeyOrb.orbit();
-        }
-        if(THROW_ACTION){
-          homeKeyOrb.drag();
-        }
-        homeKeyOrb.display();
+        if(cpu.CPU_MOVING_TOKENS)
+          cpu.move_tokens();
+        displayHexLabels();
+        logo.display();
+        me.display();
+        opponent.display();
+        scoreKeeper.display();
+      }
 
 
-    displayHexLabels();
-    logo.display();
-    me.display();
-    opponent.display();
-    scoreKeeper.display();
+    if(END_GAME){
+      background(colors.background);
+      egmgr.display();
+    }
 
   }
 
@@ -88,8 +98,12 @@ let composer;
     me.resize();
     opponent.resize();
     scoreKeeper.resize();
+
+    if(END_GAME)
+      egmgr.reposition();
   }
   function mousePressed(){
+    if(!END_GAME){
     //voice movement
     for(var i = 0; i < voix.length; i ++)
       if( voix[i].isInside(mouseX, mouseY) ){
@@ -102,6 +116,17 @@ let composer;
       if(homeKeyOrb.isInside(mouseX, mouseY))
         THROW_ACTION = true;
     }
+        //end game orb clicks
+    if(END_GAME){
+      if(!egmgr.got.show){
+        for(var i = 0; i < egmgr.clickables.length; i ++)
+          if(egmgr.clickables[i].isInside(mouseX, mouseY))
+            egmgr.clickables[i].onClick();
+      }
+    }
+
+    }
+
   function mouseDragged(){
     if(VOICE_MOVEMENT){
       voix[ACTIVE_VOICE].move();
@@ -113,7 +138,9 @@ let composer;
 
       cd.setChord(THEORY_RECORD, CURRENT_KEY);
     }
-
+   if(TEMPO_DRAG){
+      egmgr.tempoOrb.drag();
+      }
   }
   function mouseReleased(){
     if(VOICE_MOVEMENT){
@@ -129,6 +156,13 @@ let composer;
         turnSignified(me);
       }
     blossom.blossom();
+
+    if(END_GAME){
+      if(TEMPO_DRAG)
+        egmgr.tempoOrb.onClick();
+      if(egmgr.downloadOrb.state == true)
+        egmgr.downloadOrb.onRelease();
+    }
 
   }
 
@@ -197,33 +231,30 @@ let composer;
       for(var i = 0; i < musician.synth.length; i ++)
         musician.synth[i].triggerAttackRelease(musician.makeTone(utility.getByte(i, MIDI_RECORD)), "1n");
 
+      me.isMyTurn = !me.isMyTurn;
+      opponent.isMyTurn = !opponent.isMyTurn;
       /*//log turn to database
       socket.emit('logTurn', {mR: MIDI_RECORD, gameId: GAME_ID});
-      me.isMyTurn = !me.isMyTurn;
-      opponent.isMyTurn = !opponent.isMyTurn;*/
+*/
 
 
 
 }
   function checkIfGameIsOver(){
-    console.log('game is over');
-    /*
-            if(composer.turnsPrevious.length == 3+GAME_DURATION_IN_TURNS && GAME_IS_NOT_YET_OVER){
-              GAME_IS_NOT_YET_OVER = false;
-              egmgr = new EndGameMgmt();
-              END_GAME = true;
-              socket.emit('gameOver', {gameId: GAME_ID});
-              }
+    if(composer.turnsPrevious.length == 3+GAME_DURATION_IN_TURNS && GAME_IS_NOT_YET_OVER){
+      GAME_IS_NOT_YET_OVER = false;
+      egmgr = new EndGameMgmt();
+      END_GAME = true;
+      }
 
-            else{
-              if(opponent.isMyTurn && !cpu.CPU_MOVING_TOKENS){
-                //computer does its thing
-                var cpuTurn = cpu.takeTurn(MIDI_RECORD, THEORY_RECORD)
-                cpu.init_move_tokens(cpuTurn.decision);
-              }
-            }*/
-
-          }
+    else{
+      if(opponent.isMyTurn && !cpu.CPU_MOVING_TOKENS){
+        //computer does its thing
+        var cpuTurn = cpu.takeTurn(MIDI_RECORD, THEORY_RECORD)
+        cpu.init_move_tokens(cpuTurn.decision);
+      }
+    }
+  }
 
 //initialization functions
   function _init_styling(){

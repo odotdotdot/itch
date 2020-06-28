@@ -32,4 +32,18 @@ const utility = {
       else
         return opponent.userName;
     }
+  , whosWinning: ()=>{
+      if(me.orb.score > opponent.orb.score)
+        return me;
+      else
+        return opponent;
+    }
+  , getOtherPlayer: (player)=>{
+      if(player == me)
+        return opponent;
+      if(player == opponent)
+        return me;
+      else
+        return null;
+    }
 }

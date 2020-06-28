@@ -8,6 +8,7 @@ class ComputerOpponent{
   this.tokenMovementSpeed = .05;
   this.targetSerials = [];
   this.targetSerialsReached = 0;
+  this.targetSerialNumbers = [];
   this.CPU_MOVING_TOKENS = false;
   this.seive_constant = 1;
   this.N_MIN = 5;
@@ -65,19 +66,32 @@ class ComputerOpponent{
 
   init_move_tokens(decision){
     this.targetSerials = [];
+    this.targetSerialNumbers = [];
     var taken_hexes = [];
     decision.forEach( (e,index) => {
-      for(var i = 0; i < hex_data.length; i ++)
-        if( e == hex_data[i].pitchChromatic && !taken_hexes.includes(hex_data[i].serial) ){
-          this.targetSerials.push( [hex_data[i].x, hex_data[i].y] );
-
-          taken_hexes.push(hex_data[i].serial);
+      for(var i = 0; i < hexes.length; i ++)
+        if( e == hexes[i].pitchChromatic && !taken_hexes.includes(hexes[i].serial) ){
+          this.targetSerials.push( [hexes[i].center.x, hexes[i].center.y] );
+          taken_hexes.push(hexes[i].serial);
+          this.targetSerialNumbers.push(hexes[i].serial)
+          SERIAL_RECORD = this.generate_serial_from_taken();
+          blossom.blossom();
           break;
         }
     });
     this.CPU_MOVING_TOKENS = true;
   }
+  generate_serial_from_taken(){
+    //returns a 32 bit pitch chromatic record S - A - T - B . e.g. 9 - 1 - 4 - 9
+    var serialRecord = 0;
+    for(var i = 0; i < 4; i ++)
+      if(i < this.targetSerialNumbers.length)
+        serialRecord += this.targetSerialNumbers[i] << (i*8);
+      else
+        serialRecord += voix[i].getSerial() << (i*8);
+    return serialRecord;
 
+  }
   move_tokens(){
     for(var i = 0; i < 4; i++){
       var deltaX = (this.targetSerials[i][0] - voix[i].x);
@@ -87,13 +101,20 @@ class ComputerOpponent{
           voix[i].hexCheck();
 
       if(deltaX < 5 && deltaY < 5)
-        this.targetSerialsReached|= 1<<i
+        this.targetSerialsReached|= 1<<i;
+
+      MIDI_RECORD = composer.midiTransfigure(composer.pitchChromify(SERIAL_RECORD));
+      THEORY_RECORD = theoretician.theoryEncoding(MIDI_RECORD);
+      cd.setChord(THEORY_RECORD, CURRENT_KEY)
+
     }
 
     if(this.targetSerialsReached == 0xf){
       SERIAL_RECORD = serial();
+      blossom.blossom();
       MIDI_RECORD = composer.midiTransfigure(composer.pitchChromify(SERIAL_RECORD));
       THEORY_RECORD = theoretician.theoryEncoding(MIDI_RECORD);
+      cd.setChord(THEORY_RECORD, CURRENT_KEY)
       turnSignified(opponent);
       this.targetSerialsReached = 0;
       this.CPU_MOVING_TOKENS = false;
@@ -133,12 +154,12 @@ class ComputerOpponent{
       /* if there were no matching easy targets */
     if(!theoretical_decision){
      theoretical_decision = this.make_random_choice_from_list(key_filtered_options);}
-     console.log('cpu taking turn from ', pr.midiNotes(mR), pr.theoryDecoding(tR));
-     console.log('game is currently in ', CURRENT_KEY);
-     console.log('options', options.map(e=> pr.theoryDecoding(e)));
-     console.log('tied options', tied_options.map(e=> pr.theoryDecoding(e)));
-     console.log('key filtered options', key_filtered_options.map(e=> pr.theoryDecoding(e)));
-     console.log('cpu chooses ', pr.theoryDecoding(theoretical_decision));
+     //console.log('cpu taking turn from ', pr.midiNotes(mR), pr.theoryDecoding(tR));
+     //console.log('game is currently in ', CURRENT_KEY);
+     //console.log('options', options.map(e=> pr.theoryDecoding(e)));
+     //console.log('tied options', tied_options.map(e=> pr.theoryDecoding(e)));
+     //console.log('key filtered options', key_filtered_options.map(e=> pr.theoryDecoding(e)));
+     //console.log('cpu chooses ', pr.theoryDecoding(theoretical_decision));
 
      var outgoing_cardinal_list = this.cardinal_list(theoretical_decision);
     /* rearrange the outgoing cardinal to create sensible voice movement
@@ -185,10 +206,10 @@ class ComputerOpponent{
     var taken_hexes = [];
     var serial_list = [];
     cardinal_list.forEach( e => {
-      for(var i = 0; i < hex_data.length; i ++)
-        if( e == hex_data[i].pitchChromatic && !taken_hexes.includes(hex_data[i].serial) ){
-          serial_list.push( hex_data[i].serial );
-          taken_hexes.push( hex_data[i].serial );
+      for(var i = 0; i < hexes.length; i ++)
+        if( e == hexes[i].pitchChromatic && !taken_hexes.includes(hexes[i].serial) ){
+          serial_list.push( hexes[i].serial );
+          taken_hexes.push( hexes[i].serial );
           break;
         }
       });
@@ -272,7 +293,7 @@ class ComputerOpponent{
     var new_mR = 0;
     //returns a midiRecord with the octaves taken out e.g. 0-7-4-0 for machine comparison
     for(var i = 0; i < 4; i++){
-      var toAdd = this.getByte(i,mR)!=255 ? this.getByte(i,mR) %12 : 255;
+      var toAdd = utility.getByte(i,mR)!=255 ? utility.getByte(i,mR) %12 : 255;
       new_mR += toAdd << i*8;
     }
 
@@ -330,8 +351,8 @@ class ComputerOpponent{
   aggSteps(tempMidiRecord, previousMidiRecord){
     var r = [];
     for(var i = 0; i < 4; i ++){
-      var lastMidiNoteNumber = getByte(i, previousMidiRecord);
-      var nextMidiNoteNumber = getByte(i, tempMidiRecord);
+      var lastMidiNoteNumber = utility.getByte(i, previousMidiRecord);
+      var nextMidiNoteNumber = utility.getByte(i, tempMidiRecord);
       if(lastMidiNoteNumber !=255)
         var dif = nextMidiNoteNumber - lastMidiNoteNumber;
       else
@@ -357,9 +378,6 @@ class ComputerOpponent{
       r.push(mrr & 0xff)
       mrr>>=8;}
     return r;
-  }
-  getByte(i,m){
-    return (m & (0x00ff<<i*8))>>>i*8;
   }
   reverseHalfSteps(root, cK){
     /* root is a pitch cardinal, return the degree relative to currentKey complement */

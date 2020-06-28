@@ -3,6 +3,7 @@ class ChordDisplay{
                , y = geometry.KEYWHEEL_Y
                , show = true
                , trex = []
+               , outlineColor = colors.outline
              } = {}){
     //load fonts
     //prepare components
@@ -19,6 +20,7 @@ class ChordDisplay{
       this.show = show
       this.trex = trex
       this.trexIndice = null;
+      this.outlineColor = outlineColor;
   }
   resize(x = geometry.KEYWHEEL_X, y=geometry.KEYWHEEL_Y){
     this.x = x;
@@ -82,7 +84,7 @@ class ChordDisplay{
         if(this.show && !TEMPO_DRAG){
           push();
         //circle
-          stroke(colors.outline);
+          stroke(this.outlineColor);
           strokeWeight(2);
           noFill();
           circle(this.x, this.y, 6 * geometry.RADIUS);
