@@ -1,4 +1,6 @@
-let SERIAL_RECORD, MIDI_RECORD = 0xffffffff, THEORY_RECORD, STARTING_KEY = 10, CURRENT_KEY = 10, TEMPO_DRAG = false;
+let SERIAL_RECORD, MIDI_RECORD = 0xffffffff, THEORY_RECORD, STARTING_KEY = 10, CURRENT_KEY = 10,
+    HOME_KEY = 5, OPPONENT_HOME_KEY = 21, TEMPO_DRAG = false, THROW_ACTION = false, IS_MY_TURN = true,
+    GAME_DURATION_IN_TURNS = 8, TOTAL_BARS = 2;
 let W, H, CX, CY;
 let fonts;
 let VOICE_MOVEMENT = false;
@@ -21,6 +23,8 @@ let composer;
     _init_styling();
     _init_voix();
     _init_hexes();
+    _init_players();
+
     composer = new Composer(STARTING_KEY);
     theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
     musician = new Musician();
@@ -28,7 +32,11 @@ let composer;
     sd = new StaffDisplay();
     logo = new Logo(50,50);
 
-
+    lesserOrbs = [];
+    currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+    opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
+    homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
+    scoreKeeper = new ScoreKeeper();
 
     SERIAL_RECORD = serial();
   }
@@ -40,13 +48,28 @@ let composer;
     hexes.forEach( e => { e.display(); });
 
     cd.display();
-    sd.displayStaff();
-    sd.displayMeasure(MIDI_RECORD);
-
+    sd.display();
     voix.forEach( e => { e.display(); });
+
+    //orbs
+        lesserOrbs.forEach( e =>{ e.orbit(); e.display();} )
+        currentKeyOrb.orbit();currentKeyOrb.display();
+        opponentKeyOrb.orbit();opponentKeyOrb.display();
+        if(!THROW_ACTION){
+          homeKeyOrb.friction();
+          homeKeyOrb.orbit();
+        }
+        if(THROW_ACTION){
+          homeKeyOrb.drag();
+        }
+        homeKeyOrb.display();
+
+
     displayHexLabels();
     logo.display();
-
+    me.display();
+    opponent.display();
+    scoreKeeper.display();
 
   }
 
@@ -58,16 +81,26 @@ let composer;
     voix.forEach( e => e.resize());
     cd.resize()
     sd.resize()
+    lesserOrbs.forEach( e => e.resize());
+    currentKeyOrb.resize();
+    homeKeyOrb.resize();
+    opponentKeyOrb.resize();
+    me.resize();
+    opponent.resize();
+    scoreKeeper.resize();
   }
   function mousePressed(){
+    //voice movement
     for(var i = 0; i < voix.length; i ++)
       if( voix[i].isInside(mouseX, mouseY) ){
         VOICE_MOVEMENT = true;
         ACTIVE_VOICE = i;}
+    //staff wheel chord clicks
     if(sd.isInside(mouseX, mouseY))
       sd.replay(mouseX, mouseY);
-
-
+    //home key signifiying end of turn
+      if(homeKeyOrb.isInside(mouseX, mouseY))
+        THROW_ACTION = true;
     }
   function mouseDragged(){
     if(VOICE_MOVEMENT){
@@ -80,11 +113,21 @@ let composer;
 
       cd.setChord(THEORY_RECORD, CURRENT_KEY);
     }
+
   }
   function mouseReleased(){
     if(VOICE_MOVEMENT){
       VOICE_MOVEMENT = false;
     }
+
+    if(THROW_ACTION){
+      //throw action is over. process the data points and empty the arrays
+        THROW_ACTION = false;
+        homeKeyOrb.inertia();
+        homeKeyOrb.throwX.length = 0;
+        homeKeyOrb.throwY.length = 0;
+        turnSignified(me);
+      }
     blossom.blossom();
 
   }
@@ -111,6 +154,76 @@ let composer;
     hexes.forEach( e => { e.displayHexAccent(); });
     pop();
   }
+  function turnSignified(playerWhoTookTurn){
+      /* first, the theoretician conducts analysis.  this could result in a modulation
+         the results of the analysis are applied to the player's score and all the feed back orbs are prepared
+         then, the keywheel reacts. the home key orb expands or contracts.
+         lesser orbs is flushed, and the current key is put into it as the first member
+         theoretician delivers the three part std_dev list of nascent tonalities
+         and each of those nascent tonalities is put into lesser orbs, reconcileNewChord
+         should change their semi major axis and diameters accordingly
+         then, composer and staff display commit the midi record
+         musician sounds the chord
+         and turn booleans are flipped
+
+      */
+      var score = theoretician.analyze(MIDI_RECORD, THEORY_RECORD, playerWhoTookTurn);
+      scoreKeeper.scoreTurn(score, playerWhoTookTurn);
+      if(score.modulation > 0){
+        hexes.forEach( e =>{ e.hexSpelling()} );
+        currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+        currentKeyOrb.setRadius(.7*geometry.ORB_MAX_RADIUS);
+      }
+      var loi = score.loi;
+      lesserOrbs = [];
+      var radiusOptions = [.5, .7, 1];
+      var current_key_init = ( (CURRENT_KEY*7)%12)*2*PI/12 - PI/2 - (PI/2)*Math.floor(CURRENT_KEY/12);
+      var rotation_from_init = currentKeyOrb.theta - current_key_init;
+
+      for(var i = 0; i < loi.length; i ++)
+        for(var j = 0; j < loi[i].length; j ++){
+          lesserOrbs.push( new LesserKeyOrb(loi[i][j], colors.pink, colors.bass, .667) );
+          lesserOrbs[lesserOrbs.length - 1].setRadius(radiusOptions[i]*geometry.ORB_MAX_RADIUS);
+          lesserOrbs[lesserOrbs.length - 1].theta += rotation_from_init;
+
+        }
+      lesserOrbs.forEach( (e)=>{
+        if( loi.flat().includes(theoretician.relative(e.id)) && e.id < 12){
+          e.semiMajorConstant = 11/12;
+          e.resize();}
+      });
+      composer.commit(MIDI_RECORD);
+      sd.commit(MIDI_RECORD);
+      for(var i = 0; i < musician.synth.length; i ++)
+        musician.synth[i].triggerAttackRelease(musician.makeTone(utility.getByte(i, MIDI_RECORD)), "1n");
+
+      /*//log turn to database
+      socket.emit('logTurn', {mR: MIDI_RECORD, gameId: GAME_ID});
+      me.isMyTurn = !me.isMyTurn;
+      opponent.isMyTurn = !opponent.isMyTurn;*/
+
+
+
+}
+  function checkIfGameIsOver(){
+    console.log('game is over');
+    /*
+            if(composer.turnsPrevious.length == 3+GAME_DURATION_IN_TURNS && GAME_IS_NOT_YET_OVER){
+              GAME_IS_NOT_YET_OVER = false;
+              egmgr = new EndGameMgmt();
+              END_GAME = true;
+              socket.emit('gameOver', {gameId: GAME_ID});
+              }
+
+            else{
+              if(opponent.isMyTurn && !cpu.CPU_MOVING_TOKENS){
+                //computer does its thing
+                var cpuTurn = cpu.takeTurn(MIDI_RECORD, THEORY_RECORD)
+                cpu.init_move_tokens(cpuTurn.decision);
+              }
+            }*/
+
+          }
 
 //initialization functions
   function _init_styling(){
@@ -153,11 +266,30 @@ let composer;
     geometry.RADIUS = 60 * geometry.SCALE;
     geometry.APOTHEM = .5 * geometry.RADIUS * 3**.5;
     geometry.OFFSET = Math.atan((.25*H)/(.5*W));
-    geometry.KEYWHEEL_X = .75 * W;
+    geometry.KEYWHEEL_X = .8 * W;
     geometry.KEYWHEEL_Y = diagonal(geometry.KEYWHEEL_X);
-    geometry.STAFF_X = .25 * W;
+    geometry.STAFF_X = .2 * W;
     geometry.STAFF_Y = diagonal(geometry.STAFF_X);
-    geometry.KEYWHEEL_DIAMETER = 5*geometry.RADIUS;
+    geometry.KEYWHEEL_DIAMETER = 6*geometry.RADIUS;
     geometry.STAFFSPACING = .2667*geometry.RADIUS;
     geometry.STAFFLENGTH = 5.25*geometry.RADIUS;
+    geometry.ORB_MAX_RADIUS = .625 * geometry.RADIUS;
+  }
+  function _init_players(){
+    me = new Player(
+         "peter"
+        ,HOME_KEY
+        ,IS_MY_TURN*Math.PI
+        ,colors.pink
+        ,colors.bass
+        ,IS_MY_TURN);
+    opponent = new Player(
+         "cpu"
+        ,OPPONENT_HOME_KEY
+        ,!IS_MY_TURN*Math.PI
+        ,colors.white
+        ,colors.red
+        ,!IS_MY_TURN);
+    me.orb.setTwin(opponent.orb);
+    opponent.orb.setTwin(me.orb);
   }

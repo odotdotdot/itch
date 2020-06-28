@@ -10,6 +10,8 @@ const colors = {
   ,'outline':"#646464"
   ,'white': "#dcdcdc"
   ,'leverkuhn' : "#FAFA9B"
+  ,'blue': "#214EA2"
+  ,'red' : "#d32803"
 }
 
 /*

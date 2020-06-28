@@ -10,4 +10,5 @@ let geometry = {
   ,KEYWHEEL_DIAMETER : 5*60
   ,STAFFSPACING : .2667*60
   ,STAFFLENGTH : 5.25*60
+  ,ORB_MAX_RADIUS : 60 * .625
 }

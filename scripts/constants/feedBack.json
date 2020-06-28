@@ -1,0 +1,12 @@
+{
+   "diatonic":            {"txt": "diatonic voices"             , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"}
+  ,"common":              {"txt": "common chord"                , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"}
+  ,"preparation":         {"txt": "well prepared"               , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".4"}
+  ,"emergent":            {"txt": "new tonalities"              , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"}
+  ,"resolution":          {"txt": "good resolution"             , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".4"}
+  ,"modulation":          {"txt": "modulation to"               , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".4"}
+  ,"modulationToHomeKey": {"txt": "modulation to\nhome key"     , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".4"}
+  ,"changeOver":          {"txt": "'s turn"                     , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"  }
+  ,"newBar":              {"txt": "new bar"                     , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".25"}
+  ,"bar":                 {"txt": "bar"                         , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".25"}
+}

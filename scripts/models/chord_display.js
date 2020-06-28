@@ -85,7 +85,7 @@ class ChordDisplay{
           stroke(colors.outline);
           strokeWeight(2);
           noFill();
-          circle(this.x, this.y, 5 * geometry.RADIUS);
+          circle(this.x, this.y, 6 * geometry.RADIUS);
           noStroke();
         //root
           fill(colors.pink);

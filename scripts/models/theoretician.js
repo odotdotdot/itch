@@ -251,13 +251,13 @@ class Theoretician{
 
               var shiftKey = current_key % 12;
               for(var n = 0; n < 4; n ++){
-                let comp = (1<<(getByte(n, m)%12)) & (((prototype << shiftKey) & 0x0fff) + (prototype >>> (12-shiftKey)));
+                let comp = (1<<(utility.getByte(n, m)%12)) & (((prototype << shiftKey) & 0x0fff) + (prototype >>> (12-shiftKey)));
                 if(comp > 0)
                   //if comp > 0 then the note is diatonic and the 4lsb of r is augmented
                   r+=1;
                 else
                   //if not then the pitch chromatic bit is written high
-                  r|= (1 << (getByte(n, m)%12)) << 4;}
+                  r|= (1 << (utility.getByte(n, m)%12)) << 4;}
 
 
               /* if the current chord is nondiatonic, reduce the current key score by 1/Diatonicity Factor for each nondiatonic note
@@ -429,7 +429,7 @@ class Theoretician{
                   var prototype = keysToTest[i] < 12 ? 0xAB5 : 0xAAD;
                   keysToTest[i] %= 12;
                       for(var n = 0; n < 4; n ++){
-                        let comp = (1<<(getByte(n, mR)%12)) & (((prototype << keysToTest[i]) & 0x0fff) + (prototype >>> (12-keysToTest[i])));
+                        let comp = (1<<(utility.getByte(n, mR)%12)) & (((prototype << keysToTest[i]) & 0x0fff) + (prototype >>> (12-keysToTest[i])));
                         if(comp > 0)
                           r++;
                       }
@@ -616,7 +616,7 @@ class Theoretician{
             midiRecordToArray(m){
               var a = [];
               for(var i = 0; i < 4; i ++)
-                a.push(getByte(i,m));
+                a.push(utility.getByte(i,m));
               return a;
             }
             pitchCardinalReduction(n){

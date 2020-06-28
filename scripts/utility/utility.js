@@ -25,4 +25,11 @@ const utility = {
               }
             return toReturn;
             }
+  , arcAdjust: (w)=>{if(w<0)return w+=2;else {return w;}}
+  , whosTurn: ()=>{
+      if(me.isMyTurn)
+        return me.userName;
+      else
+        return opponent.userName;
+    }
 }

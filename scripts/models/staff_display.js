@@ -3,7 +3,7 @@ class StaffDisplay{
     constructor(){
       this.figuredNotes = new Array(12).fill(null);
       this.fNC = new Array(16).fill(null);
-      this.x = geometry.STAFF_X + geometry.KEYWHEEL_DIAMETER*.5*cos(Math.PI-asin(-6*geometry.STAFFSPACING/geometry.KEYWHEEL_DIAMETER*.5));
+      this.x = geometry.STAFF_X + 6*geometry.RADIUS*.5*cos(Math.PI-asin(-6*geometry.STAFFSPACING/geometry.KEYWHEEL_DIAMETER*.5));
       this.y = geometry.STAFF_Y - 6*geometry.STAFFSPACING;
     }
     figureNote(midiByte, voice_id, currentFlag = false){
@@ -67,7 +67,7 @@ class StaffDisplay{
               r+=2*geometry.STAFFSPACING;
           return r;}
     resize(){
-      this.x = geometry.STAFF_X + geometry.KEYWHEEL_DIAMETER*.5*cos(Math.PI-asin(-6*geometry.STAFFSPACING/geometry.KEYWHEEL_DIAMETER*.5));
+      this.x = geometry.STAFF_X + 6*geometry.RADIUS*.5*cos(Math.PI-asin(-6*geometry.STAFFSPACING/geometry.KEYWHEEL_DIAMETER*.5));
       this.y = geometry.STAFF_Y - 6*geometry.STAFFSPACING;
     }
     displayNote(fN, cnt, col){
@@ -115,8 +115,8 @@ class StaffDisplay{
           //bar
           if(measureNumber > 1){
             push();
-            strokeWeight(2);
-            stroke(155);
+            strokeWeight(1);
+            stroke(colors.outline);
             line(
                this.x + 8*geometry.STAFFSPACING + (geometry.STAFFLENGTH-8*geometry.STAFFSPACING)/4*(j-.5), this.y
               ,this.x + 8*geometry.STAFFSPACING + (geometry.STAFFLENGTH-8*geometry.STAFFSPACING)/4*(j-.5), this.y + 12*geometry.STAFFSPACING);
@@ -160,10 +160,10 @@ class StaffDisplay{
           stroke(colors.outline);
           strokeWeight(2);
           fill(colors.background);
-          circle(0,0,5*geometry.RADIUS);
+          circle(0,0,6*geometry.RADIUS);
           noFill();
           //STAFF LINES
-            var r = .5*5*geometry.RADIUS;
+            var r = .5*6*geometry.RADIUS;
             for(var i = 6; i >= -6; i--){
               if(i > 1 || i < -1){
                 var theta = asin(i*geometry.STAFFSPACING/r);
@@ -209,5 +209,9 @@ class StaffDisplay{
 
           musician.recall.triggerAttackRelease(musician.makeChord(mR), "4n");
     }
+  }
+    display(){
+      this.displayStaff();
+      this.displayMeasure(MIDI_RECORD);
   }
 }
