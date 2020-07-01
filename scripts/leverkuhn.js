@@ -1,13 +1,25 @@
-let SERIAL_RECORD, MIDI_RECORD = 0xffffffff, THEORY_RECORD, STARTING_KEY = 10, CURRENT_KEY = 10,
-    HOME_KEY = 5, OPPONENT_HOME_KEY = 21, TEMPO_DRAG = false, THROW_ACTION = false, IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 1, TOTAL_BARS = 2, VOICE_MOVEMENT = false, END_GAME = false,
-    GAME_IS_NOT_YET_OVER = true, TPN = 3;
+let SERIAL_RECORD,
+    MIDI_RECORD = 0xffffffff,
+    THEORY_RECORD,
+    STARTING_KEY = 10,
+    CURRENT_KEY = 10,
+    HOME_KEY = 5,
+    OPPONENT_HOME_KEY = 21,
+    TEMPO_DRAG = false,
+    THROW_ACTION = false,
+    IS_MY_TURN = true,
+    GAME_DURATION_IN_TURNS = 1,
+    TOTAL_BARS = 2,
+    VOICE_MOVEMENT = false,
+    PRE_GAME = true,
+    IN_GAME = false,
+    END_GAME = false,
+    GAME_IS_NOT_YET_OVER = true,
+    TPN = 3;
 let W, H, CX, CY;
 let fonts;
 let hexes = [];
 let voix = [];
-let blossom;
-let composer;
 
 //main
   function preload(){
@@ -16,35 +28,22 @@ let composer;
             ,leverkuhn:loadFont('./fonts/comfortaa-bold.ttf')
             }
   }
+
   function setup(){
     let p = createCanvas(windowWidth, windowHeight); p.id('p');
-    Tone.Transport.PPQ = 4;
-
-    _init_geometry();
+    _init_welcome();
     _init_styling();
-    _init_voix();
-    _init_hexes();
-    _init_players();
-
-    composer = new Composer(STARTING_KEY);
-    theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
-    musician = new Musician();
-    cd = new ChordDisplay();
-    sd = new StaffDisplay();
-    logo = new Logo(50,50);
-
-    lesserOrbs = [];
-    currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
-    opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
-    homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
-    scoreKeeper = new ScoreKeeper();
-    cpu = new ComputerOpponent({homeKey:OPPONENT_HOME_KEY});
-    pr = new Printer()
-
-    SERIAL_RECORD = serial();
   }
+
   function draw(){
-    if(!END_GAME){
+    if(PRE_GAME){
+      background(colors.background);
+      logo.display();
+      pgmgr.visibles.forEach( e => {e.display();});
+
+    }
+
+    if(IN_GAME){
         background(colors.background);
 
         fill(colors.outline)
@@ -88,23 +87,34 @@ let composer;
   function windowResized(){
     _init_geometry();
     resizeCanvas(W, H);
-    hexes.forEach( e => e.resize());
-    voix.forEach( e => e.resize());
-    cd.resize()
-    sd.resize()
-    lesserOrbs.forEach( e => e.resize());
-    currentKeyOrb.resize();
-    homeKeyOrb.resize();
-    opponentKeyOrb.resize();
-    me.resize();
-    opponent.resize();
-    scoreKeeper.resize();
+
+    if(IN_GAME){
+      hexes.forEach( e => e.resize());
+      voix.forEach( e => e.resize());
+      cd.resize()
+      sd.resize()
+      lesserOrbs.forEach( e => e.resize());
+      currentKeyOrb.resize();
+      homeKeyOrb.resize();
+      opponentKeyOrb.resize();
+      me.resize();
+      opponent.resize();
+      scoreKeeper.resize();
+    }
 
     if(END_GAME)
-      egmgr.reposition();
-  }
+        egmgr.reposition();
+    }
   function mousePressed(){
-    if(!END_GAME){
+    if(PRE_GAME){
+      pgmgr.clickables.forEach( e => {
+        if(e.isInside(mouseX, mouseY))
+          e.onClick();
+      });
+
+    }
+
+    if(IN_GAME){
     //voice movement
     for(var i = 0; i < voix.length; i ++)
       if( voix[i].isInside(mouseX, mouseY) ){
@@ -117,7 +127,7 @@ let composer;
       if(homeKeyOrb.isInside(mouseX, mouseY))
         THROW_ACTION = true;
     }
-        //end game orb clicks
+
     if(END_GAME){
       if(!egmgr.got.show){
         for(var i = 0; i < egmgr.clickables.length; i ++)
@@ -144,19 +154,28 @@ let composer;
       }
   }
   function mouseReleased(){
-    if(VOICE_MOVEMENT){
-      VOICE_MOVEMENT = false;
+    /*if(PRE_GAME){
+        PRE_GAME = false;
+        IN_GAME = true;
+        _init_leverkuhn();
+    }*/
+    if(IN_GAME){
+      if(VOICE_MOVEMENT){
+        VOICE_MOVEMENT = false;
+      }
+
+      blossom.blossom();
+
+      if(THROW_ACTION){
+        //throw action is over. process the data points and empty the arrays
+          THROW_ACTION = false;
+          homeKeyOrb.inertia();
+          homeKeyOrb.throwX.length = 0;
+          homeKeyOrb.throwY.length = 0;
+          turnSignified(me);
+        }
     }
 
-    if(THROW_ACTION){
-      //throw action is over. process the data points and empty the arrays
-        THROW_ACTION = false;
-        homeKeyOrb.inertia();
-        homeKeyOrb.throwX.length = 0;
-        homeKeyOrb.throwY.length = 0;
-        turnSignified(me);
-      }
-    blossom.blossom();
 
     if(END_GAME){
       if(TEMPO_DRAG)
@@ -260,6 +279,36 @@ let composer;
   }
 
 //initialization functions
+  function _init_welcome(){
+    _init_geometry();
+    pgmgr = new PregameManager();
+    logo = new Logo(50,50);
+  }
+  function _init_leverkuhn(){
+    Tone.Transport.PPQ = 4;
+    _init_geometry();
+    _init_styling();
+    _init_voix();
+    _init_hexes();
+    _init_players();
+
+    composer = new Composer(STARTING_KEY);
+    theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
+    musician = new Musician();
+    cd = new ChordDisplay();
+    sd = new StaffDisplay();
+    logo = new Logo(50,50);
+
+    lesserOrbs = [];
+    currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+    opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
+    homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
+    scoreKeeper = new ScoreKeeper();
+    cpu = new ComputerOpponent({homeKey:OPPONENT_HOME_KEY});
+    pr = new Printer()
+
+    SERIAL_RECORD = serial();
+  }
   function _init_styling(){
     textFont(fonts.letters);
     textAlign(CENTER, CENTER);
