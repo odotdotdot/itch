@@ -21,7 +21,7 @@ class BPMDisplay{
       pop();
     }
   }
-  reposition(){
+  resize(){
     this.x = CX;
     this.y = CY;
   }

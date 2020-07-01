@@ -21,18 +21,24 @@ class EndGameMgmt{
     this.clickables.push(this.downloadOrb);
     this.repositionables.push(this.downloadOrb);
 
-    this.endGameOrbs[0] = new EndGameOrb({i:2
+    this.playAgainOrb = new PlayAgainOrb(2, this);
+    this.orbs.push(this.playAgainOrb);
+    this.visibles.push(this.playAgainOrb);
+    this.clickables.push(this.playAgainOrb);
+    this.repositionables.push(this.playAgainOrb);
+
+    this.endGameOrbs[0] = new EndGameOrb({i:3
                                         , m:"16th"
                                         , bpm:70
                                         , tickLength: (4*GAME_DURATION_IN_TURNS).toString() + "i"
                                         , parent: this
-                                        , patch: 3
+                                        , patch: 0
                                         , parts:[ new Part(new NoteEventList({vN:0, duration:1, n:4}).eventList)
                                                 , new Part(new NoteEventList({vN:1, duration:1, n:4}).eventList, "1i")
                                                 , new Part(new NoteEventList({vN:2, duration:1, n:4}).eventList, "2i")
                                                 , new Part(new NoteEventList({vN:3, duration:1, n:4}).eventList, "3i")
                                                   ]});
-    this.endGameOrbs[1] = new EndGameOrb({i:3
+    this.endGameOrbs[1] = new EndGameOrb({i:4
                                         , m:"qtr"
                                         , bpm:120
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
@@ -43,7 +49,7 @@ class EndGameMgmt{
                                                 , new Part(new NoteEventList({vN:2, duration:4, n:16}).eventList, "8i")
                                                 , new Part(new NoteEventList({vN:3, duration:4, n:16}).eventList, "12i")
                                                   ]});
-    this.endGameOrbs[2] = new EndGameOrb({i:4
+    this.endGameOrbs[2] = new EndGameOrb({i:5
                                         , m:"alberti"
                                         , bpm:110
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
@@ -59,7 +65,7 @@ class EndGameMgmt{
                                                 , new Part(new NoteEventList({vN:2, duration:8,  n:16}).eventList, "6i")
                                                 , new Part(new NoteEventList({vN:1, duration:8,  n:16}).eventList, "12i")
                                                   ]});
-    this.endGameOrbs[3] = new EndGameOrb({i:5
+    this.endGameOrbs[3] = new EndGameOrb({i:6
                                         , m:"pad"
                                         , bpm:120
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
@@ -121,6 +127,11 @@ class EndGameMgmt{
         this.visibles[i].display();
 
   }
+  playAgain(){
+    var url = "http://127.0.0.1:8887";
+    //url+="?userName="+centerText.userName+"&homeKey="+HOME_KEY;
+    window.location.href = url;
+  }
   dlreq(){
     /* this functions prepares a data packet for midi.js, serverside.  for each end game orb (provided it's on) we go through each of its parts
        and extract a midi note event.  there is some translation involved and all time durations have to be multiplied by 32 to agree with the
@@ -137,14 +148,14 @@ class EndGameMgmt{
                       new MidiNoteEvent({ pitch: this.endGameOrbs[i].parts[j].nel[k].pitch
                                         , duration: parseInt(this.endGameOrbs[i].parts[j].nel[k].duration.slice(0,-1))
                                         , time: parseInt(this.endGameOrbs[i].parts[j].nel[k].time.slice(0,-1))
-                                        , offset: parseInt(this.endGameOrbs[i].parts[j].offset.slice(0,-1)) }))}}
+                                        , offset: parseInt(this.endGameOrbs[i].parts[j].offset.slice(0,-1))
+                                        , status : 0x90
+                                        , delta : null}))}}
             console.log({key: CURRENT_KEY
                        , bpm: this.endGameOrbs[i].bpm
                        , noteEventListForServer: noteEventListForServer});
 
             var mw = new MidiWriter(noteEventListForServer);
-
-
 
             foundHotEndGameOrb = true;}
 

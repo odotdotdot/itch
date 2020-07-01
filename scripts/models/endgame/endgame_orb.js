@@ -11,7 +11,7 @@ class EndGameOrb extends Orb{
           message: m
         , fillColor: "#353535"
         , textColor: "#fa9b9b"
-        , theta: i*2*Math.PI/6
+        , theta: i*2*Math.PI/7
         , show: true
         , radius: geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS

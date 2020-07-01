@@ -1,7 +1,7 @@
-class DownloadOrb extends Orb{
+class PlayAgainOrb extends Orb{
   constructor(i, parent){
     super({
-      message: "download"
+      message: "play again"
     , fillColor: "#353535"
     , textColor: "#fa9b9b"
     , theta: i*2*Math.PI/7
@@ -31,7 +31,7 @@ class DownloadOrb extends Orb{
 
   onRelease(){
     this.invertColors();
-    this.parent.dlreq();
+    this.parent.playAgain();
     this.state = false;
   }
 

@@ -1,6 +1,6 @@
 let SERIAL_RECORD, MIDI_RECORD = 0xffffffff, THEORY_RECORD, STARTING_KEY = 10, CURRENT_KEY = 10,
     HOME_KEY = 5, OPPONENT_HOME_KEY = 21, TEMPO_DRAG = false, THROW_ACTION = false, IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 2, TOTAL_BARS = 2, VOICE_MOVEMENT = false, END_GAME = false,
+    GAME_DURATION_IN_TURNS = 1, TOTAL_BARS = 2, VOICE_MOVEMENT = false, END_GAME = false,
     GAME_IS_NOT_YET_OVER = true, TPN = 3;
 let W, H, CX, CY;
 let fonts;
@@ -39,6 +39,7 @@ let composer;
     homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
     scoreKeeper = new ScoreKeeper();
     cpu = new ComputerOpponent({homeKey:OPPONENT_HOME_KEY});
+    pr = new Printer()
 
     SERIAL_RECORD = serial();
   }
@@ -162,6 +163,8 @@ let composer;
         egmgr.tempoOrb.onClick();
       if(egmgr.downloadOrb.state == true)
         egmgr.downloadOrb.onRelease();
+      if(egmgr.playAgainOrb.state == true)
+        egmgr.playAgainOrb.onRelease();
     }
 
   }
