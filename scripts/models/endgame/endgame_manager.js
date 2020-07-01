@@ -135,31 +135,14 @@ class EndGameMgmt{
           for(var k = 0; k < this.endGameOrbs[i].parts[j].nel.length; k++){
             noteEventListForServer.push(
                       new MidiNoteEvent({ pitch: this.endGameOrbs[i].parts[j].nel[k].pitch
-                                        , duration: parseInt(this.endGameOrbs[i].parts[j].nel[k].duration.slice(0,-1))*32
+                                        , duration: parseInt(this.endGameOrbs[i].parts[j].nel[k].duration.slice(0,-1))
                                         , time: parseInt(this.endGameOrbs[i].parts[j].nel[k].time.slice(0,-1))
                                         , offset: parseInt(this.endGameOrbs[i].parts[j].offset.slice(0,-1)) }))}}
             console.log({key: CURRENT_KEY
                        , bpm: this.endGameOrbs[i].bpm
                        , noteEventListForServer: noteEventListForServer});
-            var smf = new JZZ.MIDI.SMF(0, 96);
-            var trk = new JZZ.MIDI.SMF.MTrk();
-            smf.push(trk);
-            var endOfTrackInClicks = 0;
-            noteEventListForServer.forEach(  e => {
-              if(e.pitch != 0xff){
-                trk.add(e.startTick, JZZ.MIDI.noteOn(0, e.pitch, e.velocity))
-                trk.add(e.startTick + e.duration, JZZ.MIDI.noteOff(0, e.pitch))
-                if(e.startTick + e.duration > endOfTrackInClicks)
-                  endOfTrackInClicks = e.startTick + e.duration;
-              }
-            });
-            trk.add(endOfTrackInClicks, JZZ.MIDI.smfEndOfTrack());
 
-            var file = new File( [smf.dump()], "out.mid", {type: "audio/midi"});
-            saveAs(file);
-
-
-            console.log(smf.toString());
+            var mw = new MidiWriter(noteEventListForServer);
 
 
 
