@@ -102,15 +102,21 @@ let voix = [];
       scoreKeeper.resize();
     }
 
-    if(END_GAME)
+    if(END_GAME){
         egmgr.reposition();
     }
+
+    if(PRE_GAME){
+        pgmgr.reposition();
+    }
+  }
   function mousePressed(){
     if(PRE_GAME){
-      pgmgr.clickables.forEach( e => {
-        if(e.isInside(mouseX, mouseY))
-          e.onClick();
-      });
+      if(pgmgr.centerText.userNameCreated == true)
+        pgmgr.clickables.forEach( e => {
+          if(e.isInside(mouseX, mouseY))
+            e.onClick();
+        });
 
     }
 
@@ -137,7 +143,6 @@ let voix = [];
     }
 
     }
-
   function mouseDragged(){
     if(VOICE_MOVEMENT){
       voix[ACTIVE_VOICE].move();
@@ -187,6 +192,34 @@ let voix = [];
     }
 
   }
+  function keyPressed(){
+    if(PRE_GAME){
+      if(pgmgr.centerText.userNameCreated == false){
+
+          if(pgmgr.centerText.currentText == pgmgr.centerText.commands[1]){
+             pgmgr.centerText.currentText = pgmgr.centerText.userName;
+             pgmgr.centerText.enteringUserName = true;
+          }
+
+        if(pgmgr.centerText.enteringUserName){
+          if(keyCode >= 48 && keyCode <= 90 && pgmgr.centerText.currentText.length <=8){
+            pgmgr.centerText.currentText += key;;
+          }
+
+          if(keyCode === BACKSPACE)
+            pgmgr.centerText.currentText = pgmgr.centerText.currentText.slice(0,-1)
+
+          if(keyCode === ENTER){
+            pgmgr.centerText.userNameCreated = true;
+            pgmgr.centerText.enteringUserName = false;
+            pgmgr.centerText.userName = pgmgr.centerText.currentText;
+            pgmgr.centerText.currentText = pgmgr.centerText.commands[2];
+          }
+        }
+    }
+  }
+  return false;
+}
 
 //global scope
   function serial(){

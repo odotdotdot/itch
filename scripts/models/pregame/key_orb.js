@@ -1,5 +1,5 @@
 class KeyOrb extends Orb{
-  constructor(i){
+  constructor(i, parent){
     super({
       message: spelling.pitchChromaticToLetter[i]
     , fillColor: colors.pink
@@ -11,8 +11,9 @@ class KeyOrb extends Orb{
     , velocity: Math.PI / (1<<13)
     });
 
-    //this.parent = parent;
+    this.parent = parent;
     this.state = false;
+    this.key_id = i;
 
   }
   invertColors(){
@@ -23,17 +24,23 @@ class KeyOrb extends Orb{
 
   onClick(){
     /* if inside execute new loop or function */
-    this.invertColors();
-    this.state = true;
+    if(this.state == false){
+      this.invertColors();
+      this.state = true;
+      HOME_KEY = this.key_id;
+      this.parent.clearPreviousOrbSelection(this.key_id);
+      this.parent.signal();
+    }
   }
 
-  onRelease(){
-    this.invertColors();
+  restoreToDefault(){
+    this.fillColor = colors.pink;
+    this.textColor = colors.background;
     this.state = false;
   }
 
   resize(){
-    this.semiMajorAxis =5.5*geometry.RADIUS - Math.floor(i/12)*1.5*geometry.RADIUS;
+    this.semiMajorAxis =5.5*geometry.RADIUS - Math.floor(this.key_id/12)*1.5*geometry.RADIUS;
     this.radius = geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters, this.message, 24, this.radius * 2 - 5)
     this.primaryX = CX;
