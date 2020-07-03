@@ -44,7 +44,7 @@ class Musician{
           this.synth[i].set(this.program[2]);
 
         for(var i = 0; i < this.EndSynth.length; i ++)
-          this.EndSynth[i].set(this.program[3]);
+          this.EndSynth[i].set(this.program[0]);
 
   //ROUTING
         for(var i = 0; i < this.synth.length; i ++)

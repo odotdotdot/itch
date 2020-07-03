@@ -15,7 +15,7 @@ class CenterText{
 
     this.currentText = this.commands[0];
 
-    this.tS = 24;
+    this.tS = 40;
   }
   display(){
     push();
@@ -26,6 +26,6 @@ class CenterText{
     pop();
   }
   resize(){
-    this.tS = utility.setTextSize(fonts.letters, this.currentText, 24, 5 * geometry.RADIUS, )
+    this.tS = utility.setTextSize(fonts.letters, this.currentText, 40, 5 * geometry.RADIUS, )
   }
 }

@@ -4,8 +4,8 @@ class KeyOrb extends Orb{
       message: spelling.pitchChromaticToLetter[i]
     , fillColor: colors.pink
     , textColor: colors.background
-    , theta: i*2*Math.PI/12 + (Math.floor(i/12)*2*Math.PI/24) + (Math.floor(i/12)*Math.PI/2)
-    , show: true
+    , theta: ((i*7)%12)*2*Math.PI/12 - (Math.PI/2)*Math.floor(i/12) + Math.floor(i/12)*Math.PI/12
+    , show: false
     , radius: geometry.ORB_MAX_RADIUS
     , semiMajorAxis: 5.5*geometry.RADIUS - Math.floor(i/12)*1.5*geometry.RADIUS
     , velocity: Math.PI / (1<<13)
@@ -40,7 +40,7 @@ class KeyOrb extends Orb{
   }
 
   resize(){
-    this.semiMajorAxis =5.5*geometry.RADIUS - Math.floor(this.key_id/12)*1.5*geometry.RADIUS;
+    this.semiMajorAxis = 5.5*geometry.RADIUS - Math.floor(this.key_id/12)*1.5*geometry.RADIUS;
     this.radius = geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters, this.message, 24, this.radius * 2 - 5)
     this.primaryX = CX;

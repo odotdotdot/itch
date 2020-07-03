@@ -116,6 +116,7 @@ let voix = [];
         pgmgr.clickables.forEach( e => {
           if(e.isInside(mouseX, mouseY))
             e.onClick();
+            pgmgr.keyGlyph.signal();
         });
 
     }
@@ -203,17 +204,22 @@ let voix = [];
 
         if(pgmgr.centerText.enteringUserName){
           if(keyCode >= 48 && keyCode <= 90 && pgmgr.centerText.currentText.length <=8){
+            pgmgr.charAdded();
             pgmgr.centerText.currentText += key;;
           }
 
-          if(keyCode === BACKSPACE)
-            pgmgr.centerText.currentText = pgmgr.centerText.currentText.slice(0,-1)
+          if(keyCode === BACKSPACE){
+            pgmgr.charDelted();
+            pgmgr.centerText.currentText = pgmgr.centerText.currentText.slice(0,-1)}
 
           if(keyCode === ENTER){
             pgmgr.centerText.userNameCreated = true;
             pgmgr.centerText.enteringUserName = false;
             pgmgr.centerText.userName = pgmgr.centerText.currentText;
             pgmgr.centerText.currentText = pgmgr.centerText.commands[2];
+            pgmgr.centerText.resize();
+            pgmgr.revealOrbs();
+
           }
         }
     }
@@ -316,6 +322,7 @@ let voix = [];
     _init_geometry();
     pgmgr = new PregameManager();
     logo = new Logo(50,50);
+    musician = new Musician();
   }
   function _init_leverkuhn(){
     Tone.Transport.PPQ = 4;
@@ -327,7 +334,6 @@ let voix = [];
 
     composer = new Composer(STARTING_KEY);
     theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
-    musician = new Musician();
     cd = new ChordDisplay();
     sd = new StaffDisplay();
     logo = new Logo(50,50);
