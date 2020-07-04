@@ -40,7 +40,6 @@ let voix = [];
       background(colors.background);
       logo.display();
       pgmgr.visibles.forEach( e => {e.display();});
-
     }
 
     if(IN_GAME){
@@ -160,11 +159,10 @@ let voix = [];
       }
   }
   function mouseReleased(){
-    /*if(PRE_GAME){
-        PRE_GAME = false;
-        IN_GAME = true;
-        _init_leverkuhn();
-    }*/
+    if(PRE_GAME){
+        if(pgmgr.continueOrb.state == true)
+          pgmgr.continueOrb.onRelease();
+    }
     if(IN_GAME){
       if(VOICE_MOVEMENT){
         VOICE_MOVEMENT = false;

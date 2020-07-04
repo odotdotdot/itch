@@ -1,5 +1,5 @@
 class ContinueOrb extends Orb {
-    constructor(){
+    constructor(parent){
       super({
         message: 'continue'
       , fillColor: colors.pink
@@ -11,10 +11,35 @@ class ContinueOrb extends Orb {
       , velocity: 0
 
       });
+
+      this.parent = parent;
+      this.state = false;
   }
   onClick(){
-    PRE_GAME = false;
-    IN_GAME = true;
-    _init_leverkuhn();
+    this.state = true;
+    this.invertColors();
+  }
+
+  invertColors(){
+    var temp = this.fillColor;
+    this.fillColor = this.textColor;
+    this.textColor = temp;
+
+  }
+
+  onRelease(){
+    this.invertColors();
+    this.parent.transition_to_in_game();
+    this.state = false;
+  }
+
+  resize(){
+          this.primaryX = CX
+          this.primaryY = CY
+          this.radius = geometry.ORB_MAX_RADIUS
+          this.semiMajorAxis =  .5*W-2*geometry.ORB_MAX_RADIUS
+          this.tS = utility.setTextSize(fonts.letters, this.message, 24, 2*this.radius - 5)
+          this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
+          this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
   }
 }

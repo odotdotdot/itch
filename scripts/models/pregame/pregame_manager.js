@@ -2,12 +2,13 @@ class PregameManager{
   constructor(){
     this.centerText = new CenterText();
     this.keyGlyph = new KeyGlyph();
+    this.continueOrb = new ContinueOrb(this);
     this.orbs = [];
     this.clickables = [];
-    this.repositionables = [this.centerText, this.keyGlyph];
+    this.repositionables = [this.centerText, this.keyGlyph, this.continueOrb];
     this.visibles = [this.centerText];
     this.firstTime = true;
-    this.continueOrb = new ContinueOrb();
+
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
     this.majorScaleIndex = 0;
@@ -24,6 +25,17 @@ class PregameManager{
     }
 
     setTimeout( ()=> {this.centerText.currentText = this.centerText.commands[1]}, 1500);
+
+  }
+
+  transition_to_in_game(){
+    this.hideOrbs();
+
+    setTimeout( ()=>{
+      PRE_GAME = false;
+      IN_GAME = true;
+      _init_leverkuhn();}
+      ,5000);
 
   }
 
@@ -82,6 +94,23 @@ class PregameManager{
     }
   }
 
+  hideOrbs(){
+    for(var i = 12; i >=0; i --){
+      var major = (7*i) % 12;
+      var relative = ( (major + 9) % 12) + 12;
+      var time = 100*(12-i) - 4*(12-i)**2
+
+      var t = Tone.Time("+" + time/1000)
+      this.orbs[major].disappearAtTime(time)
+      this.orbs[relative].disappearAtTime(time)
+
+      if(i > 6){
+        musician.EndSynth[i%4].triggerAttackRelease(musician.makeTone( (7*i) + 48), '4n', t );
+      }
+
+    }
+  }
+
   charAdded(){
     musician.EndSynth[this.majorScaleIndex%4].triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
     this.majorScaleIndex++;
@@ -95,4 +124,5 @@ class PregameManager{
       this.majorScaleIndex++;
     musician.EndSynth[this.majorScaleIndex%4].triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
   }
+
 }

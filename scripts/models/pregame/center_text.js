@@ -5,7 +5,7 @@ class CenterText{
 
     this.commands = [
        "welcome to leverkuhn"
-      ,"enter your user name"
+      ,"enter a user name"
       ,"select your home key"
     ];
 

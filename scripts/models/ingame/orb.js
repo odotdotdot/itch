@@ -94,6 +94,11 @@ class Orb{
       this.show = true;
     }, t);
   }
+  disappearAtTime(t){
+      setTimeout( ()=>{
+        this.show = false;
+      }, t);
+  }
   setTwin(twin){
     this.twin = twin;
   }
