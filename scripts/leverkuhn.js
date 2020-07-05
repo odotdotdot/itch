@@ -1,14 +1,14 @@
 let SERIAL_RECORD,
     MIDI_RECORD = 0xffffffff,
     THEORY_RECORD,
-    STARTING_KEY = 10,
-    CURRENT_KEY = 10,
-    HOME_KEY = 5,
-    OPPONENT_HOME_KEY = 21,
+    STARTING_KEY,
+    CURRENT_KEY,
+    HOME_KEY = 0,
+    OPPONENT_HOME_KEY,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 1,
+    GAME_DURATION_IN_TURNS = 8,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -16,10 +16,12 @@ let SERIAL_RECORD,
     END_GAME = false,
     GAME_IS_NOT_YET_OVER = true,
     TPN = 3;
+
 let W, H, CX, CY;
 let fonts;
 let hexes = [];
 let voix = [];
+let igmgr;
 
 //main
   function preload(){
@@ -72,6 +74,9 @@ let voix = [];
         me.display();
         opponent.display();
         scoreKeeper.display();
+
+        for(var i = 0; i < igmgr.visibles.length; i ++)
+          igmgr.visibles[i].display();
       }
 
 
@@ -260,6 +265,7 @@ let voix = [];
          and turn booleans are flipped
 
       */
+      console.log(playerWhoTookTurn);
       var score = theoretician.analyze(MIDI_RECORD, THEORY_RECORD, playerWhoTookTurn);
       scoreKeeper.scoreTurn(score, playerWhoTookTurn);
       if(score.modulation > 0){
@@ -397,7 +403,7 @@ let voix = [];
   }
   function _init_players(){
     me = new Player(
-         "peter"
+         pgmgr.centerText.userName
         ,HOME_KEY
         ,IS_MY_TURN*Math.PI
         ,colors.pink

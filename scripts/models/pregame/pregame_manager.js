@@ -8,6 +8,8 @@ class PregameManager{
     this.repositionables = [this.centerText, this.keyGlyph, this.continueOrb];
     this.visibles = [this.centerText];
     this.firstTime = true;
+    this.mask = new Mask({parent: this, type: 'rect'});
+    this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:20 });
 
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
@@ -30,13 +32,12 @@ class PregameManager{
 
   transition_to_in_game(){
     this.hideOrbs();
-
-    setTimeout( ()=>{
+    this.mask.fade_up( () => {
+      igmgr = new InGameManager();
       PRE_GAME = false;
       IN_GAME = true;
-      _init_leverkuhn();}
-      ,5000);
-
+      _init_leverkuhn();
+    } );
   }
 
   clearPreviousOrbSelection(exception){
@@ -55,6 +56,8 @@ class PregameManager{
       this.clickables.push(this.continueOrb);
       this.repositionables.push(this.continueOrb);
     }
+
+    this.centerMask.fade_down( ()=> {this.centerMask.color.setAlpha(0xff)} );
 
     this.bangHomeKey();
 
@@ -95,17 +98,17 @@ class PregameManager{
   }
 
   hideOrbs(){
-    for(var i = 12; i >=0; i --){
+    for(var i = 11; i >=0; i --){
       var major = (7*i) % 12;
       var relative = ( (major + 9) % 12) + 12;
-      var time = 100*(12-i) - 4*(12-i)**2
+      var time = 100*(11-i) - 4*(11-i)**2
 
       var t = Tone.Time("+" + time/1000)
       this.orbs[major].disappearAtTime(time)
       this.orbs[relative].disappearAtTime(time)
 
       if(i > 6){
-        musician.EndSynth[i%4].triggerAttackRelease(musician.makeTone( (7*i) + 48), '4n', t );
+        musician.EndSynth[i%4].triggerAttackRelease(musician.makeTone( 7*i), '4n', t );
       }
 
     }
