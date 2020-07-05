@@ -5,7 +5,8 @@ class Hex {
               , isCopy = false
               , isCopyOf = null
               , hasCopy = false
-              , pitchChromatic = (3+index*7)%12} = {}){
+              , pitchChromatic = (3+index*7)%12
+              , impermanent_index = null} = {}){
 
     this.center = createVector(CX + x*geometry.RADIUS*Math.cos(y + geometry.OFFSET)
                              , CY + x*geometry.RADIUS*Math.sin(y + geometry.OFFSET));
@@ -18,6 +19,7 @@ class Hex {
     this.isCopy = isCopy;
     this.isCopyOf = isCopyOf;
     this.hasCopy = hasCopy;
+    this.impermanent_index = impermanent_index;
     this.root = null;
     this.accent = null;
     this.hexSpelling();
@@ -53,7 +55,6 @@ class Hex {
   displayHexLetter(){
     text(this.root, this.center.x, this.center.y);
   }
-
   displayHexAccent(){
     text(this.accent, this.center.x + 25*Math.cos(-geometry.OFFSET-Math.PI/6), this.center.y + 20*Math.sin(-geometry.OFFSET-Math.PI/6));
   }

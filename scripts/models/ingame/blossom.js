@@ -3,6 +3,8 @@ class Blossom{
   constructor(){
     this.assignment_index = 12;
     this.not_perm_index = 0;
+    this.index_library = [0, 1, 2, 3, 4]
+
     var K = .5 * 3**.5;
     this.not_permanent = [
                          [21**.5, 6.5*Math.atan( (.5*3**.5) / 4.5)]
@@ -43,13 +45,16 @@ class Blossom{
 
     hexes.forEach( e => {
                     if(e.isActive && !e.isCopy && !e.hasCopy){
+                      var checkingOut = this.index_library[utility.getRandomInt(this.index_library.length - 1)];
+                      this.index_library.splice(this.index_library.indexOf(checkingOut), 1);
                       hexes.push( new Hex({
                         index: this.assignment_index
-                        ,x: this.not_permanent[this.not_perm_index][0]
-                        ,y: this.not_permanent[this.not_perm_index][1]
+                        ,x: this.not_permanent[checkingOut][0]
+                        ,y: this.not_permanent[checkingOut][1]
                         ,isCopy:true
                         ,isCopyOf:e.serial
                         ,pitchChromatic:e.pitchChromatic
+                        ,impermanent_index : checkingOut
                       }));
                       e.hasCopy = true;
                       this.not_perm_index++;
@@ -64,6 +69,7 @@ class Blossom{
                     if(e.isCopy && !e.isActive && !hexes.find( h => h.serial == e.isCopyOf).isActive ){
                       hexes[e.isCopyOf].hasCopy = false;
                       hexes.splice(index, 1);
+                      this.index_library.push(e.impermanent_index);
                     }
     });
   }
