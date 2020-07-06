@@ -8,7 +8,7 @@ let SERIAL_RECORD,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 2,
+    GAME_DURATION_IN_TURNS = 8,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -76,6 +76,7 @@ let igmgr;
 
         if(cpu.CPU_MOVING_TOKENS)
           cpu.move_tokens();
+
         displayHexLabels();
         logo.display();
         me.display();
@@ -167,7 +168,7 @@ let igmgr;
 
     }
   function mouseDragged(){
-    if(VOICE_MOVEMENT){
+    if(VOICE_MOVEMENT && me.isMyTurn){
       voix[ACTIVE_VOICE].move();
       voix[ACTIVE_VOICE].hexCheck();
 
@@ -325,7 +326,7 @@ let igmgr;
       opponent.isMyTurn = !opponent.isMyTurn;
       /*//log turn to database
       socket.emit('logTurn', {mR: MIDI_RECORD, gameId: GAME_ID});
-*/
+      */
 
 
 

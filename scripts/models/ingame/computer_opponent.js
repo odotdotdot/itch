@@ -110,6 +110,7 @@ class ComputerOpponent{
     }
 
     if(this.targetSerialsReached == 0xf){
+      this.CPU_MOVING_TOKENS = false;
       SERIAL_RECORD = serial();
       blossom.blossom();
       MIDI_RECORD = composer.midiTransfigure(composer.pitchChromify(SERIAL_RECORD));
@@ -117,7 +118,6 @@ class ComputerOpponent{
       cd.setChord(THEORY_RECORD, CURRENT_KEY)
       turnSignified(opponent);
       this.targetSerialsReached = 0;
-      this.CPU_MOVING_TOKENS = false;
     }
 
   }

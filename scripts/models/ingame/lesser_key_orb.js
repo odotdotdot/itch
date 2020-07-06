@@ -23,7 +23,7 @@ class LesserKeyOrb extends Orb{
 
   setRadius(n){
     this.radius = n;
-    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2);
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 5);
   }
 
   setTheta(n){
