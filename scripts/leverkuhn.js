@@ -16,6 +16,9 @@ let SERIAL_RECORD,
     END_GAME = false,
     GAME_IS_NOT_YET_OVER = true,
     TPN = 3;
+    DIRECTIONS = true;
+    PLAY_BY_EAR = false;
+    SHOW_DIATONICS = false;
 
 let W, H, CX, CY;
 let fonts;
@@ -49,6 +52,10 @@ let igmgr;
 
         fill(colors.outline)
         hexes.forEach( e => { e.display(); });
+
+        if(SHOW_DIATONICS){
+          fill(colors.outline_plus)
+          hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.display() );}
 
         cd.display();
         sd.display();
@@ -104,6 +111,9 @@ let igmgr;
       me.resize();
       opponent.resize();
       scoreKeeper.resize();
+
+      igmgr.reposition();
+
     }
 
     if(END_GAME){
@@ -126,17 +136,25 @@ let igmgr;
     }
 
     if(IN_GAME){
-    //voice movement
-    for(var i = 0; i < voix.length; i ++)
-      if( voix[i].isInside(mouseX, mouseY) ){
-        VOICE_MOVEMENT = true;
-        ACTIVE_VOICE = i;}
-    //staff wheel chord clicks
-    if(sd.isInside(mouseX, mouseY))
-      sd.replay(mouseX, mouseY);
-    //home key signifiying end of turn
-      if(homeKeyOrb.isInside(mouseX, mouseY))
-        THROW_ACTION = true;
+      if(!DIRECTIONS){
+        //voice movement
+        for(var i = 0; i < voix.length; i ++)
+          if( voix[i].isInside(mouseX, mouseY) ){
+            VOICE_MOVEMENT = true;
+            ACTIVE_VOICE = i;}
+        //staff wheel chord clicks
+        if(sd.isInside(mouseX, mouseY))
+          sd.replay(mouseX, mouseY);
+        //home key signifiying end of turn
+          if(homeKeyOrb.isInside(mouseX, mouseY))
+            THROW_ACTION = true;
+      }
+
+      igmgr.clickables.forEach( e => {
+        if(e.isInside(mouseX, mouseY))
+          e.onClick();
+      });
+
     }
 
     if(END_GAME){
@@ -158,6 +176,9 @@ let igmgr;
       THEORY_RECORD = theoretician.theoryEncoding(MIDI_RECORD);
 
       cd.setChord(THEORY_RECORD, CURRENT_KEY);
+
+      if(PLAY_BY_EAR)
+        musician.scoreVoiceMovement(MIDI_RECORD)
     }
    if(TEMPO_DRAG){
       egmgr.tempoOrb.drag();
@@ -183,6 +204,10 @@ let igmgr;
           homeKeyOrb.throwY.length = 0;
           turnSignified(me);
         }
+      igmgr.clickables.forEach( e => {
+        if(e.isInside(mouseX, mouseY))
+          e.onRelease();
+      });
     }
 
 
@@ -265,7 +290,7 @@ let igmgr;
          and turn booleans are flipped
 
       */
-      console.log(playerWhoTookTurn);
+
       var score = theoretician.analyze(MIDI_RECORD, THEORY_RECORD, playerWhoTookTurn);
       scoreKeeper.scoreTurn(score, playerWhoTookTurn);
       if(score.modulation > 0){
@@ -320,6 +345,18 @@ let igmgr;
       }
     }
   }
+  function isDiatonic(pitchChromatic){
+    var prototype = CURRENT_KEY > 11 ? 0xAAD : 0xAB5;
+
+        prototype_shifted = prototype << (CURRENT_KEY%12);
+
+        pitchChromatic_shifted = (pitchChromatic + 12 - (CURRENT_KEY % 12)) % 12;
+
+        if( prototype_shifted & (1<< (pitchChromatic_shifted + (CURRENT_KEY%12) ) ) )
+          return true;
+        else
+          return false;
+  }
 
 //initialization functions
   function _init_welcome(){
@@ -360,22 +397,22 @@ let igmgr;
   function _init_voix(){
     voix.push(new Token({id:0
                         , x:.5*W +  5.5*geometry.APOTHEM
-                        , y: H - geometry.RADIUS
+                        , y: H - 2*geometry.RADIUS
                         , color:colors.bass
                         , message:'bass'}));
     voix.push(new Token({id:1
                         , x:.5*W +  7.5*geometry.APOTHEM
-                        , y: H - geometry.RADIUS
+                        , y: H - 2*geometry.RADIUS
                         , color:colors.tenor
                         , message:'tenor'}));
     voix.push(new Token({id:2
                         , x:.5*W +  9.5*geometry.APOTHEM
-                        , y: H - geometry.RADIUS
+                        , y: H - 2*geometry.RADIUS
                         , color:colors.alto
                         , message:'alto'}));
     voix.push(new Token({id:3
                         , x:.5*W +  11.5*geometry.APOTHEM
-                        , y: H - geometry.RADIUS
+                        , y: H - 2*geometry.RADIUS
                         , color:colors.soprano
                         , message:'soprano'}));
   }

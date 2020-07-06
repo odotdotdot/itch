@@ -12,6 +12,7 @@ const colors = {
   ,'leverkuhn' : "#FAFA9B"
   ,'blue': "#214EA2"
   ,'red' : "#d32803"
+  ,'outline_plus': "#7A7A7A"
 }
 
 /*

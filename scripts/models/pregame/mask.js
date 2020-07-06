@@ -8,7 +8,7 @@ class Mask{
                } = {} ) {
 
     this.color = color(mask_color);
-    this.speed = 1.5;
+    this.speed = speed;
     this.parent = parent
 
     this.fadingUp = false;
@@ -29,7 +29,8 @@ class Mask{
 
       if(this.fadingUp){
         this.color.setAlpha( alpha(this.color) + this.speed )
-        if( alpha(this.color) >= 0xFF - 2*this.speed){
+        if( alpha(this.color) >= 0xFF){
+          this.color.setAlpha(0xff);
           this.fadingUp = false;
           this.parent.visibles.splice(this.parent.visibles.indexOf(this), 1);
           this.fadeUpCallBack();
@@ -39,7 +40,8 @@ class Mask{
 
       if(this.fadingDown){
           this.color.setAlpha( alpha(this.color) - this.speed )
-          if( alpha(this.color) <= 0 + 2*this.speed){
+          if( alpha(this.color) <= 0){
+            this.color.setAlpha(0);
             this.fadingDown = false;
             this.parent.visibles.splice(this.parent.visibles.indexOf(this), 1);
             this.fadeDownCallBack();

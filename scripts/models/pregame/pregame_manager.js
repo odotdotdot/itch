@@ -9,7 +9,7 @@ class PregameManager{
     this.visibles = [this.centerText];
     this.firstTime = true;
     this.mask = new Mask({parent: this, type: 'rect'});
-    this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:20 });
+    this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:3 });
 
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];

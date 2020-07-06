@@ -15,10 +15,12 @@ class HomeKeyOrb extends Orb{
     this.id = id;
     this.throwX = [];
     this.throwY = [];
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2);
   }
 
   setRadius(n){
     this.radius = n;
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2);
   }
     drag(){
       this.theta = atan2( (mouseY - geometry.KEYWHEEL_Y) , (mouseX - geometry.KEYWHEEL_X) );

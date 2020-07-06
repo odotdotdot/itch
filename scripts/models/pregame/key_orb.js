@@ -17,8 +17,8 @@ class KeyOrb extends Orb{
 
   }
   invertColors(){
-    this.fillColor = colors.tenor;
-    this.textColor = colors.bass;
+    this.fillColor = colors.outline;
+    this.textColor = colors.pink;
   }
 
   onClick(){

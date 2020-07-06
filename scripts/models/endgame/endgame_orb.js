@@ -13,7 +13,7 @@ class EndGameOrb extends Orb{
         , textColor: "#fa9b9b"
         , theta: i*2*Math.PI/7
         , show: true
-        , radius: geometry.ORB_MAX_RADIUS
+        , radius: 1.5*geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS
       });
     this.outlineColor = "#fa9b9b";

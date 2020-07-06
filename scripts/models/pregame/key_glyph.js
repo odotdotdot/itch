@@ -19,10 +19,10 @@ class KeyGlyph{
   , {"letter": "D", "accent":0        , "quality": "maj",      "mattheson": "for warlike and merry things"}
   , {"letter": "E", "accent":1        , "quality": "maj",      "mattheson": "hostile to all sensuality"}
   , {"letter": "E", "accent":0        , "quality": "maj",      "mattheson": "despairing, fatally sad, forlorn"}
-  , {"letter": "F", "accent":0        , "quality": "maj",      "mattheson": "for generosity, constancy, love"}
-  , {"letter": "F", "accent":2        , "quality": "maj",      "mattheson": "for glory after struggle"}
+  , {"letter": "F", "accent":0        , "quality": "maj",      "mattheson": "generosity, constancy, love"}
+  , {"letter": "F", "accent":2        , "quality": "maj",      "mattheson": "in glory after struggle"}
   , {"letter": "G", "accent":0        , "quality": "maj",      "mattheson": "suggestive and rhetorical"}
-  , {"letter": "A", "accent":1        , "quality": "maj",      "mattheson": "key of the grave: death, putrefaction, eternity"}
+  , {"letter": "A", "accent":1        , "quality": "maj",      "mattheson": "death, putrefaction, eternity"}
   , {"letter": "A", "accent":0        , "quality": "maj",      "mattheson": "inclined to complain of sad passions"}
   , {"letter": "B", "accent":1        , "quality": "maj",      "mattheson": "dainty and clear of conscience"}
   , {"letter": "B", "accent":0        , "quality": "maj",      "mattheson": "gaudy and desperate"}
@@ -45,9 +45,10 @@ class KeyGlyph{
   display(){
     push();
     noStroke();
-    fill(colors.pink);
     rectMode(CENTER);
     textAlign(CENTER,CENTER);
+    fill(colors.pink);
+
 
     textSize(this.rootSize);
     text(this.data[HOME_KEY].letter, this.positions.letter.x, this.positions.letter.y)
@@ -55,6 +56,7 @@ class KeyGlyph{
     textSize(.5 * this.rootSize)
     text(this.data[HOME_KEY].quality, this.positions.quality.x, this.positions.quality.y)
 
+    noStroke();
     textSize(this.matthesonSize)
     text(this.data[HOME_KEY].mattheson, this.positions.mattheson.x, this.positions.mattheson.y)
     pop();
@@ -84,13 +86,13 @@ class KeyGlyph{
       push();
         stroke(colors.pink);
         strokeWeight(3);
-        line(this.positions.accidental.x + this.accidentalRadius * Math.cos(5*Math.PI/4) + this.sharpOffset
-            ,this.positions.accidental.y + this.accidentalRadius * Math.sin(5*Math.PI/4) - this.sharpOffset
-            ,this.positions.accidental.x + this.accidentalRadius * Math.cos(3*Math.PI/4) + this.sharpOffset
-            ,this.positions.accidental.y + this.accidentalRadius * Math.sin(3*Math.PI/4)
-          )
+          line( this.positions.accidental.x - .5*this.accidentalRadius
+              , this.positions.letter.y + (2**.5) * (11/12) * geometry.RADIUS * Math.sin(-Math.PI/4) //- .25*geometry.RADIUS
+              , this.positions.accidental.x - .5*this.accidentalRadius
+              , CY + (2**.5) * (4/12) * geometry.RADIUS * Math.cos(5*Math.PI/4)
+              )
           noFill();
-          strokeWeight(4);
+          strokeWeight(3);
           circle( this.positions.accidental.x
                 , this.positions.accidental.y
                 , this.accidentalRadius
