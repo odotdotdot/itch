@@ -137,8 +137,7 @@ class EndGameMgmt{
 
   }
   playAgain(){
-    var url = "http://127.0.0.1:8887";
-    //url+="?userName="+centerText.userName+"&homeKey="+HOME_KEY;
+    var url = "https://peter-bradley.itch.io/leverkuhn";
     window.location.href = url;
   }
   dlreq(){
