@@ -9,6 +9,7 @@ class EndGameMgmt{
     this.clickables = [];
     this.repositionables = [];
 
+    this.mask = new Mask({parent: this, type: 'rect', speed:6});
     this.tempoOrb = new TempoOrb(0, this);
     this.orbs.push(this.tempoOrb);
     this.visibles.push(this.tempoOrb);
@@ -28,6 +29,7 @@ class EndGameMgmt{
     this.repositionables.push(this.playAgainOrb);
 
     this.endGameOrbs[0] = new EndGameOrb({i:3
+                                        , egoi : 0
                                         , m:"16th"
                                         , bpm:70
                                         , tickLength: (4*GAME_DURATION_IN_TURNS).toString() + "i"
@@ -40,6 +42,7 @@ class EndGameMgmt{
                                                   ]});
     this.endGameOrbs[1] = new EndGameOrb({i:4
                                         , m:"qtr"
+                                        , egoi : 1
                                         , bpm:120
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
                                         , parent: this
@@ -51,6 +54,7 @@ class EndGameMgmt{
                                                   ]});
     this.endGameOrbs[2] = new EndGameOrb({i:5
                                         , m:"alberti"
+                                        , egoi : 2
                                         , bpm:110
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
                                         , parent: this
@@ -66,6 +70,7 @@ class EndGameMgmt{
                                                 , new Part(new NoteEventList({vN:1, duration:8,  n:16}).eventList, "12i")
                                                   ]});
     this.endGameOrbs[3] = new EndGameOrb({i:6
+                                        , egoi : 3
                                         , m:"pad"
                                         , bpm:120
                                         , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
@@ -110,6 +115,11 @@ class EndGameMgmt{
     certainly buy the physical board when it's available */
     this.visibles.push(logo);
 
+    this.mask.fade_up( () => {
+      this.mask.fade_down( ()=>{
+        });
+    });
+
   }
   reposition(){
     for(var i = 0; i < this.repositionables.length; i ++)
@@ -117,7 +127,6 @@ class EndGameMgmt{
 
     this.egcd.resize(CX, CY);
   }
-
   display(){
 
     for(var i = 0; i < this.orbs.length; i ++)
@@ -164,5 +173,12 @@ class EndGameMgmt{
     this.got.turnOffDisplayAtTime(1500);}
 
 
+  }
+  ping(egoi){
+    for(var i = 0; i < this.endGameOrbs.length; i ++){
+      if(i != egoi)
+        this.endGameOrbs[i].deactivate();
+      }
+      this.endGameOrbs[egoi].activate();
   }
 }

@@ -6,10 +6,10 @@ class TempoOrb extends Orb{
         , textColor: "#fa9b9b"
         , theta: i*2*Math.PI/7
         , show: true
-        , radius: geometry.ORB_MAX_RADIUS
+        , radius: 1.25*geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS
     });
-      this.outlineColor = "#fa9b9b";
+      this.outlineColor = colors.outline;
       this.bpm = Tone.Transport.bpm.value;
       this.bpmAugment = .25;
       this.parent = parent;
@@ -19,12 +19,11 @@ class TempoOrb extends Orb{
     var temp = this.fillColor;
     this.fillColor = this.textColor;
     this.textColor = temp;
-    this.outlineColor = this.textColor;
   }
 
   resize(){
     this.semiMajorAxis =  4*geometry.RADIUS;
-    this.radius = geometry.ORB_MAX_RADIUS;
+    this.radius = 1.25*geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters, this.message, 24, this.radius * 2 - 5)
     this.primaryX = CX;
     this.primaryY = CY;

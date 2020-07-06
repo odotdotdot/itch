@@ -1,5 +1,6 @@
 class EndGameOrb extends Orb{
   constructor( {  i
+                , egoi
                 , m
                 , state = false
                 , tickLength
@@ -9,14 +10,14 @@ class EndGameOrb extends Orb{
                 , patch = 3}){
       super({
           message: m
-        , fillColor: "#353535"
-        , textColor: "#fa9b9b"
+        , fillColor: colors.background
+        , textColor: colors.pink
         , theta: i*2*Math.PI/7
         , show: true
-        , radius: 1.5*geometry.ORB_MAX_RADIUS
+        , radius: 1.25*geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS
       });
-    this.outlineColor = "#fa9b9b";
+    this.outlineColor = colors.outline;
     this.tickLength = tickLength;
     this.parts = parts;
     this.state = state;
@@ -24,13 +25,14 @@ class EndGameOrb extends Orb{
     this.parent = parent;
     this.chordDisplayID = null;
     this.patch = patch;
+    this.egoi = egoi;
 
 
   }
 
   resize(){
     this.semiMajorAxis = 4*geometry.RADIUS;
-    this.radius = geometry.ORB_MAX_RADIUS;
+    this.radius = 1.25*geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters, this.message, 24, this.radius * 2 - 5)
     this.primaryX = CX;
     this.primaryY = CY;
@@ -42,28 +44,40 @@ class EndGameOrb extends Orb{
     var temp = this.fillColor;
     this.fillColor = this.textColor;
     this.textColor = temp;
-    this.outlineColor = this.textColor;
   }
 
   onClick(){
     /* if inside execute new loop or function */
-    this.invertColors();
-    this.state = !this.state;
-    for(var i = 0; i < this.parts.length; i ++){
-      this.parts[i].part.mute = !this.parts[i].part.mute;
-      }
-    if(this.state == true){
-      for(var i = 0; i < musician.EndSynth.length; i ++)
-        musician.EndSynth[i].set(musician.program[this.patch]);
-      this.transpoInit();
+    switch(this.state){
+      case true:
+        this.deactivate();
+        break;
+      case false:
+        this.invertColors();
+        this.parent.ping(this.egoi);
+        break;
     }
-    if(this.state == false){
+  }
+
+  activate(){
+    this.state = true;
+    for(var i = 0; i < this.parts.length; i ++)
+      this.parts[i].part.mute = false;
+    this.transpoInit();
+  }
+
+  deactivate(){
+    this.fillColor = colors.background;
+    this.textColor = colors.pink;
+    if(this.state == true){
+      for(var i = 0; i < this.parts.length; i ++)
+        this.parts[i].part.mute = true;
       Tone.Transport.stop();
       Tone.Transport.clear(this.chordDisplayID);
       this.parent.egcd.show = false;
       this.parent.egcd.trexIndice = null;
+      this.state = false;
     }
-
   }
 
   display(){

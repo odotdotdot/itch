@@ -8,7 +8,7 @@ let SERIAL_RECORD,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 8,
+    GAME_DURATION_IN_TURNS = 2,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -333,8 +333,8 @@ let igmgr;
   function checkIfGameIsOver(){
     if(composer.turnsPrevious.length == 3+GAME_DURATION_IN_TURNS && GAME_IS_NOT_YET_OVER){
       GAME_IS_NOT_YET_OVER = false;
-      egmgr = new EndGameMgmt();
       END_GAME = true;
+      egmgr = new EndGameMgmt();
       }
 
     else{
@@ -381,6 +381,7 @@ let igmgr;
 
     lesserOrbs = [];
     currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+    currentKeyOrb.velocity = Math.PI/2056;
     opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
     homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
     scoreKeeper = new ScoreKeeper();
