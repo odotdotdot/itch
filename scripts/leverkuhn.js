@@ -297,6 +297,7 @@ let igmgr;
       if(score.modulation > 0){
         hexes.forEach( e =>{ e.hexSpelling()} );
         currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+        currentKeyOrb.velocity = Math.PI/2056;
         currentKeyOrb.setRadius(.7*geometry.ORB_MAX_RADIUS);
       }
       var loi = score.loi;
