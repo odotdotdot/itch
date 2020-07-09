@@ -137,7 +137,7 @@ let igmgr;
     }
 
     if(IN_GAME){
-      if(!DIRECTIONS){
+      if(!DIRECTIONS && me.isMyTurn){
         //voice movement
         for(var i = 0; i < voix.length; i ++)
           if( voix[i].isInside(mouseX, mouseY) ){

@@ -12,7 +12,7 @@ class LesserKeyOrb extends Orb{
           , show: true
         });
     this.id = id;
-    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2);
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 10);
   }
 
   setAxis(){
@@ -23,7 +23,7 @@ class LesserKeyOrb extends Orb{
 
   setRadius(n){
     this.radius = n;
-    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 5);
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 10);
   }
 
   setTheta(n){
@@ -34,7 +34,7 @@ class LesserKeyOrb extends Orb{
 
   resize(x = geometry.KEYWHEEL_X, y = geometry.KEYWHEEL_Y, coefficient=geometry.KEYWHEEL_DIAMETER){
     this.radius = .7 * geometry.ORB_MAX_RADIUS;
-    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2);
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 10);
     this.primaryX = x;
     this.primaryY = y;
     this.semiMajorAxis = this.semiMajorConstant*coefficient;

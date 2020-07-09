@@ -30,16 +30,20 @@ class ChordDisplay{
   setChord(theoryRecord, ck){
     if(theoryRecord>>>12 < 12){
       var rootPitchChromatic = theoryRecord>>>12;
-      var spellingRule =  (spelling.spelling[ck - (Math.floor(ck/12)*(ck - ((ck-9)%12)))] >>> (2*rootPitchChromatic)) & 0x00000003;
+      var spellingRule =  (spelling.spelling[ck] >>> (2*rootPitchChromatic)) & 0x00000003;
       switch(spellingRule){
         //natural
-          case 0: this.root = spelling.pitchChromaticToLetter[rootPitchChromatic]; break;
+          case 0:
+            this.root = spelling.pitchChromaticToLetter[rootPitchChromatic];
+            break;
         //sharp
-          case 1: this.root = spelling.pitchChromaticToLetter[ (rootPitchChromatic-1 + 12) %12 ]; break;
+          case 1:
+            this.root = spelling.pitchChromaticToLetter[ (rootPitchChromatic-1 + 12) %12 ];
+            break;
         //flat
-          case 2: this.root = spelling.pitchChromaticToLetter[ (rootPitchChromatic+1) %12 ]; break;
-        //out of key. should look at voice movement
-          case 3: this.root = spelling.pitchChromaticToLetter[ (rootPitchChromatic-1 + 12) %12 ]; break;
+          case 2:
+            this.root = spelling.pitchChromaticToLetter[ (rootPitchChromatic+1) %12 ];
+            break;
       }
       this.accent = spelling.accents[spellingRule];
     }

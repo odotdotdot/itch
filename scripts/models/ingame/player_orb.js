@@ -26,11 +26,11 @@ class PlayerOrb extends Orb{
 
     this.score+=n;
 
-    this.setMessage(this.score);
-    this.twin.setMessage(this.twin.score);
+    this.setMessage(this.score.toString());
+    this.twin.setMessage(this.twin.score.toString());
 
-    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2-5);
-    this.twin.tS = utility.setTextSize(fonts.letters,this.twin.message,24,this.twin.radius*2-5);
+    this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2 - 10);
+    this.twin.tS = utility.setTextSize(fonts.letters,this.twin.message,24,this.twin.radius*2 - 10);
 
     this.vel = 5;
     this.r = 1.5*Math.PI + Math.sin(Math.random()*2*Math.PI)*0.125*Math.random()*Math.PI*Math.sign(n);

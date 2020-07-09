@@ -38,7 +38,7 @@ class Hex {
   }
   hexSpelling(){
       var root = "";
-      var spellingRule =  (spelling.spelling[CURRENT_KEY - (Math.floor(CURRENT_KEY/12)*(CURRENT_KEY - ((CURRENT_KEY-9)%12)))] >> (2*this.pitchChromatic)) & 0x00000003;
+      var spellingRule =  (spelling.spelling[CURRENT_KEY] >> (2*this.pitchChromatic)) & 0x00000003;
       switch(spellingRule){
         //natural
           case 0: root = spelling.pitchChromaticToLetter[this.pitchChromatic]; break;
@@ -46,8 +46,6 @@ class Hex {
           case 1: root = spelling.pitchChromaticToLetter[ (this.pitchChromatic-1 + 12) %12 ]; break;
         //flat
           case 2: root = spelling.pitchChromaticToLetter[ (this.pitchChromatic+1) %12 ]; break;
-        //out of key. should look at voice movement
-          case 3: root = spelling.pitchChromaticToLetter[ (this.pitchChromatic-1 + 12) %12 ]; break;
       }
       this.root = root;
       this.accent = spelling.accents[spellingRule];
