@@ -459,3 +459,26 @@ let igmgr;
     me.orb.setTwin(opponent.orb);
     opponent.orb.setTwin(me.orb);
   }
+  function spellingAudit(){
+        for(var i = 0; i < 24; i ++){
+          var keyString = spelling.pitchChromaticToLetter[i] + ": "
+          for(var p = 0; p < 12; p ++ ){
+            var root = ""
+            var spellingRule =  (spelling.spelling[i] >> (2*p)) & 0x00000003;
+              switch(spellingRule){
+              //natural
+                case 0:
+                  root = spelling.pitchChromaticToLetter[p];
+                  break;
+              //sharp
+                case 1: root = spelling.pitchChromaticToLetter[ (p-1 + 12) %12 ]; break;
+              //flat
+                case 2: root = spelling.pitchChromaticToLetter[ (p+1) %12 ]; break;
+          }
+          root += spelling.accents[spellingRule];
+          root += " "
+          keyString+=root
+          }
+          console.log(keyString);
+        }
+      }

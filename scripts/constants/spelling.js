@@ -1,10 +1,10 @@
 const spelling = {  pitchChromaticToLetter : ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B","c", "c#", "d", "eb", "e", "f", "f#", "g", "g#", "a", "bb", "b"]
-                  , spelling : [0x211084
-                               ,0x222088
-                               ,0x111044
-                               ,0x222088
-                               ,0x221084
-                               ,0x2330CC
+                  , spelling : [0x211084 //C
+                               ,0x222088 //Db
+                               ,0x111044 //D
+                               ,0x222088 //Eb
+                               ,0x111044 //E
+                               ,0x221084 //F
                                ,0x111444
                                ,0x211044
                                ,0x222088

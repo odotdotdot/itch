@@ -94,6 +94,7 @@ class StaffDisplay{
           //accent
             textAlign(CENTER, CENTER);
             textFont(fonts.accents);
+            textSize(16);
             text(spelling.accents[ ((fN&0xf00) >>> 8)&0xf],
               this.x + 8*geometry.STAFFSPACING + (geometry.STAFFLENGTH-8*geometry.STAFFSPACING)/4*j - geometry.STAFFSPACING,
               this.staffY(fN) - textDescent());
