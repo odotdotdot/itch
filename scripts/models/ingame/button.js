@@ -16,9 +16,9 @@ class Button{
     this.color_B = colors.outline;
 
     this.x = this.linkID > 0 ? this.parent.buttons[this.linkID-1].x - .5*this.parent.buttons[this.linkID-1].w - 20 - .5*this.w :
-             W - 20 - .5*this.w;
+             W - 50 - .5*this.w;
 
-    this.y = H - 20;
+    this.y = geometry.STAFF_Y + 3*geometry.RADIUS;
 
     this.parent.visibles.push(this);
     this.parent.clickables.push(this);
@@ -62,7 +62,7 @@ class Button{
   resize(){
     this.x = this.linkID > 0 ? this.parent.buttons[this.linkID-1].x - .5*this.parent.buttons[this.linkID-1].w - 20 - .5*this.w :
              W - 20 - .5*this.w;
-    this.y = H - 20;
+    this.y = geometry.STAFF_Y + 3*geometry.RADIUS;
   }
 
 }

@@ -112,7 +112,7 @@ let igmgr;
       me.resize();
       opponent.resize();
       scoreKeeper.resize();
-
+      logo.resize();
       igmgr.reposition();
 
 
@@ -120,10 +120,12 @@ let igmgr;
     }
 
     if(END_GAME){
+        logo.resize();
         egmgr.reposition();
     }
 
     if(PRE_GAME){
+        logo.resize();
         pgmgr.reposition();
     }
   }
@@ -256,8 +258,8 @@ let igmgr;
     }
   }
 
-    if(keyCode === TAB){
-      saveCanvas();}
+    //if(keyCode === TAB){
+      //saveCanvas();}
   return false;
 }
 
@@ -369,7 +371,7 @@ let igmgr;
   function _init_welcome(){
     _init_geometry();
     pgmgr = new PregameManager();
-    logo = new Logo(50,50);
+    logo = new Logo();
     musician = new Musician();
   }
   function _init_leverkuhn(){
@@ -407,22 +409,22 @@ let igmgr;
   function _init_voix(){
     voix.push(new Token({id:0
                         , x:.5*W +  5.5*geometry.APOTHEM
-                        , y: H - 2*geometry.RADIUS
+                        , y: H - 3*geometry.RADIUS
                         , color:colors.bass
                         , message:'bass'}));
     voix.push(new Token({id:1
                         , x:.5*W +  7.5*geometry.APOTHEM
-                        , y: H - 2*geometry.RADIUS
+                        , y: H - 3*geometry.RADIUS
                         , color:colors.tenor
                         , message:'tenor'}));
     voix.push(new Token({id:2
                         , x:.5*W +  9.5*geometry.APOTHEM
-                        , y: H - 2*geometry.RADIUS
+                        , y: H - 3*geometry.RADIUS
                         , color:colors.alto
                         , message:'alto'}));
     voix.push(new Token({id:3
                         , x:.5*W +  11.5*geometry.APOTHEM
-                        , y: H - 2*geometry.RADIUS
+                        , y: H - 3*geometry.RADIUS
                         , color:colors.soprano
                         , message:'soprano'}));
   }
@@ -468,26 +470,3 @@ let igmgr;
     me.orb.setTwin(opponent.orb);
     opponent.orb.setTwin(me.orb);
   }
-  function spellingAudit(){
-        for(var i = 0; i < 24; i ++){
-          var keyString = spelling.pitchChromaticToLetter[i] + ": "
-          for(var p = 0; p < 12; p ++ ){
-            var root = ""
-            var spellingRule =  (spelling.spelling[i] >> (2*p)) & 0x00000003;
-              switch(spellingRule){
-              //natural
-                case 0:
-                  root = spelling.pitchChromaticToLetter[p];
-                  break;
-              //sharp
-                case 1: root = spelling.pitchChromaticToLetter[ (p-1 + 12) %12 ]; break;
-              //flat
-                case 2: root = spelling.pitchChromaticToLetter[ (p+1) %12 ]; break;
-          }
-          root += spelling.accents[spellingRule];
-          root += " "
-          keyString+=root
-          }
-          console.log(keyString);
-        }
-      }
