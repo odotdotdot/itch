@@ -20,7 +20,7 @@ let SERIAL_RECORD,
     PLAY_BY_EAR = false;
     SHOW_DIATONICS = false;
 
-let W, H, CX, CY;
+let W, H, CX, CY, Xo, Yo;
 let fonts;
 let hexes = [];
 let voix = [];
@@ -114,6 +114,8 @@ let igmgr;
       scoreKeeper.resize();
 
       igmgr.reposition();
+
+
 
     }
 
@@ -253,6 +255,9 @@ let igmgr;
         }
     }
   }
+
+    if(keyCode === TAB){
+      saveCanvas();}
   return false;
 }
 
@@ -369,6 +374,8 @@ let igmgr;
   }
   function _init_leverkuhn(){
     Tone.Transport.PPQ = 4;
+    Xo = windowWidth;
+    Yo = windowHeight;
     _init_geometry();
     _init_styling();
     _init_voix();
@@ -424,6 +431,8 @@ let igmgr;
     blossom.helics.forEach( (e,index) => {hexes.push(new Hex( {index: index, x:e[0], y:e[1]} ) );} );
   }
   function _init_geometry(){
+    Xo = W;
+    Yo = H;
     W = windowWidth;
     H = windowHeight;
     CX = W * .5;

@@ -70,5 +70,7 @@ class Token {
           resize(){
             this.radius = 1.25 * geometry.RADIUS;
             this.text_size = utility.setTextSize(fonts.letters, this.message, 24, this.radius);
+            this.x = this.x * W/Xo;
+            this.y = this.y * H/Yo;
           }
   }

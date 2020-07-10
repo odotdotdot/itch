@@ -100,8 +100,8 @@ class ComputerOpponent{
           voix[i].y += this.tokenMovementSpeed * deltaY;
           voix[i].hexCheck();
 
-      if(deltaX < 5 && deltaY < 5)
-        this.targetSerialsReached|= 1<<i;
+      if(deltaX < 5 && deltaY < 5){
+        this.targetSerialsReached|= 1<<i;}
 
       MIDI_RECORD = composer.midiTransfigure(composer.pitchChromify(SERIAL_RECORD));
       THEORY_RECORD = theoretician.theoryEncoding(MIDI_RECORD);
