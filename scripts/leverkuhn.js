@@ -16,7 +16,6 @@ let SERIAL_RECORD,
     END_GAME = false,
     GAME_IS_NOT_YET_OVER = true,
     TPN = 3;
-    DIRECTIONS = true;
     PLAY_BY_EAR = false;
     SHOW_DIATONICS = false;
 
@@ -141,7 +140,7 @@ let igmgr;
     }
 
     if(IN_GAME){
-      if(!DIRECTIONS && me.isMyTurn){
+      if(me.isMyTurn){
         //voice movement
         for(var i = 0; i < voix.length; i ++)
           if( voix[i].isInside(mouseX, mouseY) ){
@@ -409,22 +408,22 @@ let igmgr;
   function _init_voix(){
     voix.push(new Token({id:0
                         , x:.5*W +  5.5*geometry.APOTHEM
-                        , y: H - 3*geometry.RADIUS
+                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
                         , color:colors.bass
                         , message:'bass'}));
     voix.push(new Token({id:1
                         , x:.5*W +  7.5*geometry.APOTHEM
-                        , y: H - 3*geometry.RADIUS
+                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
                         , color:colors.tenor
                         , message:'tenor'}));
     voix.push(new Token({id:2
                         , x:.5*W +  9.5*geometry.APOTHEM
-                        , y: H - 3*geometry.RADIUS
+                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
                         , color:colors.alto
                         , message:'alto'}));
     voix.push(new Token({id:3
                         , x:.5*W +  11.5*geometry.APOTHEM
-                        , y: H - 3*geometry.RADIUS
+                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
                         , color:colors.soprano
                         , message:'soprano'}));
   }

@@ -1,23 +1,21 @@
 class InGameManager{
   constructor(){
+    OPPONENT_HOME_KEY = this.weightedRandomKey(HOME_KEY);
+    STARTING_KEY = this.findStartKey(HOME_KEY, OPPONENT_HOME_KEY);
+    CURRENT_KEY = STARTING_KEY;
+
     this.visibles = []
     this.clickables = []
     this.respositionables = []
     this.buttons = [];
+    this.conditions = [];
 
     this.mask = new Mask({parent: this, type: 'rect', init_alpha: 0xff});
-    this.directions = new Directions(this)
+    this.directions = new Tutorial(this)
 
-    this.buttons.push(new Button(this, 0, 'help', ()=>{this.directions = new Directions(this); DIRECTIONS = true;}))
+    this.buttons.push(new Button(this, 0, 'help', ()=>{}))
     this.buttons.push(new Button(this, 1, 'play by ear', ()=>{PLAY_BY_EAR = !PLAY_BY_EAR}))
     this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{SHOW_DIATONICS = !SHOW_DIATONICS}))
-
-
-
-
-    OPPONENT_HOME_KEY = this.weightedRandomKey(HOME_KEY);
-    STARTING_KEY = this.findStartKey(HOME_KEY, OPPONENT_HOME_KEY);
-    CURRENT_KEY = STARTING_KEY;
 
     this.mask.fade_down( ()=>{
 

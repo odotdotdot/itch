@@ -9,7 +9,7 @@ class PregameManager{
     this.visibles = [this.centerText];
     this.firstTime = true;
     this.mask = new Mask({parent: this, type: 'rect'});
-    this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:3 });
+    this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:7 });
 
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
@@ -64,15 +64,17 @@ class PregameManager{
   }
 
   bangHomeKey(){
+    var pitchCardinal = (HOME_KEY % 12)
+    var octave = pitchCardinal < 9 ? 3 : 2
     var chord = [
-       (HOME_KEY % 12) + 36
-      ,(HOME_KEY % 12) + 48
-      ,(HOME_KEY % 12) + 48 + 7
-      ,(HOME_KEY % 12) + 48 + 16 - Math.floor(HOME_KEY/12)
-    ]
+       pitchCardinal + 12*octave
+      ,pitchCardinal + 12*(octave + 1)
+      ,pitchCardinal + 12*(octave + 1) + 7
+      ,pitchCardinal + 12*(octave + 1) + 16 - Math.floor(HOME_KEY/12)
+    ].map( e=> musician.makeTone(e) );
 
-    for(var i = 0; i < musician.synth.length; i ++)
-      musician.synth[i].triggerAttackRelease(musician.makeTone(chord[i]), "4n");
+
+    musician.kalimba.triggerAttackRelease(chord, "2n");
   }
 
   reposition(){

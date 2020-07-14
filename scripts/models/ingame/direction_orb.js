@@ -6,6 +6,7 @@ class DirectionOrb extends Orb{
                 ,semiMajorAxis
                 ,parent
                 ,semiMajorConstant
+                ,callback
                } = {} ){
     super({
       message: message
@@ -21,10 +22,13 @@ class DirectionOrb extends Orb{
     });
 
     this.parent = parent;
+    this.callback = callback;
     this.state = false;
     this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
     this.parent.parent.clickables.push(this);
     this.parent.parent.respositionables.push(this);
+    this.parent.parent.visibles.push(this);
+
   }
 
   invertColors(){
@@ -41,7 +45,7 @@ class DirectionOrb extends Orb{
 
   onRelease(){
     this.invertColors();
-    this.parent.ping(this.message);
+    this.parent.exec(this.callback);
     this.state = false;
   }
 
@@ -53,5 +57,9 @@ class DirectionOrb extends Orb{
     this.semiMajorAxis = geometry.RADIUS * this.semiMajorConstant;
     this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
     this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
+  }
+  move(x,y){
+    this.u = x;
+    this.v = y;
   }
 }

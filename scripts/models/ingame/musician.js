@@ -22,7 +22,10 @@ class Musician{
           this.EndSynth[i].toMaster();
 
         this.recall = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
+
         this.vibeSynth = new Tone.FMSynth().toMaster();
+
+        this.kalimba = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
 
 
     //EFFECTS
@@ -37,7 +40,7 @@ class Musician{
 
     //SYNTH SETTINGS
         this.vibeSynth.set(this.program[0]);
-
+        this.kalimba.set(this.program[5]);
         this.recall.set(this.program[1]);
 
         for(var i = 0; i < this.synth.length; i ++)
@@ -60,6 +63,7 @@ class Musician{
       chord.push(this.makeTone(utility.getByte(i,midiRecord)));
     return chord;
   }
+
   scoreVoiceMovement(midiRecord){
     if(midiRecord != this.lastMidiRecord){
       for(var i = 0; i < 4; i ++){

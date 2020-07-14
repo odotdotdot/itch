@@ -118,4 +118,27 @@ const PROGRAM =
         "release": 1.5,
     }
 }
+,
+{ // 5 : KALIMBA +
+"harmonicity":8,
+"modulationIndex": 2,
+"oscillator" : {
+    "type": "sine"
+},
+"envelope": {
+    "attack": 0.001,
+    "decay": 2,
+    "sustain": 0.1,
+    "release": 6
+},
+"modulation" : {
+    "type" : "square"
+},
+"modulationEnvelope" : {
+    "attack": 0.002,
+    "decay": 0.2,
+    "sustain": 0,
+    "release": 0.2
+}
+}
 ]

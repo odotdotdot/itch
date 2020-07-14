@@ -72,4 +72,8 @@ const utility = {
             console.log(keyString);
           }
         }
+  , keyCardinalToString: (k)=> {
+            var q = k < 12 ? 'major' : 'minor'
+            return spelling.pitchChromaticToLetter[k] + " " + q
+  }
 }
