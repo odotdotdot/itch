@@ -25,10 +25,8 @@ class DirectionOrb extends Orb{
     this.callback = callback;
     this.state = false;
     this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
-    this.parent.parent.clickables.push(this);
-    this.parent.parent.respositionables.push(this);
-    this.parent.parent.visibles.push(this);
-
+    this.parent.parent.clickables.push(this)
+    this.parent.parent.repositionables.push(this)
   }
 
   invertColors(){

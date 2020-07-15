@@ -6,7 +6,7 @@ class InGameManager{
 
     this.visibles = []
     this.clickables = []
-    this.respositionables = []
+    this.repositionables = []
     this.buttons = [];
     this.conditions = [];
 
@@ -18,13 +18,20 @@ class InGameManager{
     this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{SHOW_DIATONICS = !SHOW_DIATONICS}))
 
     this.mask.fade_down( ()=>{
-
+      this.organize_visibles()
     });
   }
 
+  organize_visibles(){
+    console.log(this.visibles)
+    this.visibles.splice(this.visibles.indexOf(this.mask), 1)
+    this.visibles.splice(0, 0, cd, sd, logo, me, opponent, scoreKeeper)
+    console.log(this.visibles)
+  }
+
   reposition(){
-    for(var i = 0; i < this.respositionables.length; i ++)
-      this.respositionables[i].resize();
+    for(var i = 0; i < this.repositionables.length; i ++)
+      this.repositionables[i].resize();
   }
   weightedRandomKey(exclusion){
       var exclusions = [HOME_KEY

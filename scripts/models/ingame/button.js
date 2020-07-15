@@ -22,7 +22,7 @@ class Button{
 
     this.parent.visibles.push(this);
     this.parent.clickables.push(this);
-    this.parent.respositionables.push(this);
+    this.parent.repositionables.push(this);
   }
 
   onClick(){

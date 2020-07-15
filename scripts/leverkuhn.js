@@ -56,14 +56,15 @@ let igmgr;
           fill(colors.outline_plus)
           hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.display() );}
 
-        cd.display();
-        sd.display();
+        //cd.display();
+        //sd.display();
         voix.forEach( e => { e.display(); });
 
         //orbs
-            lesserOrbs.forEach( e =>{ e.orbit(); e.display();} )
-            currentKeyOrb.orbit();currentKeyOrb.display();
-            opponentKeyOrb.orbit();opponentKeyOrb.display();
+            lesserOrbs.forEach( e =>{ e.orbit(); } )
+            //now in igmgr : e.display();
+            currentKeyOrb.orbit();//currentKeyOrb.display();
+            opponentKeyOrb.orbit();//opponentKeyOrb.display();
             if(!THROW_ACTION){
               homeKeyOrb.friction();
               homeKeyOrb.orbit();
@@ -71,16 +72,16 @@ let igmgr;
             if(THROW_ACTION){
               homeKeyOrb.drag();
             }
-            homeKeyOrb.display();
+            //homeKeyOrb.display();
 
         if(cpu.CPU_MOVING_TOKENS)
           cpu.move_tokens();
 
         displayHexLabels();
-        logo.display();
-        me.display();
-        opponent.display();
-        scoreKeeper.display();
+        //logo.display();
+        //me.display();
+        //opponent.display();
+        //scoreKeeper.display();
 
         for(var i = 0; i < igmgr.visibles.length; i ++)
           igmgr.visibles[i].display();
@@ -154,9 +155,10 @@ let igmgr;
             THROW_ACTION = true;
       }
 
-      igmgr.clickables.forEach( e => {
-        if(e.isInside(mouseX, mouseY))
-          e.onClick();
+      igmgr.visibles.forEach( e => {
+        if(igmgr.clickables.includes(e))
+          if(e.isInside(mouseX, mouseY))
+            e.onClick();
       });
 
     }
@@ -208,10 +210,11 @@ let igmgr;
           homeKeyOrb.throwY.length = 0;
           turnSignified(me);
         }
-      igmgr.clickables.forEach( e => {
-        if(e.isInside(mouseX, mouseY))
-          e.onRelease();
-      });
+        igmgr.visibles.forEach( e => {
+          if(igmgr.clickables.includes(e))
+            if(e.isInside(mouseX, mouseY))
+              e.onRelease();
+        });
     }
 
 

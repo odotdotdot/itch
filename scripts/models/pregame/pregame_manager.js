@@ -33,10 +33,11 @@ class PregameManager{
   transition_to_in_game(){
     this.hideOrbs();
     this.mask.fade_up( () => {
-      igmgr = new InGameManager();
       PRE_GAME = false;
       IN_GAME = true;
-      _init_leverkuhn();
+      igmgr = new InGameManager();
+     _init_leverkuhn();
+     igmgr.directions.attach_leverkuhn_objects();
     } );
   }
 
