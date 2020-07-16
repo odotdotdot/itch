@@ -37,7 +37,6 @@ class PregameManager{
       IN_GAME = true;
       igmgr = new InGameManager();
      _init_leverkuhn();
-     igmgr.directions.attach_leverkuhn_objects();
     } );
   }
 

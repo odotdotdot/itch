@@ -48,7 +48,7 @@ class Blossom{
                       var checkingOut = this.index_library[utility.getRandomInt(this.index_library.length - 1)];
                       this.index_library.splice(this.index_library.indexOf(checkingOut), 1);
                       hexes.push( new Hex({
-                        index: this.assignment_index
+                         index: this.assignment_index
                         ,x: this.not_permanent[checkingOut][0]
                         ,y: this.not_permanent[checkingOut][1]
                         ,isCopy:true
@@ -69,6 +69,7 @@ class Blossom{
                     if(e.isCopy && !e.isActive && !hexes.find( h => h.serial == e.isCopyOf).isActive ){
                       hexes[e.isCopyOf].hasCopy = false;
                       hexes.splice(index, 1);
+                      hexLabels.splice(hexLabels.indexOf(hexLabels.find( l => l.serial == e.serial)), 1)
                       this.index_library.push(e.impermanent_index);
                     }
     });

@@ -43,7 +43,7 @@ class DirectionOrb extends Orb{
 
   onRelease(){
     this.invertColors();
-    this.parent.exec(this.callback);
+    this.parent.ping(this.message);
     this.state = false;
   }
 

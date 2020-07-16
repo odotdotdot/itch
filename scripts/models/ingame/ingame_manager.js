@@ -10,22 +10,58 @@ class InGameManager{
     this.buttons = [];
     this.conditions = [];
 
-    this.mask = new Mask({parent: this, type: 'rect', init_alpha: 0xff});
-    this.directions = new Tutorial(this)
-
     this.buttons.push(new Button(this, 0, 'help', ()=>{}))
     this.buttons.push(new Button(this, 1, 'play by ear', ()=>{PLAY_BY_EAR = !PLAY_BY_EAR}))
-    this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{SHOW_DIATONICS = !SHOW_DIATONICS}))
+    this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{
+      SHOW_DIATONICS = !SHOW_DIATONICS
+      if(SHOW_DIATONICS){
+        hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
+      if(!SHOW_DIATONICS)
+        hexes.forEach( e => {e.fillColor = colors.outline});
+
+    }))
+
+    this.mask = new Mask({parent: this, type: 'rect', init_alpha: 0xff});
+
+    this.tutorial = new Tutorial(this);
+    this.ping(0)
 
     this.mask.fade_down( ()=>{
-      this.organize_visibles()
-    });
+      });
   }
 
-  organize_visibles(){
-    console.log(this.visibles)
-    this.visibles.splice(this.visibles.indexOf(this.mask), 1)
-    this.visibles.splice(0, 0, cd, sd, logo, me, opponent, scoreKeeper)
+
+  ping(i){
+    switch (i) {
+      case 0:
+        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask),0, hexes, hexLabels, logo)
+        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask) + 1, 0, this.tutorial.nextOrb)
+        break;
+      case 1:
+        this.visibles.splice(this.visibles.indexOf(this.tutorial.nextOrb) + 1, 0, this.tutorial.previousOrb)
+        break;
+      case 2:
+        break;
+      case 3:
+        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask) + 1, 0, cd, homeKeyOrb)
+        break;
+      case 4:
+        this.visibles.splice(this.visibles.indexOf(homeKeyOrb) + 1, 0, opponentKeyOrb)
+        break;
+      case 5:
+        this.visibles.splice(this.visibles.indexOf(opponentKeyOrb) + 1, 0, currentKeyOrb)
+        break;
+      case 6:
+        this.visibles.splice(this.visibles.indexOf(hexes) + 1, 0, voix)
+        break;
+      case 7:
+        this.visibles.splice(this.visibles.indexOf(cd) + 1, 0, sd)
+        break;
+      case 8:
+        this.visibles.splice(this.visibles.length, 0, me, opponent, scoreKeeper)
+        break;
+
+    }
     console.log(this.visibles)
   }
 

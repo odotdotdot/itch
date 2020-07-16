@@ -39,6 +39,13 @@ class Tutorial{
 
   }
 
+  ping(message){
+    if(message == 'next')
+      this.nextDirection();
+    if(message == 'prev')
+      this.previousDirection()
+  }
+
   nextDirection(){
     //pop the last direction from visibles
       this.parent.visibles.splice(this.parent.visibles.indexOf(this.directions[this.index]), 1)
@@ -48,9 +55,8 @@ class Tutorial{
       musician.kalimba.triggerAttackRelease(this.intervals[this.index], '4n' )
     //push the new direction to visibles
       this.parent.visibles.push(this.directions[this.index]);
-    //if it has an orb to push or pop, do so
-      this.directions[this.index].push_to_visible.forEach( e => {this.pushToParent(e)});
-      this.directions[this.index].pop_from_visible.forEach( e => {this.popFromParent(e)});
+
+      this.parent.ping(this.index)
   }
 
   previousDirection(){
@@ -58,61 +64,51 @@ class Tutorial{
       this.parent.visibles.splice(this.parent.visibles.indexOf(this.directions[this.index]), 1)
     //decrement the index
       this.index--
+      if(this.index < 0){this.index == 0; this.parent.visibles.splice(this.parent.visibles.indexOf(this.previousOrb), 1)}
     //play the decrement sound
       musician.kalimba.triggerAttackRelease(this.intervals[this.index - 1], '4n' )
     //push the old/new direction to visibles
       this.parent.visibles.push(this.directions[this.index]);
-    //if it has an orb to push or pop, do so
-      this.directions[this.index].push_to_visible.forEach( e => {this.pushToParent(e)});
-      this.directions[this.index].pop_from_visible.forEach( e => {this.popFromParent(e)});
-  }
 
-  popFromParent(obj){
-    if(this.parent.visibles.includes(obj))
-      this.parent.visibles.splice(this.parent.visibles.indexOf(obj), 1);
-  }
-
-  pushToParent(obj){
-    if(!this.parent.visibles.includes(obj))
-      this.parent.visibles.push(obj);
-  }
-
-  exec(someFunction){
-    someFunction.call(this);
   }
 
   init_directions(){
-
+    //0
     this.directions.push(new Direction({
                                 text: 'Leverkuhn is a game of composition and modulation.'
-                               ,push_to_visible: [this.nextOrb]
-                               ,pop_from_visible: [this.previousOrb]
                                }))
+    //1
     this.directions.push(new Direction({
-                                text: 'You will write a song with your opponent.'
-                               ,push_to_visible: [this.previousOrb]
+                                text: 'You will compose a song with your opponent.'
                                }))
-   this.directions.push(new Direction({
-                                text: 'Your goal is to assert your home key in the context of that composition.'
+    //2
+    this.directions.push(new Direction({
+                                text: 'Your goal is to bring the song as elegantly as possible into your home key.'
                               }))
+    //3
     this.directions.push(new Direction({
-                                text: 'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY)
+                                text: 'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY) + '.'
                                 }))
+    //4
     this.directions.push(new Direction({
-                                 text: 'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY)
+                                 text: 'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY) + '.'
                                }))
-   this.directions.push(new Direction({
-                                 text: 'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY)
+    //5
+    this.directions.push(new Direction({
+                                 text: 'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'
                               }))
-   this.directions.push(new Direction({
+    //6
+    this.directions.push(new Direction({
                                  text: 'It\'s your turn. Move the voice tokens to create a chord.'
-                                ,y:50
-                                ,pop_from_visible: [this.nextOrb, this.previousOrb, this.mask]
-                             }))
-   this.directions.push(new Direction({
+                              }))
+    //7
+    this.directions.push(new Direction({
                                  text: 'Click the notes on the staff wheel to hear it sound.'
-                                ,y: 50
                              }))
+    //8
+    this.directions.push(new Direction({
+                                 text: 'When you\'re satisfied, click your score orb to signify your turn'
+                              }))
   }
 
   init_intervals(){
@@ -132,13 +128,8 @@ class Tutorial{
     ].map( e => [ musician.makeTone(e[0] + o*12), musician.makeTone(e[1] + o*12) ])
   }
 
-  attach_leverkuhn_objects(){
-    this.directions[3].push_to_visible = [homeKeyOrb]
-    this.directions[4].push_to_visible = [opponentKeyOrb]
-    this.directions[5].push_to_visible = [currentKeyOrb]
-  }
-
   resize(){
     this.directions.forEach( e=> e.resize() )
   }
+
 }

@@ -22,6 +22,7 @@ let SERIAL_RECORD,
 let W, H, CX, CY, Xo, Yo;
 let fonts;
 let hexes = [];
+let hexLabels = [];
 let voix = [];
 let igmgr;
 
@@ -48,43 +49,27 @@ let igmgr;
 
     if(IN_GAME){
         background(colors.background);
-
-        fill(colors.outline)
-        hexes.forEach( e => { e.display(); });
-
-        if(SHOW_DIATONICS){
-          fill(colors.outline_plus)
-          hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.display() );}
-
-        //cd.display();
-        //sd.display();
-        voix.forEach( e => { e.display(); });
-
         //orbs
-            lesserOrbs.forEach( e =>{ e.orbit(); } )
-            //now in igmgr : e.display();
-            currentKeyOrb.orbit();//currentKeyOrb.display();
-            opponentKeyOrb.orbit();//opponentKeyOrb.display();
-            if(!THROW_ACTION){
-              homeKeyOrb.friction();
-              homeKeyOrb.orbit();
-            }
-            if(THROW_ACTION){
-              homeKeyOrb.drag();
-            }
-            //homeKeyOrb.display();
+        lesserOrbs.forEach( e => {e.orbit();} )
+        currentKeyOrb.orbit();
+        opponentKeyOrb.orbit();
+        if(!THROW_ACTION){
+          homeKeyOrb.friction();
+          homeKeyOrb.orbit();
+        }
+        if(THROW_ACTION){
+          homeKeyOrb.drag();
+        }
 
         if(cpu.CPU_MOVING_TOKENS)
           cpu.move_tokens();
 
-        displayHexLabels();
-        //logo.display();
-        //me.display();
-        //opponent.display();
-        //scoreKeeper.display();
-
         for(var i = 0; i < igmgr.visibles.length; i ++)
-          igmgr.visibles[i].display();
+          if(Array.isArray(igmgr.visibles[i]))
+            igmgr.visibles[i].forEach( e=> e.display() )
+          else
+            igmgr.visibles[i].display();
+
       }
 
 
@@ -102,6 +87,7 @@ let igmgr;
 
     if(IN_GAME){
       hexes.forEach( e => e.resize());
+      hexLabels.forEach( e => e.resize());
       voix.forEach( e => e.resize());
       cd.resize()
       sd.resize()
@@ -210,9 +196,9 @@ let igmgr;
           homeKeyOrb.throwY.length = 0;
           turnSignified(me);
         }
-        igmgr.visibles.forEach( e => {
-          if(igmgr.clickables.includes(e))
-            if(e.isInside(mouseX, mouseY))
+
+        igmgr.clickables.forEach( e => {
+          if(igmgr.visibles.includes(e) && e.isInside(mouseX, mouseY))
               e.onRelease();
         });
     }
@@ -276,17 +262,6 @@ let igmgr;
   function diagonal(x){
     return -.5*H/W * x + .75*H;
   }
-  function displayHexLabels(){
-    push();
-    fill(colors.pink)
-    textFont(fonts.letters);
-    textSize(24);
-    hexes.forEach( e => { e.displayHexLetter(); });
-    textSize(.6 * 32)
-    textFont(fonts.accents)
-    hexes.forEach( e => { e.displayHexAccent(); });
-    pop();
-  }
   function turnSignified(playerWhoTookTurn){
       /* first, the theoretician conducts analysis.  this could result in a modulation
          the results of the analysis are applied to the player's score and all the feed back orbs are prepared
@@ -304,10 +279,14 @@ let igmgr;
       var score = theoretician.analyze(MIDI_RECORD, THEORY_RECORD, playerWhoTookTurn);
       scoreKeeper.scoreTurn(score, playerWhoTookTurn);
       if(score.modulation > 0){
-        hexes.forEach( e =>{ e.hexSpelling()} );
+        hexLabels.forEach( e =>{ e.hexSpelling()} );
         currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
+        igmgr.visibles.splice(igmgr.visibles.indexOf(currentKeyOrb), 1, currentKeyOrb)
         currentKeyOrb.velocity = Math.PI/2056;
         currentKeyOrb.setRadius(.7*geometry.ORB_MAX_RADIUS);
+        if(SHOW_DIATONICS){
+          hexes.forEach( e => {e.fillColor = colors.outline});
+          hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
       }
       var loi = score.loi;
       lesserOrbs = [];
@@ -327,6 +306,8 @@ let igmgr;
           e.semiMajorConstant = 11/12;
           e.resize();}
       });
+      //remove and then replace lesser orbs in in game manager visibles
+      igmgr.visibles.splice(igmgr.visibles.indexOf(lesserOrbs), 1, lesserOrbs)
       composer.commit(MIDI_RECORD);
       sd.commit(MIDI_RECORD);
       for(var i = 0; i < musician.synth.length; i ++)
