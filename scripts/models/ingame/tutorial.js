@@ -8,107 +8,151 @@ class Tutorial{
                      ,type : 'rect'
                      ,init_alpha : 220
     })
+    this.keyWheelMask = new Mask({
+                      mask_color : colors.background
+                     ,speed : 7
+                     ,parent: this
+                     ,type : 'circle'
+                     ,init_alpha : 220
+                     ,x: geometry.KEYWHEEL_X
+                     ,y: geometry.KEYWHEEL_Y
+                     ,radius: 8*geometry.RADIUS
+    })
+    this.staffWheelMask = new Mask({
+                      mask_color : colors.background
+                     ,speed : 7
+                     ,parent: this
+                     ,type : 'circle'
+                     ,init_alpha : 220
+                     ,x: geometry.STAFF_X
+                     ,y: geometry.STAFF_Y
+                     ,radius: 8*geometry.RADIUS
+    })
     this.parent.visibles.push(this.mask)
-    this.parent.repositionables.push(this)
     this.directions = []
     this.index = 0
     this.intervals = []
     this.init_intervals()
-    this.nextOrb = new DirectionOrb({
-                                message:'next'
-                               ,semiMajorAxis: 6.5*geometry.RADIUS
-                               ,semiMajorConstant : 6.5
-                               ,theta:0
-                               ,parent: this
-                               ,callback: this.nextDirection
-                            });
-    this.previousOrb = new DirectionOrb({
-                                message:'prev'
-                               ,semiMajorAxis: 6.5*geometry.RADIUS
-                               ,semiMajorConstant : 6.5
-                               ,theta:Math.PI
-                               ,parent: this
-                               ,callback: this.previousDirection
-                            });
+    this.activeDirection = null
 
-  this.init_directions()
-  this.parent.visibles.push(this.directions[this.index]);
-  this.directions[this.index].push_to_visible.forEach( e => {this.pushToParent(e)});
-  musician.kalimba.triggerAttackRelease(this.intervals[this.index], '4n' )
 
+  this.tutorialText = [
+    'Leverkuhn is a game of composition and modulation.'
+    ,'You will compose a song with your opponent.'
+    ,'Your goal is to bring the song as elegantly as possible into your home key.'
+    ,'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY) + '.'
+    ,'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY) + '.'
+    ,'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'
+    ,'Move the voice tokens to create a chord.'
+    ,'Click the notes to hear it sound.'
+    ,'If you need some help,\ntry the buttons in the corner.'
+    ,'When you\'re satisfied,\nclick your score orb to signify your turn'
+  ]
+
+  this.tutorialLocations = [
+     [CX,CY]
+    ,[CX,CY]
+    ,[CX,CY]
+    ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+    ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+    ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+    ,[CX - 2.5*geometry.RADIUS,CY]
+    ,[CX + 2.5*geometry.RADIUS,CY]
+    ,[CX - 2.5*geometry.RADIUS,CY]
+    ,[CX + 2.5*geometry.RADIUS,CY]
+  ]
+
+  this.tutorialAlignments = [
+     CENTER
+    ,CENTER
+    ,CENTER
+    ,RIGHT
+    ,RIGHT
+    ,RIGHT
+    ,RIGHT
+    ,LEFT
+    ,RIGHT
+    ,LEFT
+  ]
+
+  this.initDirections()
+  this.parent.repositionables.push(this)
 
   }
 
-  ping(message){
+  resize(){
+    this.keyWheelMask = new Mask({
+                      mask_color : colors.background
+                     ,speed : 7
+                     ,parent: this
+                     ,type : 'circle'
+                     ,init_alpha : 220
+                     ,x: geometry.KEYWHEEL_X
+                     ,y: geometry.KEYWHEEL_Y
+                     ,radius: 8*geometry.RADIUS
+    })
+    this.staffWheelMask = new Mask({
+                      mask_color : colors.background
+                     ,speed : 7
+                     ,parent: this
+                     ,type : 'circle'
+                     ,init_alpha : 220
+                     ,x: geometry.STAFF_X
+                     ,y: geometry.STAFF_Y
+                     ,radius: 8*geometry.RADIUS
+    })
+    this.tutorialLocations = [
+       [CX,CY]
+      ,[CX,CY]
+      ,[CX,CY]
+      ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+      ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+      ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
+      ,[CX - 2.5*geometry.RADIUS,CY]
+      ,[CX + 2.5*geometry.RADIUS,CY]
+      ,[CX - 2.5*geometry.RADIUS,CY]
+      ,[CX + 2.5*geometry.RADIUS,CY]
+    ]
+  }
+
+  ping(message, id){
     if(message == 'next')
-      this.nextDirection();
+      this.nextDirection(id);
     if(message == 'prev')
-      this.previousDirection()
+      this.previousDirection(id)
+    if(message == 'skip')
+      this.skipDirections()
+    if(message == 'done')
+      this.skipDirections()
   }
 
-  nextDirection(){
+  nextDirection(id){
     //pop the last direction from visibles
-      this.parent.visibles.splice(this.parent.visibles.indexOf(this.directions[this.index]), 1)
-    //augment the index
-      this.index++
-    //play the augment sound
-      musician.kalimba.triggerAttackRelease(this.intervals[this.index], '4n' )
-    //push the new direction to visibles
-      this.parent.visibles.push(this.directions[this.index]);
-
-      this.parent.ping(this.index)
+      this.activeDirection.remove()
+    //load next direction
+      this.activeDirection = this.loadDirection(id + 1)
+    //tell igmgr to shuffle visibles as is necessary
+      this.parent.ping(id + 1)
+    //sound
+      musician.kalimba.triggerAttackRelease(this.intervals[0], "8n")
   }
 
-  previousDirection(){
-    //pop the previous direction from visibles
-      this.parent.visibles.splice(this.parent.visibles.indexOf(this.directions[this.index]), 1)
-    //decrement the index
-      this.index--
-      if(this.index < 0){this.index == 0; this.parent.visibles.splice(this.parent.visibles.indexOf(this.previousOrb), 1)}
-    //play the decrement sound
-      musician.kalimba.triggerAttackRelease(this.intervals[this.index - 1], '4n' )
-    //push the old/new direction to visibles
-      this.parent.visibles.push(this.directions[this.index]);
-
+  previousDirection(id){
+    //pop the last direction from visibles
+      this.activeDirection.remove()
+    //load next direction
+      this.activeDirection = this.loadDirection(id - 1)
+    //tell igmgr to shuffle visibles as is necessary
+      this.parent.ping(id - 1)
   }
 
-  init_directions(){
-    //0
-    this.directions.push(new Direction({
-                                text: 'Leverkuhn is a game of composition and modulation.'
-                               }))
-    //1
-    this.directions.push(new Direction({
-                                text: 'You will compose a song with your opponent.'
-                               }))
-    //2
-    this.directions.push(new Direction({
-                                text: 'Your goal is to bring the song as elegantly as possible into your home key.'
-                              }))
-    //3
-    this.directions.push(new Direction({
-                                text: 'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY) + '.'
-                                }))
-    //4
-    this.directions.push(new Direction({
-                                 text: 'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY) + '.'
-                               }))
-    //5
-    this.directions.push(new Direction({
-                                 text: 'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'
-                              }))
-    //6
-    this.directions.push(new Direction({
-                                 text: 'It\'s your turn. Move the voice tokens to create a chord.'
-                              }))
-    //7
-    this.directions.push(new Direction({
-                                 text: 'Click the notes on the staff wheel to hear it sound.'
-                             }))
-    //8
-    this.directions.push(new Direction({
-                                 text: 'When you\'re satisfied, click your score orb to signify your turn'
-                              }))
+  skipDirections(){
+    this.activeDirection.remove()
+    this.parent.ping(this.tutorialText.length)
+  }
+
+  initDirections(){
+    this.activeDirection = new Direction ({id: 0, text: this.tutorialText[0], parent: this})
   }
 
   init_intervals(){
@@ -128,8 +172,16 @@ class Tutorial{
     ].map( e => [ musician.makeTone(e[0] + o*12), musician.makeTone(e[1] + o*12) ])
   }
 
-  resize(){
-    this.directions.forEach( e=> e.resize() )
+  loadDirection(id){
+    var d = new Direction ({
+                   id: id
+                 , text: this.tutorialText[id]
+                 , parent:this
+                 , x:this.tutorialLocations[id][0]
+                 , y: this.tutorialLocations[id][1]
+                 , alignment:this.tutorialAlignments[id]
+                 })
+    return d
   }
 
 }

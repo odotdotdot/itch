@@ -141,8 +141,7 @@ let igmgr;
             THROW_ACTION = true;
       }
 
-      igmgr.visibles.forEach( e => {
-        if(igmgr.clickables.includes(e))
+      igmgr.clickables.forEach( e => {
           if(e.isInside(mouseX, mouseY))
             e.onClick();
       });
@@ -198,7 +197,7 @@ let igmgr;
         }
 
         igmgr.clickables.forEach( e => {
-          if(igmgr.visibles.includes(e) && e.isInside(mouseX, mouseY))
+          if(e.isInside(mouseX, mouseY))
               e.onRelease();
         });
     }
@@ -281,8 +280,8 @@ let igmgr;
       if(score.modulation > 0){
         hexLabels.forEach( e =>{ e.hexSpelling()} );
         currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
-        igmgr.visibles.splice(igmgr.visibles.indexOf(currentKeyOrb), 1, currentKeyOrb)
-        currentKeyOrb.velocity = Math.PI/2056;
+        //igmgr.visibles.splice(igmgr.visibles.indexOf(currentKeyOrb), 1, currentKeyOrb)
+        //currentKeyOrb.velocity = Math.PI/2056;
         currentKeyOrb.setRadius(.7*geometry.ORB_MAX_RADIUS);
         if(SHOW_DIATONICS){
           hexes.forEach( e => {e.fillColor = colors.outline});
@@ -375,7 +374,6 @@ let igmgr;
 
     lesserOrbs = [];
     currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
-    currentKeyOrb.velocity = Math.PI/2056;
     opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
     homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
     scoreKeeper = new ScoreKeeper();

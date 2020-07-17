@@ -9,7 +9,7 @@ class HomeKeyOrb extends Orb{
           , semiMajorConstant : .5
           , theta : id*2*PI/12 + (Math.floor(id/12)*2*PI/24)
           , message : spelling.pitchChromaticToLetter[id]
-          , velocity : Math.PI/512
+          , velocity : Math.PI/1028
           , show: true
         });
     this.id = id;

@@ -2,32 +2,40 @@ class DirectionOrb extends Orb{
 
   constructor( {
                  message
-                ,theta
-                ,semiMajorAxis
                 ,parent
-                ,semiMajorConstant
-                ,callback
+                ,position
                } = {} ){
     super({
       message: message
     , fillColor: colors.outline
     , textColor: colors.pink
-    , theta: theta
+    , theta: 0
     , show: true
     , radius: geometry.ORB_MAX_RADIUS
-    , semiMajorAxis: semiMajorAxis
-    , semiMajorConstant: semiMajorConstant
-    , primaryX : CX
-    , primaryY : CY
+    , semiMajorAxis: 0
+    , semiMajorConstant: 0
+    , primaryX : 0
+    , primaryY : 0
     });
 
     this.parent = parent;
-    this.callback = callback;
     this.state = false;
+    this.position = position
     this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
-    this.parent.parent.clickables.push(this)
-    this.parent.parent.repositionables.push(this)
+    this.parent.parent.parent.clickables.push(this)
+    this.parent.parent.parent.repositionables.push(this)
+
+    if(parent.alignment == CENTER)
+      this.u = parent.x + .5 * parent.calculate_text_width() - 2*geometry.RADIUS*this.position
+    if(parent.alignment == RIGHT)
+      this.u = parent.x - 2*geometry.RADIUS*this.position
+    if(parent.alignment == LEFT)
+      this.u = parent.x + parent.calculate_text_width() - 2*geometry.RADIUS*this.position
+
+    this.v = parent.y + 1.5*geometry.RADIUS
+
   }
+
 
   invertColors(){
     var temp = this.fillColor;
@@ -42,22 +50,30 @@ class DirectionOrb extends Orb{
   }
 
   onRelease(){
-    this.invertColors();
-    this.parent.ping(this.message);
-    this.state = false;
+
+    if(this.state){
+      this.invertColors();
+      this.parent.parent.ping(this.message, this.parent.id);
+      this.state = false
+    }
+
   }
 
   resize(){
     this.radius = geometry.ORB_MAX_RADIUS;
-    this.primaryX = CX;
-    this.primaryY = CY;
     this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
-    this.semiMajorAxis = geometry.RADIUS * this.semiMajorConstant;
-    this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
-    this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
+    this.calculateUV()
   }
-  move(x,y){
-    this.u = x;
-    this.v = y;
+
+  calculateUV(){
+    if(this.parent.alignment == CENTER)
+      this.u = this.parent.x + .5 * this.parent.calculate_text_width() - 2*geometry.RADIUS*this.position
+    if(this.parent.alignment == RIGHT)
+      this.u = this.parent.x - 2*geometry.RADIUS*this.position
+    if(this.parent.alignment == LEFT)
+      this.u = this.parent.x + this.parent.calculate_text_width() - 2*geometry.RADIUS*this.position
+
+    this.v = this.parent.y + 1.5*geometry.RADIUS
   }
+
 }

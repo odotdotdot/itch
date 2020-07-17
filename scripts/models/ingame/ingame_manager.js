@@ -10,7 +10,7 @@ class InGameManager{
     this.buttons = [];
     this.conditions = [];
 
-    this.buttons.push(new Button(this, 0, 'help', ()=>{}))
+    this.buttons.push(new Button(this, 0, 'tutorial', ()=>{this.tutorial = new Tutorial(this)}))
     this.buttons.push(new Button(this, 1, 'play by ear', ()=>{PLAY_BY_EAR = !PLAY_BY_EAR}))
     this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{
       SHOW_DIATONICS = !SHOW_DIATONICS
@@ -34,40 +34,45 @@ class InGameManager{
   ping(i){
     switch (i) {
       case 0:
-        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask),0, hexes, hexLabels, logo)
-        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask) + 1, 0, this.tutorial.nextOrb)
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, this.tutorial.activeDirection]
         break;
       case 1:
-        this.visibles.splice(this.visibles.indexOf(this.tutorial.nextOrb) + 1, 0, this.tutorial.previousOrb)
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, this.tutorial.activeDirection]
         break;
       case 2:
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, this.tutorial.activeDirection]
         break;
       case 3:
-        this.visibles.splice(this.visibles.indexOf(this.tutorial.mask) + 1, 0, cd, homeKeyOrb)
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, this.tutorial.activeDirection]
         break;
       case 4:
-        this.visibles.splice(this.visibles.indexOf(homeKeyOrb) + 1, 0, opponentKeyOrb)
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, opponentKeyOrb, this.tutorial.activeDirection]
         break;
       case 5:
-        this.visibles.splice(this.visibles.indexOf(opponentKeyOrb) + 1, 0, currentKeyOrb)
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.activeDirection]
         break;
       case 6:
-        this.visibles.splice(this.visibles.indexOf(hexes) + 1, 0, voix)
+        this.visibles = [hexes, cd, voix, hexLabels, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.activeDirection]
         break;
       case 7:
-        this.visibles.splice(this.visibles.indexOf(cd) + 1, 0, sd)
+        this.visibles = [hexes, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.keyWheelMask, sd, voix, hexLabels, this.tutorial.activeDirection]
         break;
       case 8:
-        this.visibles.splice(this.visibles.length, 0, me, opponent, scoreKeeper)
+        this.visibles = [hexes, this.buttons, sd, this.tutorial.staffWheelMask, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, voix, hexLabels, this.tutorial.activeDirection]
         break;
+      case 9:
+        this.visibles = [hexes, this.buttons, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.keyWheelMask, sd, voix, hexLabels, me, opponent, scoreKeeper, this.tutorial.activeDirection]
+        break;
+      default:
+        this.visibles = [hexes, this.buttons, cd, sd, voix, hexLabels, homeKeyOrb, opponentKeyOrb, currentKeyOrb, me, opponent, scoreKeeper]
+
 
     }
-    console.log(this.visibles)
   }
 
   reposition(){
-    for(var i = 0; i < this.repositionables.length; i ++)
-      this.repositionables[i].resize();
+    for(var i = 0; i < this.repositionables.length; i ++){
+      this.repositionables[i].resize();}
   }
   weightedRandomKey(exclusion){
       var exclusions = [HOME_KEY

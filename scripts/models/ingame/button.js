@@ -20,7 +20,6 @@ class Button{
 
     this.y = geometry.STAFF_Y + 3*geometry.RADIUS;
 
-    this.parent.visibles.push(this);
     this.parent.clickables.push(this);
     this.parent.repositionables.push(this);
   }
