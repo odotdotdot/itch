@@ -42,37 +42,44 @@ class InGameManager{
       case 2:
         this.visibles = [hexes, hexLabels, this.tutorial.mask, this.tutorial.activeDirection]
         break;
-      case 3:
-        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, this.tutorial.activeDirection]
+      case 3://homekey
+        sectorManager.homeKeyInit()
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, sectorManager, cd, this.tutorial.activeDirection]
         break;
       case 4:
-        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, opponentKeyOrb, this.tutorial.activeDirection]
+        sectorManager.opponentHomeKeyInit()
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, sectorManager, cd, this.tutorial.activeDirection]
         break;
       case 5:
-        this.visibles = [hexes, hexLabels, this.tutorial.mask, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.activeDirection]
+        sectorManager.currentKeyInit()
+        this.visibles = [hexes, hexLabels, this.tutorial.mask, sectorManager, cd, this.tutorial.activeDirection]
         break;
       case 6:
-        this.visibles = [hexes, cd, voix, hexLabels, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.activeDirection]
+        this.visibles = [hexes, sectorManager, this.tutorial.keyWheelMask, cd, voix, hexLabels, this.tutorial.activeDirection]
         break;
       case 7:
-        this.visibles = [hexes, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.keyWheelMask, sd, voix, hexLabels, this.tutorial.activeDirection]
+        this.visibles = [hexes, sectorManager, cd, voix, hexLabels, this.tutorial.mask, sd, this.tutorial.activeDirection]
         break;
       case 8:
-        this.visibles = [hexes, this.buttons, sd, this.tutorial.staffWheelMask, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, voix, hexLabels, this.tutorial.activeDirection]
+        this.visibles = [hexes, this.buttons, sd, this.tutorial.staffWheelMask, sectorManager, cd, voix, hexLabels, this.tutorial.activeDirection]
         break;
       case 9:
-        this.visibles = [hexes, this.buttons, cd, homeKeyOrb, opponentKeyOrb, currentKeyOrb, this.tutorial.keyWheelMask, sd, voix, hexLabels, me, opponent, scoreKeeper, this.tutorial.activeDirection]
+        this.visibles = [hexes, this.buttons, sectorManager, cd, sd, voix, hexLabels, opponent, this.tutorial.mask, me, this.tutorial.activeDirection]
         break;
       default:
-        this.visibles = [hexes, this.buttons, cd, sd, voix, hexLabels, homeKeyOrb, opponentKeyOrb, currentKeyOrb, me, opponent, scoreKeeper]
-
-
+        sectorManager.homeKeyInit()
+        sectorManager.opponentHomeKeyInit()
+        sectorManager.currentKeyInit()
+        this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
     }
   }
 
   reposition(){
-    for(var i = 0; i < this.repositionables.length; i ++){
-      this.repositionables[i].resize();}
+    for(var i = 0; i < this.repositionables.length; i ++)
+      if(Array.isArray(igmgr.repositionables[i]))
+        igmgr.repositionables[i].forEach( e => e.resize() )
+      else
+        igmgr.repositionables[i].resize();
   }
   weightedRandomKey(exclusion){
       var exclusions = [HOME_KEY

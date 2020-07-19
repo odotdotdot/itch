@@ -154,12 +154,12 @@ class ComputerOpponent{
       /* if there were no matching easy targets */
     if(!theoretical_decision){
      theoretical_decision = this.make_random_choice_from_list(key_filtered_options);}
-     console.log('cpu taking turn from ', pr.midiNotes(mR), pr.theoryDecoding(tR));
+     /*console.log('cpu taking turn from ', pr.midiNotes(mR), pr.theoryDecoding(tR));
      console.log('game is currently in ', CURRENT_KEY);
      console.log('options', options.map(e=> pr.theoryDecoding(e)));
      console.log('tied options', tied_options.map(e=> pr.theoryDecoding(e)));
      console.log('key filtered options', key_filtered_options.map(e=> pr.theoryDecoding(e)));
-     console.log('cpu chooses ', pr.theoryDecoding(theoretical_decision));
+     console.log('cpu chooses ', pr.theoryDecoding(theoretical_decision));*/
 
      var outgoing_cardinal_list = this.cardinal_list(theoretical_decision);
     /* rearrange the outgoing cardinal to create sensible voice movement

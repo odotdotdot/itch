@@ -420,7 +420,16 @@ class Theoretician{
                }
 
             }
-
+            highKeyScore(){
+              var scores = []
+              for(var i = 0; i < 24; i ++){
+                scores.push(this.SCALE_SCORES[i] + this.GROWTH_BONUS[i])
+              }
+              var max = scores.reduce(function(a, b) {
+                return Math.max(a, b);
+              });
+              return max
+            }
             commonality(keysToTest, mR){
                /*determines whether each voice of m is diatonic, both to the current key
                  and the player's home key.  if yes, returns true if no, returns false*/

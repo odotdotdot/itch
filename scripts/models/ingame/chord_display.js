@@ -14,7 +14,7 @@ class ChordDisplay{
       this.upperFigure = "";
       this.lowerFigure = "";
       this.displayFont = fonts.letters;
-      this.ROOTSIZE = 150*geometry.SCALE;
+      this.ROOTSIZE = 120*geometry.SCALE;
       this.x = x;
       this.y = y;
       this.show = show
@@ -25,7 +25,7 @@ class ChordDisplay{
   resize(x = geometry.KEYWHEEL_X, y=geometry.KEYWHEEL_Y){
     this.x = x;
     this.y = y;
-    this.ROOTSIZE = 150*geometry.SCALE;
+    this.ROOTSIZE = 120*geometry.SCALE;
   }
   setChord(theoryRecord, ck){
     if(theoryRecord>>>12 < 12){
@@ -88,11 +88,8 @@ class ChordDisplay{
         if(this.show && !TEMPO_DRAG){
           push();
         //circle
-          stroke(this.outlineColor);
-          strokeWeight(2);
-          noFill();
-          circle(this.x, this.y, 6 * geometry.RADIUS);
-          noStroke();
+          fill(colors.background)
+          circle(this.x, this.y, 1/2 *  geometry.KEYWHEEL_DIAMETER);
         //root
           fill(colors.pink);
           textAlign(CENTER, CENTER);

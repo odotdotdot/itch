@@ -46,7 +46,7 @@ class Tutorial{
     ,'Move the voice tokens to create a chord.'
     ,'Click the notes to hear it sound.'
     ,'If you need some help,\ntry the buttons in the corner.'
-    ,'When you\'re satisfied,\nclick your score orb to signify your turn'
+    ,'When you\'re satisfied, click your score orb to signify your turn'
   ]
 
   this.tutorialLocations = [
@@ -57,9 +57,9 @@ class Tutorial{
     ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
     ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
     ,[CX - 2.5*geometry.RADIUS,CY]
-    ,[CX + 2.5*geometry.RADIUS,CY]
+    ,[geometry.STAFF_X + 3.5*geometry.RADIUS, geometry.STAFF_Y]
     ,[CX - 2.5*geometry.RADIUS,CY]
-    ,[CX + 2.5*geometry.RADIUS,CY]
+    ,[geometry.STAFF_X - 3*geometry.RADIUS, geometry.STAFF_Y]
   ]
 
   this.tutorialAlignments = [
@@ -108,10 +108,10 @@ class Tutorial{
       ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
       ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
       ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-      ,[CX - 2.5*geometry.RADIUS,CY]
+      ,[geometry.STAFF_X + 3.5*geometry.RADIUS, geometry.STAFF_Y]
       ,[CX + 2.5*geometry.RADIUS,CY]
       ,[CX - 2.5*geometry.RADIUS,CY]
-      ,[CX + 2.5*geometry.RADIUS,CY]
+      ,[geometry.STAFF_X - 3*geometry.RADIUS, geometry.STAFF_Y]
     ]
   }
 
@@ -134,7 +134,7 @@ class Tutorial{
     //tell igmgr to shuffle visibles as is necessary
       this.parent.ping(id + 1)
     //sound
-      musician.kalimba.triggerAttackRelease(this.intervals[0], "8n")
+      musician.kalimba.triggerAttackRelease(this.intervals[id], "8n")
   }
 
   previousDirection(id){
@@ -144,11 +144,15 @@ class Tutorial{
       this.activeDirection = this.loadDirection(id - 1)
     //tell igmgr to shuffle visibles as is necessary
       this.parent.ping(id - 1)
+    //sound
+      musician.kalimba.triggerAttackRelease(this.intervals[id], "8n")
   }
 
   skipDirections(){
     this.activeDirection.remove()
     this.parent.ping(this.tutorialText.length)
+  //sound
+    musician.kalimba.triggerAttackRelease(this.intervals[this.intervals.length - 1], "8n")
   }
 
   initDirections(){
@@ -158,18 +162,30 @@ class Tutorial{
   init_intervals(){
     var p = (CURRENT_KEY % 12)
     var o = p < 9 ? 5 : 4
-    this.intervals = CURRENT_KEY < 12 ? [  [p, p + 4]
-                                          ,[p + 2, p + 5]
-                                          ,[p + 4, p + 7]
-                                          ,[p + 5, p + 9]
-                                          ,[p + 7, p + 11]
-    ].map( e => [ musician.makeTone(e[0] + o*12), musician.makeTone(e[1] + o*12) ])
-                                      :[  [p, p + 3]
-                                         ,[p + 2, p + 5]
-                                         ,[p + 3, p + 7]
-                                         ,[p + 5, p + 9]
-                                         ,[p + 7, p + 11]
-    ].map( e => [ musician.makeTone(e[0] + o*12), musician.makeTone(e[1] + o*12) ])
+    this.intervals = CURRENT_KEY < 12 ? [  p
+                                          ,p+2
+                                          ,p+4
+                                          ,p+5
+                                          ,p+7
+                                          ,p+9
+                                          ,p+11
+                                          ,p+12
+                                          ,p+7
+                                          ,p
+
+    ].map( e => musician.makeTone(e + o*12) )
+                                      :[   p
+                                          ,p+2
+                                          ,p+3
+                                          ,p+5
+                                          ,p+7
+                                          ,p+9
+                                          ,p+11
+                                          ,p+12
+                                          ,p+7
+                                          ,p
+
+    ].map( e => musician.makeTone(e + o*12) )
   }
 
   loadDirection(id){

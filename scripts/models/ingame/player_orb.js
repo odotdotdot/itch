@@ -1,15 +1,15 @@
 class PlayerOrb extends Orb{
   constructor(fC, tC, t, player){
     super({
-      radius: geometry.ORB_MAX_RADIUS * .8
+      radius: geometry.ORB_MAX_RADIUS
     , show: true
     , fillColor: fC
     , textColor: tC
     , theta: t
     , primaryX: geometry.STAFF_X
     , primaryY: geometry.STAFF_Y
-    , semiMajorConstant : .7
-    , semiMajorAxis: .7*geometry.KEYWHEEL_DIAMETER
+    , semiMajorConstant : 4
+    , semiMajorAxis:4*geometry.RADIUS
     , message: player.userName
   });
 
@@ -17,6 +17,7 @@ class PlayerOrb extends Orb{
   this.score = 0;
   this.collisions = null;
   this.expectedCollisions = null;
+  igmgr.clickables.push(this)
   }
   collide(n){
     /* expand or contract the orb in accordance with the value of the satellite that's struck it
@@ -43,6 +44,7 @@ class PlayerOrb extends Orb{
     if(this.collisions == this.expectedCollisions){
        this.init_controlledOrbit(Math.PI/128);
        this.twin.init_controlledOrbit(Math.PI/128);
+       igmgr.visibles.splice(igmgr.visibles.indexOf(scoreKeeper), 1)
 
        setTimeout( ()=>{
         this.setMessage(this.player.userName);
@@ -53,14 +55,29 @@ class PlayerOrb extends Orb{
   }
 
 }
-  resize(x = geometry.STAFF_X, y=geometry.STAFF_Y, coefficient = geometry.KEYWHEEL_DIAMETER){
-    this.radius = .8 * geometry.ORB_MAX_RADIUS;
+  resize(x = geometry.STAFF_X, y=geometry.STAFF_Y, coefficient = geometry.RADIUS){
+    this.radius = geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2-5);
     this.primaryX = x;
     this.primaryY = y;
     this.semiMajorAxis = this.semiMajorConstant * coefficient;
     this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
     this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
+  }
+
+  onClick(){
+    if(this.player.isMyTurn)
+      this.invertColors()
+  }
+  onRelease(){
+    if(this.player.isMyTurn){
+      this.invertColors()
+      turnSignified(this.player)}
+  }
+  invertColors(){
+    var temp = this.fillColor;
+    this.fillColor = this.textColor;
+    this.textColor = temp;
   }
 
 }

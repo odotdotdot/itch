@@ -23,7 +23,9 @@ let W, H, CX, CY, Xo, Yo;
 let fonts;
 let hexes = [];
 let hexLabels = [];
+let keyOrbs = [];
 let voix = [];
+let sectors = []
 let igmgr;
 
 //main
@@ -50,23 +52,12 @@ let igmgr;
     if(IN_GAME){
         background(colors.background);
         //orbs
-        lesserOrbs.forEach( e => {e.orbit();} )
-        currentKeyOrb.orbit();
-        opponentKeyOrb.orbit();
-        if(!THROW_ACTION){
-          homeKeyOrb.friction();
-          homeKeyOrb.orbit();
-        }
-        if(THROW_ACTION){
-          homeKeyOrb.drag();
-        }
-
+          //keyOrbs.forEach(e => e.orbit())
         if(cpu.CPU_MOVING_TOKENS)
           cpu.move_tokens();
-
         for(var i = 0; i < igmgr.visibles.length; i ++)
           if(Array.isArray(igmgr.visibles[i]))
-            igmgr.visibles[i].forEach( e=> e.display() )
+            igmgr.visibles[i].forEach( e => e.display() )
           else
             igmgr.visibles[i].display();
 
@@ -91,18 +82,11 @@ let igmgr;
       voix.forEach( e => e.resize());
       cd.resize()
       sd.resize()
-      lesserOrbs.forEach( e => e.resize());
-      currentKeyOrb.resize();
-      homeKeyOrb.resize();
-      opponentKeyOrb.resize();
       me.resize();
       opponent.resize();
       scoreKeeper.resize();
       logo.resize();
       igmgr.reposition();
-
-
-
     }
 
     if(END_GAME){
@@ -116,6 +100,7 @@ let igmgr;
     }
   }
   function mousePressed(){
+
     if(PRE_GAME){
       if(pgmgr.centerText.userNameCreated == true)
         pgmgr.clickables.forEach( e => {
@@ -136,9 +121,6 @@ let igmgr;
         //staff wheel chord clicks
         if(sd.isInside(mouseX, mouseY))
           sd.replay(mouseX, mouseY);
-        //home key signifiying end of turn
-          if(homeKeyOrb.isInside(mouseX, mouseY))
-            THROW_ACTION = true;
       }
 
       igmgr.clickables.forEach( e => {
@@ -187,19 +169,11 @@ let igmgr;
 
       blossom.blossom();
 
-      if(THROW_ACTION){
-        //throw action is over. process the data points and empty the arrays
-          THROW_ACTION = false;
-          homeKeyOrb.inertia();
-          homeKeyOrb.throwX.length = 0;
-          homeKeyOrb.throwY.length = 0;
-          turnSignified(me);
-        }
-
-        igmgr.clickables.forEach( e => {
-          if(e.isInside(mouseX, mouseY))
-              e.onRelease();
-        });
+      igmgr.clickables.forEach( e => {
+        if(e.isInside(mouseX, mouseY))
+            e.onRelease();
+      });
+      //one of those releases has to turnSignified(me)
     }
 
 
@@ -275,38 +249,30 @@ let igmgr;
 
       */
 
+      igmgr.visibles.push(scoreKeeper)
+
       var score = theoretician.analyze(MIDI_RECORD, THEORY_RECORD, playerWhoTookTurn);
       scoreKeeper.scoreTurn(score, playerWhoTookTurn);
+
       if(score.modulation > 0){
+        sectorManager.updateCurrentKey()
         hexLabels.forEach( e =>{ e.hexSpelling()} );
-        currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
-        //igmgr.visibles.splice(igmgr.visibles.indexOf(currentKeyOrb), 1, currentKeyOrb)
-        //currentKeyOrb.velocity = Math.PI/2056;
-        currentKeyOrb.setRadius(.7*geometry.ORB_MAX_RADIUS);
         if(SHOW_DIATONICS){
           hexes.forEach( e => {e.fillColor = colors.outline});
           hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
-      }
+        }
+
+      //update keyOrbs
       var loi = score.loi;
-      lesserOrbs = [];
-      var radiusOptions = [.5, .7, 1];
-      var current_key_init = ( (CURRENT_KEY*7)%12)*2*PI/12 - PI/2 - (PI/2)*Math.floor(CURRENT_KEY/12);
+      keyOrbs.splice(keyOrbs.indexOf(homeKeyOrb) + 1, keyOrbs.length - 3)
+
+      var current_key_init = ( (CURRENT_KEY*7)%12)*2*Math.PI/12 - Math.PI/2 - (Math.PI/2)*Math.floor(CURRENT_KEY/12);
       var rotation_from_init = currentKeyOrb.theta - current_key_init;
 
-      for(var i = 0; i < loi.length; i ++)
-        for(var j = 0; j < loi[i].length; j ++){
-          lesserOrbs.push( new LesserKeyOrb(loi[i][j], colors.pink, colors.bass, .667) );
-          lesserOrbs[lesserOrbs.length - 1].setRadius(radiusOptions[i]*geometry.ORB_MAX_RADIUS);
-          lesserOrbs[lesserOrbs.length - 1].theta += rotation_from_init;
+      sectorManager.turnSignified()
 
-        }
-      lesserOrbs.forEach( (e)=>{
-        if( loi.flat().includes(theoretician.relative(e.id)) && e.id < 12){
-          e.semiMajorConstant = 11/12;
-          e.resize();}
-      });
       //remove and then replace lesser orbs in in game manager visibles
-      igmgr.visibles.splice(igmgr.visibles.indexOf(lesserOrbs), 1, lesserOrbs)
+      //igmgr.visibles.splice(igmgr.visibles.indexOf(lesserOrbs), 1, lesserOrbs)
       composer.commit(MIDI_RECORD);
       sd.commit(MIDI_RECORD);
       for(var i = 0; i < musician.synth.length; i ++)
@@ -314,9 +280,6 @@ let igmgr;
 
       me.isMyTurn = !me.isMyTurn;
       opponent.isMyTurn = !opponent.isMyTurn;
-      /*//log turn to database
-      socket.emit('logTurn', {mR: MIDI_RECORD, gameId: GAME_ID});
-      */
 
 
 
@@ -372,10 +335,11 @@ let igmgr;
     sd = new StaffDisplay();
     logo = new Logo(50,50);
 
-    lesserOrbs = [];
-    currentKeyOrb = new LesserKeyOrb(CURRENT_KEY, colors.blue, colors.white);
-    opponentKeyOrb = new LesserKeyOrb(OPPONENT_HOME_KEY, colors.white, colors.red);
-    homeKeyOrb = new HomeKeyOrb(HOME_KEY, colors.pink, colors.bass);
+    currentKeyOrb = new LesserKeyOrb({id:CURRENT_KEY, fillColor:colors.blue, textColor:colors.white});
+    opponentKeyOrb = new LesserKeyOrb({id:OPPONENT_HOME_KEY})
+    homeKeyOrb = new LesserKeyOrb({id:HOME_KEY, fillColor:colors.pink, textColor:colors.bass});
+    sectorManager = new SectorManager()
+    keyOrbs = [opponentKeyOrb, currentKeyOrb, homeKeyOrb]
     scoreKeeper = new ScoreKeeper();
     cpu = new ComputerOpponent({homeKey:OPPONENT_HOME_KEY});
     pr = new Printer()
@@ -426,9 +390,9 @@ let igmgr;
     geometry.OFFSET = Math.atan((.25*H)/(.5*W));
     geometry.KEYWHEEL_X = .8 * W;
     geometry.KEYWHEEL_Y = diagonal(geometry.KEYWHEEL_X);
-    geometry.STAFF_X = .2 * W;
+    geometry.STAFF_X = .25 * W;
     geometry.STAFF_Y = diagonal(geometry.STAFF_X);
-    geometry.KEYWHEEL_DIAMETER = 6*geometry.RADIUS;
+    geometry.KEYWHEEL_DIAMETER = 8*geometry.RADIUS;
     geometry.STAFFSPACING = .2667*geometry.RADIUS;
     geometry.STAFFLENGTH = 5.25*geometry.RADIUS;
     geometry.ORB_MAX_RADIUS = .625 * geometry.RADIUS;
