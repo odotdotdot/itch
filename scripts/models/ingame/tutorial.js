@@ -12,21 +12,15 @@ class Tutorial{
                       mask_color : colors.background
                      ,speed : 7
                      ,parent: this
-                     ,type : 'circle'
+                     ,type : 'key'
                      ,init_alpha : 220
-                     ,x: geometry.KEYWHEEL_X
-                     ,y: geometry.KEYWHEEL_Y
-                     ,radius: 8*geometry.RADIUS
     })
     this.staffWheelMask = new Mask({
                       mask_color : colors.background
                      ,speed : 7
                      ,parent: this
-                     ,type : 'circle'
+                     ,type : 'staff'
                      ,init_alpha : 220
-                     ,x: geometry.STAFF_X
-                     ,y: geometry.STAFF_Y
-                     ,radius: 8*geometry.RADIUS
     })
     this.parent.visibles.push(this.mask)
     this.directions = []
@@ -45,7 +39,6 @@ class Tutorial{
     ,'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'
     ,'Move the voice tokens to create a chord.'
     ,'Click the notes to hear it sound.'
-    ,'If you need some help,\ntry the buttons in the corner.'
     ,'When you\'re satisfied, click your score orb to signify your turn'
   ]
 
@@ -58,7 +51,6 @@ class Tutorial{
     ,[geometry.KEYWHEEL_X - 4.5*geometry.RADIUS, geometry.KEYWHEEL_Y]
     ,[CX - 2.5*geometry.RADIUS,CY]
     ,[geometry.STAFF_X + 3.5*geometry.RADIUS, geometry.STAFF_Y]
-    ,[CX - 2.5*geometry.RADIUS,CY]
     ,[geometry.STAFF_X - 3*geometry.RADIUS, geometry.STAFF_Y]
   ]
 
@@ -71,7 +63,6 @@ class Tutorial{
     ,RIGHT
     ,RIGHT
     ,LEFT
-    ,RIGHT
     ,LEFT
   ]
 
@@ -85,21 +76,15 @@ class Tutorial{
                       mask_color : colors.background
                      ,speed : 7
                      ,parent: this
-                     ,type : 'circle'
+                     ,type : 'key'
                      ,init_alpha : 220
-                     ,x: geometry.KEYWHEEL_X
-                     ,y: geometry.KEYWHEEL_Y
-                     ,radius: 8*geometry.RADIUS
     })
     this.staffWheelMask = new Mask({
                       mask_color : colors.background
                      ,speed : 7
                      ,parent: this
-                     ,type : 'circle'
+                     ,type : 'staff'
                      ,init_alpha : 220
-                     ,x: geometry.STAFF_X
-                     ,y: geometry.STAFF_Y
-                     ,radius: 8*geometry.RADIUS
     })
     this.tutorialLocations = [
        [CX,CY]

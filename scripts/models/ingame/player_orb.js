@@ -55,12 +55,12 @@ class PlayerOrb extends Orb{
   }
 
 }
-  resize(x = geometry.STAFF_X, y=geometry.STAFF_Y, coefficient = geometry.RADIUS){
+  resize(){
     this.radius = geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters,this.message,24,this.radius*2-5);
-    this.primaryX = x;
-    this.primaryY = y;
-    this.semiMajorAxis = this.semiMajorConstant * coefficient;
+    this.primaryX = geometry.STAFF_X;
+    this.primaryY = geometry.STAFF_Y;
+    this.semiMajorAxis = 4*geometry.RADIUS
     this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
     this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
   }

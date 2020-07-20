@@ -5,16 +5,12 @@ class Mask{
                 ,parent
                 ,type = 'rect'
                 ,init_alpha = 0
-                ,x = CX
-                ,y = CY
                 ,radius = 6*geometry.RADIUS
                } = {} ) {
 
     this.color = color(mask_color);
     this.speed = speed;
     this.parent = parent
-    this.x = x
-    this.y = y
     this.radius = radius
 
     this.fadingUp = false;
@@ -75,9 +71,13 @@ class Mask{
     shape(){
 
       if(this.type == 'rect')
-        rect(this.x, this.y, W, H);
-      if(this.type == 'circle'){
-        circle(this.x, this.y, this.radius)}
+        rect(CX, CY, W, H);
+      if(this.type == 'circle')
+        circle(CX, CY, 6*geometry.RADIUS)
+      if(this.type == 'key')
+        circle(geometry.KEYWHEEL_X, geometry.KEYWHEEL_Y, geometry.KEYWHEEL_DIAMETER)
+      if(this.type == 'staff')
+        circle(geometry.STAFF_X, geometry.STAFF_Y, geometry.STAFFWHEEL_DIAMETER)
 
 
     }

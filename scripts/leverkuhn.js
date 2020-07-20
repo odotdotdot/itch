@@ -16,7 +16,7 @@ let SERIAL_RECORD,
     END_GAME = false,
     GAME_IS_NOT_YET_OVER = true,
     TPN = 3;
-    PLAY_BY_EAR = false;
+    PLAY_BY_EAR = true;
     SHOW_DIATONICS = false;
 
 let W, H, CX, CY, Xo, Yo;
@@ -353,23 +353,23 @@ let igmgr;
   }
   function _init_voix(){
     voix.push(new Token({id:0
-                        , x:.5*W +  5.5*geometry.APOTHEM
-                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
+                        , x: CX - 9 * geometry.RADIUS
+                        , y: CY - geometry.RADIUS
                         , color:colors.bass
                         , message:'bass'}));
     voix.push(new Token({id:1
-                        , x:.5*W +  7.5*geometry.APOTHEM
-                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
+                        , x:CX - 7*geometry.RADIUS
+                        , y: CY - geometry.RADIUS
                         , color:colors.tenor
                         , message:'tenor'}));
     voix.push(new Token({id:2
-                        , x:.5*W +  9.5*geometry.APOTHEM
-                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
+                        , x:CX - 5*geometry.RADIUS
+                        , y: CY - geometry.RADIUS
                         , color:colors.alto
                         , message:'alto'}));
     voix.push(new Token({id:3
-                        , x:.5*W +  11.5*geometry.APOTHEM
-                        , y: geometry.STAFF_Y + 2*geometry.RADIUS
+                        , x:CX - 3*geometry.RADIUS
+                        , y: CY - geometry.RADIUS
                         , color:colors.soprano
                         , message:'soprano'}));
   }
@@ -393,6 +393,7 @@ let igmgr;
     geometry.STAFF_X = .25 * W;
     geometry.STAFF_Y = diagonal(geometry.STAFF_X);
     geometry.KEYWHEEL_DIAMETER = 8*geometry.RADIUS;
+    geometry.STAFFWHEEL_DIAMETER = 6*geometry.RADIUS;
     geometry.STAFFSPACING = .2667*geometry.RADIUS;
     geometry.STAFFLENGTH = 5.25*geometry.RADIUS;
     geometry.ORB_MAX_RADIUS = .625 * geometry.RADIUS;

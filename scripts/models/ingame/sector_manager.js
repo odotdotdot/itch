@@ -6,6 +6,7 @@ class SectorManager{
 
     this.currentKey = CURRENT_KEY
 
+
     igmgr.repositionables.push(this)
   }
   display(){
@@ -28,17 +29,14 @@ class SectorManager{
   homeKeyInit(){
     this.sectors[HOME_KEY].fillColor = color(colors.pink);
     this.sectors[HOME_KEY].textColor = color(colors.bass);
-    this.sectors[HOME_KEY].setAlphas()
   }
   opponentHomeKeyInit(){
     this.sectors[OPPONENT_HOME_KEY].fillColor = color(colors.white);
     this.sectors[OPPONENT_HOME_KEY].textColor = color(colors.red);
-    this.sectors[OPPONENT_HOME_KEY].setAlphas()
   }
   currentKeyInit(){
     this.sectors[CURRENT_KEY].fillColor = color(colors.blue);
     this.sectors[CURRENT_KEY].textColor = color(colors.white);
-    this.sectors[CURRENT_KEY].setAlphas()
   }
   turnSignified(){
     this.sectors.forEach(e => {e.setAlphas()} )

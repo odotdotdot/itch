@@ -61,15 +61,13 @@ class InGameManager{
         this.visibles = [hexes, sectorManager, cd, voix, hexLabels, this.tutorial.mask, sd, this.tutorial.activeDirection]
         break;
       case 8:
-        this.visibles = [hexes, this.buttons, sd, this.tutorial.staffWheelMask, sectorManager, cd, voix, hexLabels, this.tutorial.activeDirection]
-        break;
-      case 9:
-        this.visibles = [hexes, this.buttons, sectorManager, cd, sd, voix, hexLabels, opponent, this.tutorial.mask, me, this.tutorial.activeDirection]
+        this.visibles = [hexes, sectorManager, cd, sd, voix, hexLabels, opponent, this.tutorial.mask, me, this.tutorial.activeDirection]
         break;
       default:
         sectorManager.homeKeyInit()
         sectorManager.opponentHomeKeyInit()
         sectorManager.currentKeyInit()
+        sectorManager.turnSignified()
         this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
     }
   }
