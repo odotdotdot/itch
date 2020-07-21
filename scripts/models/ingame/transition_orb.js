@@ -35,7 +35,7 @@ class TransitionOrb extends Orb{
      /*
      overwrite this method so the comparison is to the chord length at tx, ty rather than the diameter
      */
-     let s = 24;
+     let s = 24*geometry.SCALE;
      textFont(fonts.letters);
      textSize(s);
      while( textWidth(this.message) > 2*(this.radius**2 - this.yOFF**2)**.5 - 10 && s > 2){
@@ -47,6 +47,8 @@ class TransitionOrb extends Orb{
 
    resize(){
       this.radius = 2.5 * geometry.RADIUS;
+      if(this.message)
+        this.setTextSize()
       this.primaryX = CX;
       this.primaryY = CY;
       this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);

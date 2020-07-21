@@ -17,8 +17,6 @@ class Sector{
             this.alpha = 255 * this.score/theoretician.highKeyScore();
             this.fillColor.setAlpha(this.alpha)
             this.textColor.setAlpha(this.alpha)
-
-            igmgr.repositionables.push(this)
   }
 
   display(){

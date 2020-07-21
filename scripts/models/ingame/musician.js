@@ -64,6 +64,33 @@ class Musician{
     return chord;
   }
 
+  scoreTutorial(message, index){
+    var tutorialChords = [
+       [61, 63, 66]
+      ,[63, 66, 68]
+      ,[66, 68, 70]
+      ,[68, 70, 73]
+      ,[70, 73, 75]
+      ,[73, 75, 78]
+      ,[75, 78, 80]
+      ,[78, 80, 82]
+      ,[80, 82 ,85]
+    ]
+    if(message == 'next'){
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][0]), '64n')
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][1]), '64n', '+64n')
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][2]), '64n', '+32n')}
+
+    if(message == 'prev'){
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][2]), '64n')
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][1]), '64n', '+64n')
+      this.kalimba.triggerAttackRelease(this.makeTone(tutorialChords[index][0]), '64n', '+32n')}
+
+    if(message =='done' || message == 'skip')
+      this.kalimba.triggerAttackRelease([66, 68, 70, 73, 75, 78].map(e=>this.makeTone(e)), '16n')
+  }
+
+
   scoreVoiceMovement(activeVoice){
     if(utility.getByte(activeVoice, MIDI_RECORD) != 0xff){
         this.kalimba.triggerAttackRelease(this.makeTone(utility.getByte(activeVoice,MIDI_RECORD)), "8n");

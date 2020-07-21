@@ -15,11 +15,11 @@ class Direction{
         this.y = y;
         this.alignment = alignment
         this.textColor = textColor
-        this.text_size = 24 * geometry.SCALE //utility.setTextSize(fonts.letters, this.text, 24, 10*geometry.RADIUS)
+        this.text_size = text_size
         this.parent = parent
         this.orbs = []
 
-if(this.id < this.parent.tutorialText.length - 1){
+        if(this.id < this.parent.numberOfDirections - 1){
         this.nextOrb = new DirectionOrb({
                                     message:'next'
                                    ,parent: this
@@ -43,10 +43,8 @@ if(this.id < this.parent.tutorialText.length - 1){
                                  });
         this.orbs.push(this.skipOrb)
     }
-
-
-//the last direction has prev / done
-if(this.id == this.parent.tutorialText.length - 1){
+      //the last direction has prev / done
+        if(this.id == this.parent.numberOfDirections - 1){
   this.doneOrb = new DirectionOrb({
      message:'done'
     ,parent: this
@@ -61,10 +59,8 @@ if(this.id == this.parent.tutorialText.length - 1){
   this.orbs.push(this.previousOrb)
 }
 
-this.parent.parent.visibles.push(this)
-this.parent.parent.repositionables.push(this)
-
-      }
+    this.parent.parent.visibles.push(this)
+    }
 
   display(){
     push()
@@ -81,27 +77,17 @@ this.parent.parent.repositionables.push(this)
 
 
   }
-
-  resize(){
-    this.text_size = 24 * geometry.SCALE
-    this.x = this.x * W/Xo
-    this.y = this.y * H/Yo
-  }
-
   calculate_text_width(){
     textFont(fonts.letters)
     textSize(this.text_size)
     var lines = this.text.split('\n')
     return textWidth(lines[lines.length-1])
   }
-
   remove(){
-    this.parent.parent.visibles.splice(this.parent.parent.visibles.indexOf(this), 1)
-    this.parent.parent.repositionables.splice(this.parent.parent.repositionables.indexOf(this), 1)
+    if(this.parent.parent.visibles.includes(this))
+      this.parent.parent.visibles.splice(this.parent.parent.visibles.indexOf(this), 1)
     for(var i = 0; i < this.orbs.length; i++){
-      this.parent.parent.clickables.splice(this.parent.parent.clickables.indexOf(this.orbs[i]), 1)
-      this.parent.parent.repositionables.splice(this.parent.parent.repositionables.indexOf(this.orbs[i]), 1)}
+      if(this.parent.parent.clickables.includes(this.orbs[i]))
+        this.parent.parent.clickables.splice(this.parent.parent.clickables.indexOf(this.orbs[i]), 1)}
   }
-
-
-  }
+}

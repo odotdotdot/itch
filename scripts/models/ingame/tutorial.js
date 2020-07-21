@@ -23,56 +23,36 @@ class Tutorial{
                      ,init_alpha : 220
     })
     this.parent.visibles.push(this.mask)
+    this.parent.repositionables.push(this)
     this.directions = []
-    this.index = 0
+    this.numberOfDirections = 9
     this.intervals = []
     this.activeDirection = null
-
     this.hexLabelRemoved = null
-
-
-  this.tutorialText = [
-    'Leverkuhn is a game of composition and modulation.'
-    ,'You will compose a song with your opponent.'
-    ,'Your goal is to bring the song as elegantly as possible into your home key.'
-    ,'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY) + '.'
-    ,'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY) + '.'
-    ,'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'
-    ,'It\'s your turn. Move the voices onto the game board to create a chord.'
-    ,'Click the notes to hear it sound.'
-    ,'Click your score orb to signify the end your turn.'
-  ]
-
-  this.tutorialLocations = [
-     [CX,CY]
-    ,[CX,CY]
-    ,[CX,CY]
-    ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-    ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-    ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-    ,[geometry.STAFF_X + .5*geometry.STAFFWHEEL_DIAMETER * Math.cos(-geometry.OFFSET) + geometry.RADIUS, CY]
-    ,[geometry.STAFF_X + 3.5*geometry.RADIUS, geometry.STAFF_Y]
-    ,[geometry.STAFF_X + 4*geometry.RADIUS * Math.cos(Math.PI + geometry.OFFSET) + 1.5*geometry.ORB_MAX_RADIUS
-      ,geometry.STAFF_Y + 4*geometry.RADIUS * Math.sin(Math.PI + geometry.OFFSET)]
-  ]
-
-  this.tutorialAlignments = [
-     CENTER
-    ,CENTER
-    ,CENTER
-    ,RIGHT
-    ,RIGHT
-    ,RIGHT
-    ,LEFT
-    ,LEFT
-    ,LEFT
-  ]
-
-  this.initDirections()
-  this.parent.repositionables.push(this)
-
+    this.initDirections()
   }
 
+  directionParameters(id){
+    //calculate constants at current dims
+     var KX = geometry.KEYWHEEL_X - 5*geometry.RADIUS
+     var KY = geometry.KEYWHEEL_Y
+     var TX = geometry.STAFF_X + .5*geometry.STAFFWHEEL_DIAMETER * Math.cos(-geometry.OFFSET) + geometry.RADIUS
+     var SX = geometry.STAFF_X + 3.5*geometry.RADIUS
+     var SY = geometry.STAFF_Y
+     var BX = geometry.STAFF_X + 4*geometry.RADIUS * Math.cos(Math.PI + geometry.OFFSET) + 1.5*geometry.ORB_MAX_RADIUS
+     var BY = geometry.STAFF_Y + 4*geometry.RADIUS * Math.sin(Math.PI + geometry.OFFSET)
+     var params =[ {x: CX, y: CY, align: CENTER, constrain: W, text: 'Leverkuhn is a game of composition and modulation.'}
+                  ,{x: CX, y: CY, align: CENTER, constrain: W, text: 'You will compose a song with your opponent.'}
+                  ,{x: CX, y: CY, align: CENTER, constrain: W, text: 'Your goal is to bring the song as elegantly as possible into your home key.'}
+                  ,{x: KX, y: KY, align: RIGHT,  constrain: KX, text: 'This is the key wheel. You\'re playing for '+ utility.keyCardinalToString(HOME_KEY) + '.'}
+                  ,{x: KX, y: KY, align: RIGHT,  constrain: KX, text: 'The computer is playing for '+ utility.keyCardinalToString(OPPONENT_HOME_KEY) + '.'}
+                  ,{x: KX, y: KY, align: RIGHT,  constrain: KX, text: 'The game begins in '+ utility.keyCardinalToString(CURRENT_KEY) + '.'}
+                  ,{x: TX, y: CY, align: LEFT,   constrain: W - TX - logo.x, text: 'It\'s your turn. Move the voices onto the game board to create a chord.'}
+                  ,{x: SX, y: SY, align: LEFT,   constrain: W - SX, text: 'Click the notes to hear it sound.'}
+                  ,{x: BX, y: BY, align: LEFT,   constrain: W - BX, text: 'Click your score orb to signify the end of your turn.'}
+                ]
+    return params[id]
+  }
   resize(){
     this.keyWheelMask = new Mask({
                       mask_color : colors.background
@@ -88,23 +68,15 @@ class Tutorial{
                      ,type : 'staff'
                      ,init_alpha : 220
     })
-    this.tutorialLocations = [
-       [CX,CY]
-      ,[CX,CY]
-      ,[CX,CY]
-      ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-      ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-      ,[geometry.KEYWHEEL_X - 5*geometry.RADIUS, geometry.KEYWHEEL_Y]
-      ,[geometry.STAFF_X + .5*geometry.STAFFWHEEL_DIAMETER * Math.cos(-geometry.OFFSET) + geometry.RADIUS, CY]
-      ,[geometry.STAFF_X + 3.5*geometry.RADIUS, geometry.STAFF_Y]
-      ,[geometry.STAFF_X + 4*geometry.RADIUS * Math.cos(Math.PI + geometry.OFFSET) + 1.5*geometry.ORB_MAX_RADIUS
-        ,geometry.STAFF_Y + 4*geometry.RADIUS * Math.sin(Math.PI + geometry.OFFSET)]
-    ]
     if(this.hexLabelRemoved)
       this.hexLabelRemoved.resize()
-  }
 
+    var currentIndex = this.activeDirection.id
+    this.activeDirection.remove()
+    this.activeDirection = this.loadDirection(currentIndex)
+  }
   ping(message, id){
+    musician.scoreTutorial(message, id)
     if(message == 'next')
       this.nextDirection(id);
     if(message == 'prev')
@@ -114,22 +86,18 @@ class Tutorial{
     if(message == 'done')
       this.skipDirections()
   }
-
   hideText(){
     this.activeDirection.text = ''
     hexLabels.splice(0, 0, this.hexLabelRemoved)
   }
-
   showText(){
-    this.activeDirection.text = this.tutorialText[this.activeDirection.id]
+    this.activeDirection.text = this.directionParameters(this.activeDirection.id).text
     this.hexLabelRemoved = hexLabels[0]
     hexLabels.splice(0,1)
   }
-
   changeText(str){
     this.activeDirection.text = str
   }
-
   nextDirection(id){
     //pop the last direction from visibles
       this.activeDirection.remove()
@@ -138,7 +106,6 @@ class Tutorial{
     //tell igmgr to shuffle visibles as is necessary
       this.parent.ping(id + 1)
   }
-
   previousDirection(id){
     //pop the last direction from visibles
       this.activeDirection.remove()
@@ -147,24 +114,23 @@ class Tutorial{
     //tell igmgr to shuffle visibles as is necessary
       this.parent.ping(id - 1)
   }
-
   skipDirections(){
     this.activeDirection.remove()
-    this.parent.ping(this.tutorialText.length)
+    this.parent.ping(this.numberOfDirections)
   }
-
   initDirections(){
-    this.activeDirection = new Direction ({id: 0, text: this.tutorialText[0], parent: this})
+    this.activeDirection = this.loadDirection(0)
   }
-
   loadDirection(id){
+    var dir = this.directionParameters(id)
     var d = new Direction ({
                    id: id
-                 , text: this.tutorialText[id]
+                 , text: dir.text
                  , parent:this
-                 , x:this.tutorialLocations[id][0]
-                 , y: this.tutorialLocations[id][1]
-                 , alignment:this.tutorialAlignments[id]
+                 , x: dir.x
+                 , y: dir.y
+                 , alignment: dir.align
+                 , text_size: utility.setTextSize(fonts.letters, dir.text, 24, dir.constrain)
                  })
     return d
   }

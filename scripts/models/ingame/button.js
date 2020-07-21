@@ -1,9 +1,8 @@
 class Button{
-  constructor({parent, id, message, callback, alignment} = {}){
+  constructor({parent, id, message, callback} = {}){
     this.message = message;
     this.tSize = 20 * geometry.SCALE;
     this.linkID = id;
-    this.alignment = alignment
     push();
     textFont(fonts.letters)
     textSize(this.tSize);
@@ -16,10 +15,9 @@ class Button{
     this.color_A = colors.pink;
     this.color_B = colors.outline;
 
-    var sign = this.linkID > 0 ? -1 : 1
-
-    this.x = geometry.KEYWHEEL_X + .5*geometry.KEYWHEEL_DIAMETER*Math.cos(Math.PI/2) + sign*10
+    this.x = this.parent.buttonStop - .5*this.w
     this.y = geometry.STAFF_Y + 3*geometry.RADIUS;
+    this.parent.buttonStop = this.x - .5*this.w - 20
 
     this.parent.clickables.push(this);
     this.parent.repositionables.push(this);
@@ -52,7 +50,7 @@ class Button{
       fill(this.color_A);
       noStroke();
       textSize(this.tSize);
-      textAlign(this.alignment, CENTER);
+      textAlign(CENTER, CENTER);
       text(this.message, this.x, this.y);
     pop();
   }
@@ -60,11 +58,17 @@ class Button{
 
 
   resize(){
-    var sign = this.linkID > 0 ? -1 : 1
     this.tSize = 20 * geometry.SCALE;
+    push();
+    textFont(fonts.letters)
+    textSize(this.tSize);
+    this.w = textWidth(this.message);
+    this.h = textAscent() + textDescent();
+    pop();
 
-    this.x = geometry.KEYWHEEL_X + .5*geometry.KEYWHEEL_DIAMETER*Math.cos(Math.PI/2) + sign*10
+    this.x = this.parent.buttonStop - .5*this.w
     this.y = geometry.STAFF_Y + 3*geometry.RADIUS;
+    this.parent.buttonStop = this.x - .5*this.w - 20
   }
 
 }

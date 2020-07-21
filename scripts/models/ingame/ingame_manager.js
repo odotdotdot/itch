@@ -12,19 +12,19 @@ class InGameManager{
 
     this.voicesHaveBeenIntroduced = false;
 
+    this.buttonStop = geometry.KEYWHEEL_X + .5*geometry.KEYWHEEL_DIAMETER
+
     this.buttons.push(new Button({parent:this
                                   ,id: 0
                                   ,message: 'tutorial'
-                                  ,callback: ()=>{this.tutorial = new Tutorial(this); this.ping(0)}
-                                  ,alignment: LEFT}))
+                                  ,callback: ()=>{TUTORIAL = true; this.tutorial = new Tutorial(this); this.ping(0)}}))
     this.buttons.push(new Button({parent:this
                                  ,id: 1
-                                 ,message: 'show diatonics'
+                                 ,message: 'diatonics'
                                  ,callback: ()=>{
                                    SHOW_DIATONICS = !SHOW_DIATONICS
                                    if(SHOW_DIATONICS){hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
-                                   if(!SHOW_DIATONICS)hexes.forEach( e => {e.fillColor = colors.outline}, RIGHT);}
-                                ,alignment:RIGHT}))
+                                   if(!SHOW_DIATONICS)hexes.forEach( e => {e.fillColor = colors.outline}, RIGHT);}}))
 
     this.mask = new Mask({parent: this, type: 'rect', init_alpha: 0xff});
 
@@ -89,11 +89,13 @@ class InGameManager{
         });
 
         this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
+        this.repositionables.splice(this.repositionables.indexOf(this.tutorial), 1)
         TUTORIAL = false;
     }
   }
 
   reposition(){
+      this.buttonStop = geometry.KEYWHEEL_X + .5*geometry.KEYWHEEL_DIAMETER
     for(var i = 0; i < this.repositionables.length; i ++)
       if(Array.isArray(igmgr.repositionables[i]))
         igmgr.repositionables[i].forEach( e => e.resize() )

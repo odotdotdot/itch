@@ -10,6 +10,7 @@ class FeedBackOrb extends Orb{
       , message: message
       , omega: -2.5*Math.PI
       , semiMajorAxis: 4*geometry.RADIUS
+      , tS: 22*geometry.SCALE
     });
 
     this.coloric = color(this.fillColor);
@@ -19,7 +20,7 @@ class FeedBackOrb extends Orb{
 
     //bezier terms
     this.t = 0;
-    this.tinc = 0.01;
+    this.tinc = 0.015;
     this.CPX = [];
     this.CPY = [];
 
@@ -74,6 +75,7 @@ class FeedBackOrb extends Orb{
     this.primaryY = CY;
     this.radius = .9*geometry.ORB_MAX_RADIUS;
     this.semiMajorAxis = 4*geometry.RADIUS;
+    this.tS = 22*geometry.SCALE
     this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
     this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);
   }

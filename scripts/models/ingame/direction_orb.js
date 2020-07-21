@@ -21,9 +21,8 @@ class DirectionOrb extends Orb{
     this.parent = parent;
     this.state = false;
     this.position = position
-    this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
+    this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius - 5)
     this.parent.parent.parent.clickables.push(this)
-    this.parent.parent.parent.repositionables.push(this)
 
     if(parent.alignment == CENTER)
       this.u = parent.x + .5 * parent.calculate_text_width() - 2*geometry.RADIUS*this.position
@@ -57,12 +56,6 @@ class DirectionOrb extends Orb{
       this.state = false
     }
 
-  }
-
-  resize(){
-    this.radius = geometry.ORB_MAX_RADIUS;
-    this.tS = utility.setTextSize(fonts.letters, this.message, 18, 2*this.radius)
-    this.calculateUV()
   }
 
   calculateUV(){

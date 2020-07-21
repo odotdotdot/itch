@@ -208,7 +208,7 @@ class StaffDisplay{
             if(i < composer.turnsPrevious.length) mR = composer.turnsPrevious[i];
             else mR = MIDI_RECORD;
 
-          musician.recall.triggerAttackRelease(musician.makeChord(mR), "4n");
+          musician.kalimba.triggerAttackRelease(musician.makeChord(mR), "4n");
     }
   }
     display(){

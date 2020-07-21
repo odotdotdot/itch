@@ -27,9 +27,7 @@ class SectorManager{
   }
   resize(){
     this.text_size = geometry.SCALE * 22;
-    this.sectors.forEach(e => {
-      e.resize
-    });
+    this.sectors.forEach(e => { e.resize() });
 
   }
   homeKeyInit(){

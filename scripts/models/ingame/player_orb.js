@@ -42,8 +42,8 @@ class PlayerOrb extends Orb{
     this.collisions++;
 
     if(this.collisions == this.expectedCollisions){
-       this.init_controlledOrbit(Math.PI/128);
-       this.twin.init_controlledOrbit(Math.PI/128);
+       this.init_controlledOrbit(Math.PI/90);
+       this.twin.init_controlledOrbit(Math.PI/90);
        igmgr.visibles.splice(igmgr.visibles.indexOf(scoreKeeper), 1)
 
        setTimeout( ()=>{
