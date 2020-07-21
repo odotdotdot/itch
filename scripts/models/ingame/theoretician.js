@@ -430,6 +430,9 @@ class Theoretician{
               });
               return max
             }
+            currentKeyScore(){
+              return this.SCALE_SCORES[CURRENT_KEY] + this.GROWTH_BONUS[CURRENT_KEY]
+            }
             commonality(keysToTest, mR){
                /*determines whether each voice of m is diatonic, both to the current key
                  and the player's home key.  if yes, returns true if no, returns false*/

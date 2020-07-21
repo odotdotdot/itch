@@ -18,6 +18,7 @@ let SERIAL_RECORD,
     TPN = 3;
     PLAY_BY_EAR = true;
     SHOW_DIATONICS = false;
+    TUTORIAL = true;
 
 let W, H, CX, CY, Xo, Yo;
 let fonts;
@@ -117,7 +118,10 @@ let igmgr;
         for(var i = 0; i < voix.length; i ++)
           if( voix[i].isInside(mouseX, mouseY) ){
             VOICE_MOVEMENT = true;
-            ACTIVE_VOICE = i;}
+            ACTIVE_VOICE = i;
+            if(TUTORIAL)
+              igmgr.tutorial.hideText()
+          }
         //staff wheel chord clicks
         if(sd.isInside(mouseX, mouseY))
           sd.replay(mouseX, mouseY);
@@ -150,8 +154,7 @@ let igmgr;
 
       cd.setChord(THEORY_RECORD, CURRENT_KEY);
 
-      if(PLAY_BY_EAR)
-        musician.scoreVoiceMovement(MIDI_RECORD)
+
     }
    if(TEMPO_DRAG){
       egmgr.tempoOrb.drag();
@@ -165,6 +168,10 @@ let igmgr;
     if(IN_GAME){
       if(VOICE_MOVEMENT){
         VOICE_MOVEMENT = false;
+        if(PLAY_BY_EAR)
+          musician.scoreVoiceMovement(ACTIVE_VOICE)
+        if(TUTORIAL)
+          igmgr.tutorial.showText()
       }
 
       blossom.blossom();
@@ -325,8 +332,8 @@ let igmgr;
     Yo = windowHeight;
     _init_geometry();
     _init_styling();
-    _init_voix();
     _init_hexes();
+    _init_voix();
     _init_players();
 
     composer = new Composer(STARTING_KEY);
@@ -353,23 +360,15 @@ let igmgr;
   }
   function _init_voix(){
     voix.push(new Token({id:0
-                        , x: CX - 9 * geometry.RADIUS
-                        , y: CY - geometry.RADIUS
                         , color:colors.bass
                         , message:'bass'}));
     voix.push(new Token({id:1
-                        , x:CX - 7*geometry.RADIUS
-                        , y: CY - geometry.RADIUS
                         , color:colors.tenor
                         , message:'tenor'}));
     voix.push(new Token({id:2
-                        , x:CX - 5*geometry.RADIUS
-                        , y: CY - geometry.RADIUS
                         , color:colors.alto
                         , message:'alto'}));
     voix.push(new Token({id:3
-                        , x:CX - 3*geometry.RADIUS
-                        , y: CY - geometry.RADIUS
                         , color:colors.soprano
                         , message:'soprano'}));
   }
@@ -402,14 +401,14 @@ let igmgr;
     me = new Player(
          pgmgr.centerText.userName
         ,HOME_KEY
-        ,IS_MY_TURN*Math.PI
+        ,IS_MY_TURN*Math.PI + geometry.OFFSET
         ,colors.pink
         ,colors.bass
         ,IS_MY_TURN);
     opponent = new Player(
          "cpu"
         ,OPPONENT_HOME_KEY
-        ,!IS_MY_TURN*Math.PI
+        ,!IS_MY_TURN*Math.PI + geometry.OFFSET
         ,colors.white
         ,colors.red
         ,!IS_MY_TURN);

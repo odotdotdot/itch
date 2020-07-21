@@ -9,7 +9,6 @@ class EndGameMgmt{
     this.clickables = [];
     this.repositionables = [];
 
-    this.mask = new Mask({parent: this, type: 'rect', speed:6});
     this.tempoOrb = new TempoOrb(0, this);
     this.orbs.push(this.tempoOrb);
     this.visibles.push(this.tempoOrb);
@@ -114,12 +113,6 @@ class EndGameMgmt{
   /*extra things to see on endgame: logo, about link, maybe some kind of aggregate key review
     certainly buy the physical board when it's available */
     this.visibles.push(logo);
-
-    this.mask.fade_up( () => {
-      this.mask.fade_down( ()=>{
-        });
-    });
-
   }
   reposition(){
     for(var i = 0; i < this.repositionables.length; i ++)

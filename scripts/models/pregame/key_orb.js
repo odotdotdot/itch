@@ -14,6 +14,7 @@ class KeyOrb extends Orb{
     this.parent = parent;
     this.state = false;
     this.key_id = i;
+    this.tS = 24*geometry.SCALE
 
   }
   invertColors(){
@@ -41,7 +42,7 @@ class KeyOrb extends Orb{
   resize(){
     this.semiMajorAxis = 5*geometry.RADIUS - Math.floor(this.key_id/12)*1*geometry.RADIUS;
     this.radius = geometry.ORB_MAX_RADIUS;
-    this.tS = utility.setTextSize(fonts.letters, this.message, 24, this.radius * 2 - 5)
+    this.tS = 24*geometry.SCALE
     this.primaryX = CX;
     this.primaryY = CY;
     this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);

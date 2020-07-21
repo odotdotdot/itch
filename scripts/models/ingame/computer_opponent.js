@@ -100,7 +100,7 @@ class ComputerOpponent{
           voix[i].y += this.tokenMovementSpeed * deltaY;
           voix[i].hexCheck();
 
-      if(deltaX < 5 && deltaY < 5){
+      if(deltaX < 2 && deltaY < 2 && serial() == SERIAL_RECORD){
         this.targetSerialsReached|= 1<<i;}
 
       MIDI_RECORD = composer.midiTransfigure(composer.pitchChromify(SERIAL_RECORD));

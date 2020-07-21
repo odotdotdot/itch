@@ -64,12 +64,10 @@ class Musician{
     return chord;
   }
 
-  scoreVoiceMovement(midiRecord){
-    if(midiRecord != this.lastMidiRecord){
-      for(var i = 0; i < 4; i ++){
-        if(utility.getByte(i,midiRecord)!=utility.getByte(i,this.lastMidiRecord) && utility.getByte(i,midiRecord)!=255)
-          this.vibeSynth.triggerAttackRelease(this.makeTone(utility.getByte(i,midiRecord)), "8n");}
-      this.lastMidiRecord = midiRecord;}
+  scoreVoiceMovement(activeVoice){
+    if(utility.getByte(activeVoice, MIDI_RECORD) != 0xff){
+        this.kalimba.triggerAttackRelease(this.makeTone(utility.getByte(activeVoice,MIDI_RECORD)), "8n");
+        }
     else
       return false;
   }

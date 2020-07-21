@@ -70,9 +70,14 @@ class PlayerOrb extends Orb{
       this.invertColors()
   }
   onRelease(){
-    if(this.player.isMyTurn){
+    if(this.player.isMyTurn  && !TUTORIAL && this.player == me){
       this.invertColors()
       turnSignified(this.player)}
+
+    if(this.player.isMyTurn && TUTORIAL && this.player == me){
+      this.invertColors()
+      igmgr.tutorial.changeText('Click done first.')
+    }
   }
   invertColors(){
     var temp = this.fillColor;

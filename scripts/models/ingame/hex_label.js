@@ -15,11 +15,11 @@ class HexLabel{
     push()
     fill(colors.pink)
     textFont(fonts.letters)
-    textSize(24)
+    textSize(24*geometry.SCALE)
     text(this.root, this.center.x, this.center.y);
-    textSize(.6 * 32)
+    textSize(.6 * 32*geometry.SCALE)
     textFont(fonts.accents)
-    text(this.accent, this.center.x + 25*Math.cos(-geometry.OFFSET-Math.PI/6), this.center.y + 20*Math.sin(-geometry.OFFSET-Math.PI/6));
+    text(this.accent, this.center.x + 25*geometry.SCALE*Math.cos(-geometry.OFFSET-Math.PI/6), this.center.y + 20*geometry.SCALE*Math.sin(-geometry.OFFSET-Math.PI/6));
     pop()
   }
   hexSpelling(){

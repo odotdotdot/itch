@@ -10,16 +10,21 @@ class InGameManager{
     this.buttons = [];
     this.conditions = [];
 
-    this.buttons.push(new Button(this, 0, 'tutorial', ()=>{this.tutorial = new Tutorial(this)}))
-    this.buttons.push(new Button(this, 1, 'play by ear', ()=>{PLAY_BY_EAR = !PLAY_BY_EAR}))
-    this.buttons.push(new Button(this, 2, 'show diatonics', ()=>{
-      SHOW_DIATONICS = !SHOW_DIATONICS
-      if(SHOW_DIATONICS){
-        hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
-      if(!SHOW_DIATONICS)
-        hexes.forEach( e => {e.fillColor = colors.outline});
+    this.voicesHaveBeenIntroduced = false;
 
-    }))
+    this.buttons.push(new Button({parent:this
+                                  ,id: 0
+                                  ,message: 'tutorial'
+                                  ,callback: ()=>{this.tutorial = new Tutorial(this); this.ping(0)}
+                                  ,alignment: LEFT}))
+    this.buttons.push(new Button({parent:this
+                                 ,id: 1
+                                 ,message: 'show diatonics'
+                                 ,callback: ()=>{
+                                   SHOW_DIATONICS = !SHOW_DIATONICS
+                                   if(SHOW_DIATONICS){hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
+                                   if(!SHOW_DIATONICS)hexes.forEach( e => {e.fillColor = colors.outline}, RIGHT);}
+                                ,alignment:RIGHT}))
 
     this.mask = new Mask({parent: this, type: 'rect', init_alpha: 0xff});
 
@@ -52,12 +57,21 @@ class InGameManager{
         break;
       case 5:
         sectorManager.currentKeyInit()
+        if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         this.visibles = [hexes, hexLabels, this.tutorial.mask, sectorManager, cd, this.tutorial.activeDirection]
         break;
       case 6:
-        this.visibles = [hexes, sectorManager, this.tutorial.keyWheelMask, cd, voix, hexLabels, this.tutorial.activeDirection]
+        if(!this.voicesHaveBeenIntroduced){
+        voix.forEach( (e, index)=>{
+          e.move(geometry.STAFF_X + .5*geometry.STAFFWHEEL_DIAMETER * Math.cos(Math.PI+geometry.OFFSET)
+                 + index/3 * 2 * .5*geometry.STAFFWHEEL_DIAMETER*Math.sin(Math.PI/2 - geometry.OFFSET)
+                ,CY)})
+        this.voicesHaveBeenIntroduced = true;}
+        this.tutorial.showText();
+        this.visibles = [hexes, sectorManager, this.tutorial.keyWheelMask, cd, sd, this.tutorial.staffWheelMask, voix, hexLabels, this.tutorial.activeDirection]
         break;
       case 7:
+        if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         this.visibles = [hexes, sectorManager, cd, voix, hexLabels, this.tutorial.mask, sd, this.tutorial.activeDirection]
         break;
       case 8:
@@ -68,7 +82,14 @@ class InGameManager{
         sectorManager.opponentHomeKeyInit()
         sectorManager.currentKeyInit()
         sectorManager.turnSignified()
+        if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
+        voix.forEach( (e, index) => {
+          if(e.serialRecord == null)
+            e.move(logo.x + geometry.ORB_MAX_RADIUS + index*2.5*geometry.ORB_MAX_RADIUS, logo.y + 3*geometry.ORB_MAX_RADIUS)
+        });
+
         this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
+        TUTORIAL = false;
     }
   }
 
@@ -118,7 +139,7 @@ class InGameManager{
       //index is delta   n/a, n/a, 2, 3, 4, 5, 6, 7,  8, 9, 10, n/a
       var fifthsUp = [10, 4, 1, 9, 2, 3, 3, 9, 10, 3, 11, 2];
 
-      if(a > 12)
+      if(a >= 12)
         a = this.relative(a)
 
       var major = ( a + 7*fifthsUp[delta]) % 12;

@@ -11,6 +11,8 @@ class LargeText{
     this.fC = fC;
     this.message = message;
     this.show = show;
+
+    this.tS = utility.setTextSize(fonts.letters, this.message, 40, 4*geometry.RADIUS)
   }
   display(){
     if(this.show){
@@ -30,8 +32,14 @@ class LargeText{
   }
 
   updateMessageAtTime(m,n){
-    setTimeout( ()=>{this.show = true;this.message = m;}, n);
+    setTimeout( ()=>{
+      this.show = true;
+      this.message = m;
+      var textSetMessage = this.message.includes('\n') ? this.message.split('\n')[1] : this.message
+      this.tS = utility.setTextSize(fonts.letters, textSetMessage, 40, 4*geometry.RADIUS);
+    }, n);
   }
+  
   turnOffDisplayAtTime(n){
     setTimeout( ()=>{this.show = false;}, n);
   }

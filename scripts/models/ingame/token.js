@@ -5,7 +5,7 @@ class Token {
                    ,radius = 1.25 * geometry.RADIUS
                    ,color = colors.yellow
                    ,message = 'bass'
-                   ,text_size = 24
+                   ,text_size = utility.setTextSize(fonts.letters, message, 24, this.radius - 2)
     } = {}){
           this.id = id;
           this.x = x;
@@ -69,7 +69,7 @@ class Token {
           }
           resize(){
             this.radius = 1.25 * geometry.RADIUS;
-            this.text_size = utility.setTextSize(fonts.letters, this.message, 24, this.radius);
+            this.text_size = utility.setTextSize(fonts.letters, this.message, 24, this.radius - 2);
             this.x = this.x * W/Xo;
             this.y = this.y * H/Yo;
           }

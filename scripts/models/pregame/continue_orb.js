@@ -6,8 +6,8 @@ class ContinueOrb extends Orb {
       , textColor: colors.pink
       , theta: 0
       , show: true
-      , radius: geometry.ORB_MAX_RADIUS
-      , semiMajorAxis: .5*W-4*geometry.ORB_MAX_RADIUS
+      , radius: 1.25*geometry.ORB_MAX_RADIUS
+      , semiMajorAxis: .5*(5*geometry.RADIUS + CX)
       , velocity: 0
 
       });
@@ -36,8 +36,8 @@ class ContinueOrb extends Orb {
   resize(){
           this.primaryX = CX
           this.primaryY = CY
-          this.radius = geometry.ORB_MAX_RADIUS
-          this.semiMajorAxis =  .5*W-2*geometry.ORB_MAX_RADIUS
+          this.radius = 1.25*geometry.ORB_MAX_RADIUS
+          this.semiMajorAxis =  .5*(5*geometry.RADIUS + CX)
           this.tS = utility.setTextSize(fonts.letters, this.message, 24, 2*this.radius - 5)
           this.u = this.primaryX + this.semiMajorAxis*Math.cos(this.theta);
           this.v = this.primaryY + this.semiMajorAxis*Math.sin(this.theta);

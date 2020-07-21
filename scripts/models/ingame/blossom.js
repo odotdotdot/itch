@@ -34,6 +34,8 @@ class Blossom{
     this.activate_hexes();
     this.copy_active_hexes();
     this.remove_inactive_copies();
+    if(SHOW_DIATONICS)
+      {hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
   }
 
   activate_hexes(){
