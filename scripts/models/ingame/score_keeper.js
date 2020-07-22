@@ -14,7 +14,7 @@ class ScoreKeeper{
         this.feedBackText = null;
         this.feedBackEventCount = 0;
         this.feedBackEventsCompleted = 0;
-        this.feedBackInterval = 3000;//maybe set dyanmically based on the size of score / feedbackeventcount
+        this.feedBackInterval = 2000;//maybe set dyanmically based on the size of score / feedbackeventcount
         this.intervalID = null;
         this.t0 = 0;//time param for fade in and out
         this.diatonicNotes = null;
@@ -162,6 +162,8 @@ class ScoreKeeper{
             for(var i = 0; i < this.scoreOrbs.length; i ++)
               if(event == this.scoreOrbs[i].type){
                 this.scoreOrbs[i].appearAtTime( (orbsOfType+1) * this.feedBackInterval/8);
+                var t = (orbsOfType+1) * this.feedBackInterval/8;
+                setTimeout(musician.scoreFeedback, t, this.scoreOrbs[i].message)
                 orbsOfType++;
               }
           /* flip display binaries and make accomodations for variable additions */

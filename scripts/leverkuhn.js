@@ -282,9 +282,7 @@ let igmgr;
       //igmgr.visibles.splice(igmgr.visibles.indexOf(lesserOrbs), 1, lesserOrbs)
       composer.commit(MIDI_RECORD);
       sd.commit(MIDI_RECORD);
-      for(var i = 0; i < musician.synth.length; i ++)
-        musician.synth[i].triggerAttackRelease(musician.makeTone(utility.getByte(i, MIDI_RECORD)), "1n");
-
+      musician.turnSignified();
       me.isMyTurn = !me.isMyTurn;
       opponent.isMyTurn = !opponent.isMyTurn;
 

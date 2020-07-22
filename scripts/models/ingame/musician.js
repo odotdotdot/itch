@@ -6,11 +6,7 @@ class Musician{
 
     //SYNTHS: synth is an array of FM synths for banging chords. recall is a poly synth to be used for replay
     //to do just have one poly fm synth
-        this.synth = [];
-          this.bass = new Tone.FMSynth(); this.synth.push(this.bass);
-          this.tenor = new Tone.FMSynth(); this.synth.push(this.tenor);
-          this.alto = new Tone.FMSynth(); this.synth.push(this.alto);
-          this.soprano = new Tone.FMSynth(); this.synth.push(this.soprano);
+        this.medieval = new Tone.PolySynth(4, Tone.FMSynth)
 
         this.EndSynth = [];
             this.b = new Tone.FMSynth(); this.EndSynth.push(this.b);
@@ -21,37 +17,19 @@ class Musician{
         for(var i = 0; i < this.EndSynth.length; i ++)
           this.EndSynth[i].toMaster();
 
-        this.recall = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
-
-        this.vibeSynth = new Tone.FMSynth().toMaster();
-
         this.kalimba = new Tone.PolySynth(4, Tone.FMSynth).toMaster();
 
 
     //EFFECTS
-        this.pan = [];
-        this.delay = [];
-        var delaySet = [.25, .29, .21, .27];
-        var panSet = [0, -1, 1, 0]
-        for(var i = 0; i < 4; i ++){
-          this.pan.push(new Tone.PanVol(panSet[i], -10));
-          this.delay.push(new Tone.FeedbackDelay(delaySet[i], .85));
-        }
+        this.delay = new Tone.FeedbackDelay(.05, .2);
+        this.chorus = new Tone.Chorus();
 
     //SYNTH SETTINGS
-        this.vibeSynth.set(this.program[0]);
-        this.kalimba.set(this.program[5]);
-        this.recall.set(this.program[1]);
-
-        for(var i = 0; i < this.synth.length; i ++)
-          this.synth[i].set(this.program[2]);
-
-        for(var i = 0; i < this.EndSynth.length; i ++)
-          this.EndSynth[i].set(this.program[0]);
-
-  //ROUTING
-        for(var i = 0; i < this.synth.length; i ++)
-          this.synth[i].chain(this.delay[i], this.pan[i], Tone.Master);
+        this.kalimba.set(this.program[0]);
+        this.medieval.set(this.program[0]);
+        for(var i = 0; i < this.EndSynth.length; i ++)this.EndSynth[i].set(this.program[0]);
+    //ROUTING
+        this.medieval.chain(this.delay, this.chorus, Tone.Master);
 }
 
   makeTone(midiByte){
@@ -63,7 +41,6 @@ class Musician{
       chord.push(this.makeTone(utility.getByte(i,midiRecord)));
     return chord;
   }
-
   scoreTutorial(message, index){
     var tutorialChords = [
        [61, 63, 66]
@@ -89,8 +66,18 @@ class Musician{
     if(message =='done' || message == 'skip')
       this.kalimba.triggerAttackRelease([66, 68, 70, 73, 75, 78].map(e=>this.makeTone(e)), '16n')
   }
-
-
+  scoreFeedback(message){
+    var duree = Tone.Time('64n')
+    if(message.includes('+'))
+      console.log(message)
+    if(message.includes('-'))
+      console.log(message)
+  }
+  turnSignified(){
+      var notes = utility.byteToList(MIDI_RECORD).map(e=>this.makeTone(e))
+      this.medieval.triggerAttackRelease(notes, "2n");
+      //this.kalimba.triggerAttackRelease(notes, '1n');
+  }
   scoreVoiceMovement(activeVoice){
     if(utility.getByte(activeVoice, MIDI_RECORD) != 0xff){
         this.kalimba.triggerAttackRelease(this.makeTone(utility.getByte(activeVoice,MIDI_RECORD)), "8n");
@@ -117,6 +104,6 @@ class Musician{
     }
   }
   scoreCollision(n, cols){
-    this.vibeSynth.triggerAttackRelease(this.makeTone(this.collisionArray[cols]), "8n");
+    this.kalimba.triggerAttackRelease(this.makeTone(this.collisionArray[cols]), "8n");
   }
 }

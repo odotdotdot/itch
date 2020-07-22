@@ -74,7 +74,7 @@ class PregameManager{
     ].map( e=> musician.makeTone(e) );
 
 
-    musician.kalimba.triggerAttackRelease(chord, "2n");
+    musician.medieval.triggerAttackRelease(chord, "2n");
   }
 
   reposition(){
