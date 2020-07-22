@@ -1,7 +1,7 @@
 class Part{
   constructor(noteEventList, offset = "0i"){
     this.part = new Tone.Part( (time, value) =>
-                 { musician.EndSynth[value.vN].triggerAttackRelease(musician.makeTone(value.pitch), value.duration);}
+                 { musician.medieval.triggerAttackRelease(musician.makeTone(value.pitch), value.duration);}
                  , noteEventList ).start(offset);
     this.offset = offset;
     this.vN = noteEventList.vN;

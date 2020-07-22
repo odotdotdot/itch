@@ -8,7 +8,7 @@ let SERIAL_RECORD,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 8,
+    GAME_DURATION_IN_TURNS = 2,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -387,9 +387,9 @@ let igmgr;
     geometry.OFFSET = Math.atan((.25*H)/(.5*W));
     geometry.KEYWHEEL_X = .8 * W;
     geometry.KEYWHEEL_Y = diagonal(geometry.KEYWHEEL_X);
-    geometry.STAFF_X = .25 * W;
+    geometry.STAFF_X = .2 * W;
     geometry.STAFF_Y = diagonal(geometry.STAFF_X);
-    geometry.KEYWHEEL_DIAMETER = 8*geometry.RADIUS;
+    geometry.KEYWHEEL_DIAMETER = 6*geometry.RADIUS;
     geometry.STAFFWHEEL_DIAMETER = 6*geometry.RADIUS;
     geometry.STAFFSPACING = .2667*geometry.RADIUS;
     geometry.STAFFLENGTH = 5.25*geometry.RADIUS;

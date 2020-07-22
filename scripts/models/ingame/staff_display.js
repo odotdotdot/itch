@@ -158,11 +158,14 @@ class StaffDisplay{
       push();
         translate(geometry.STAFF_X, geometry.STAFF_Y)
         //OUTLINE
+          //stroke(colors.outline);
+          //strokeWeight(2);
+          //noStroke()
+          //fill(colors.background);
+          //circle(0,0,6*geometry.RADIUS);
+          noFill();
           stroke(colors.outline);
           strokeWeight(2);
-          fill(colors.background);
-          circle(0,0,6*geometry.RADIUS);
-          noFill();
           //STAFF LINES
             var r = .5*6*geometry.RADIUS;
             for(var i = 6; i >= -6; i--){

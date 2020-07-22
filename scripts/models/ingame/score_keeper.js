@@ -55,6 +55,7 @@ class ScoreKeeper{
       this.feedBackEventCount = 0;
       this.feedBackEventsCompleted = 0;
       this.scoreOrbs = [];
+      musician.feedBackIndex = 0;
 
       var numberOfActiveVoices = 0;
       for(var i = 0; i < 4; i ++)
@@ -163,7 +164,7 @@ class ScoreKeeper{
               if(event == this.scoreOrbs[i].type){
                 this.scoreOrbs[i].appearAtTime( (orbsOfType+1) * this.feedBackInterval/8);
                 var t = (orbsOfType+1) * this.feedBackInterval/8;
-                setTimeout(musician.scoreFeedback, t, this.scoreOrbs[i].message)
+                setTimeout( musician.scoreFeedback.bind(musician), t, this.scoreOrbs[i].message)
                 orbsOfType++;
               }
           /* flip display binaries and make accomodations for variable additions */
