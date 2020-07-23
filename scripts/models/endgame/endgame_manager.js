@@ -89,7 +89,12 @@ class EndGameMgmt{
   //end game chord display requires a list of theory encoded chords
     var trecs  = []; for(var i = TPN; i < composer.turnsPrevious.length; i ++)
     trecs.push(theoretician.theoryEncoding(composer.turnsPrevious[i]));
-    this.egcd = new ChordDisplay({x : .5 * windowWidth, y: .5 * windowHeight, trex: trecs, show: false, outlineColor:colors.background});
+    this.egcd = new ChordDisplay({x : .5 * windowWidth
+                                , y: .5 * windowHeight
+                                , trex: trecs
+                                , show: false
+                                , outlineColor:colors.background
+                                , rootsize: 150});
     this.visibles.push(this.egcd);
 
     this.bpmDisplay = new BPMDisplay();
@@ -103,7 +108,7 @@ class EndGameMgmt{
      in the egmgr clickables to delay function until the presentation is complete
   */
     this.got = new LargeText({message:'game over'});
-    this.got.updateMessageAtTime(utility.whosWinning().userName + ' wins',1500);
+    this.got.updateMessageAtTime(utility.whosWinning().userName + ' wins', 1500);
     this.got.updateMessageAtTime(utility.whosWinning().orb.score + ' to ' + utility.getOtherPlayer(utility.whosWinning()).orb.score, 3000 );
     this.got.updateMessageAtTime('select an arrangement\nand enjoy the music', 4500);
     this.got.turnOffDisplayAtTime(6000);

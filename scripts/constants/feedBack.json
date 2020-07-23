@@ -9,4 +9,5 @@
   ,"changeOver":          {"txt": "'s turn"                     , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"  }
   ,"newBar":              {"txt": "new bar"                     , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".25"}
   ,"bar":                 {"txt": "bar"                         , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": ".25"}
+  ,"gameOver":            {"txt": "fin"                         , "tclr": "#fa9b9b",   "cclr": "#353535", "yOFF": "0"}
 }

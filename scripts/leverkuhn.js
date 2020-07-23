@@ -8,7 +8,7 @@ let SERIAL_RECORD,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 2,
+    GAME_DURATION_IN_TURNS = 8,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -336,7 +336,7 @@ let igmgr;
 
     composer = new Composer(STARTING_KEY);
     theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
-    cd = new ChordDisplay();
+    cd = new ChordDisplay({rootsize:100});
     sd = new StaffDisplay();
     logo = new Logo(50,50);
 

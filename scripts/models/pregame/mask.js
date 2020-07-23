@@ -75,9 +75,9 @@ class Mask{
       if(this.type == 'circle')
         circle(CX, CY, 6*geometry.RADIUS)
       if(this.type == 'key')
-        circle(geometry.KEYWHEEL_X, geometry.KEYWHEEL_Y, geometry.KEYWHEEL_DIAMETER)
+        circle(geometry.KEYWHEEL_X, geometry.KEYWHEEL_Y, geometry.KEYWHEEL_DIAMETER + 5)
       if(this.type == 'staff')
-        circle(geometry.STAFF_X, geometry.STAFF_Y, geometry.STAFFWHEEL_DIAMETER)
+        circle(geometry.STAFF_X, geometry.STAFF_Y, geometry.STAFFWHEEL_DIAMETER + 5)
 
 
     }

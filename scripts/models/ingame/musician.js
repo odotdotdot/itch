@@ -5,31 +5,16 @@ class Musician{
       this.collisionArray = [];
       this.feedBackIndex = 0
 
-    //SYNTHS: synth is an array of FM synths for banging chords. recall is a poly synth to be used for replay
-    //to do just have one poly fm synth
+    //SYNTHS
         this.medieval = new Tone.PolySynth(4, Tone.FMSynth)
-
-        this.EndSynth = [];
-            this.b = new Tone.FMSynth(); this.EndSynth.push(this.b);
-            this.t = new Tone.FMSynth(); this.EndSynth.push(this.t);
-            this.a = new Tone.FMSynth(); this.EndSynth.push(this.a);
-            this.s = new Tone.FMSynth(); this.EndSynth.push(this.s);
-
-        for(var i = 0; i < this.EndSynth.length; i ++)
-          this.EndSynth[i].toMaster();
-
         this.kalimba = new Tone.PolySynth(4, Tone.FMSynth);
-
-
     //EFFECTS
         this.delay = new Tone.FeedbackDelay(.05, .2);
         this.chorus = new Tone.Chorus();
         this.lightChorus = new Tone.Chorus({depth: .2})
-
-    //SYNTH SETTINGS
+    //PATCHES
         this.kalimba.set(this.program[0]);
         this.medieval.set(this.program[0]);
-        for(var i = 0; i < this.EndSynth.length; i ++)this.EndSynth[i].set(this.program[0]);
     //ROUTING
         this.medieval.chain(this.delay, this.chorus, Tone.Master);
         this.kalimba.chain(this.lightChorus, Tone.Master)
@@ -98,7 +83,7 @@ class Musician{
   }
   turnSignified(){
       var notes = utility.byteToList(MIDI_RECORD).map(e=>this.makeTone(e))
-      this.medieval.triggerAttackRelease(notes, "1n");
+      this.medieval.triggerAttackRelease(notes, '1n');
   }
   scoreVoiceMovement(activeVoice){
     if(utility.getByte(activeVoice, MIDI_RECORD) != 0xff){
@@ -126,6 +111,6 @@ class Musician{
     }
   }
   scoreCollision(n, cols){
-    this.medieval.triggerAttackRelease(this.makeTone(this.collisionArray[cols]), "8n");
+    this.kalimba.triggerAttackRelease(this.makeTone(this.collisionArray[cols]), "8n");
   }
 }

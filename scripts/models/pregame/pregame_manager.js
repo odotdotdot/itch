@@ -93,7 +93,7 @@ class PregameManager{
       this.orbs[relative].appearAtTime(time)
 
       if(i < 6){
-        musician.EndSynth[i%4].triggerAttackRelease(musician.makeTone( (7*i) + 48), '4n', t );
+        musician.kalimba.triggerAttackRelease(musician.makeTone( (7*i) + 48), '4n', t );
       }
 
     }
@@ -110,14 +110,14 @@ class PregameManager{
       this.orbs[relative].disappearAtTime(time)
 
       if(i > 6){
-        musician.EndSynth[i%4].triggerAttackRelease(musician.makeTone( 7*i), '4n', t );
+        musician.kalimba.triggerAttackRelease(musician.makeTone( 7*i), '4n', t );
       }
 
     }
   }
 
   charAdded(){
-    musician.EndSynth[this.majorScaleIndex%4].triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
+    musician.kalimba.triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
     this.majorScaleIndex++;
     if(this.majorScaleIndex > this.majorScale - 1)
       this.majorScaleIndex--;
@@ -127,7 +127,7 @@ class PregameManager{
     this.majorScaleIndex--;
     if(this.majorScaleIndex < 0)
       this.majorScaleIndex++;
-    musician.EndSynth[this.majorScaleIndex%4].triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
+    musician.kalimba.triggerAttackRelease(musician.makeTone( 60 + this.majorScale[this.majorScaleIndex]), '4n');
   }
 
 }

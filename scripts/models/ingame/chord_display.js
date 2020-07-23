@@ -4,6 +4,7 @@ class ChordDisplay{
                , show = true
                , trex = []
                , outlineColor = colors.outline
+               , rootsize = 120
              } = {}){
     //load fonts
     //prepare components
@@ -14,7 +15,8 @@ class ChordDisplay{
       this.upperFigure = "";
       this.lowerFigure = "";
       this.displayFont = fonts.letters;
-      this.ROOTSIZE = 120*geometry.SCALE;
+      this.rootCoefficent = rootsize;
+      this.ROOTSIZE = rootsize*geometry.SCALE;
       this.x = x;
       this.y = y;
       this.show = show
@@ -25,7 +27,7 @@ class ChordDisplay{
   resize(x = geometry.KEYWHEEL_X, y=geometry.KEYWHEEL_Y){
     this.x = x;
     this.y = y;
-    this.ROOTSIZE = 120*geometry.SCALE;
+    this.ROOTSIZE = this.rootCoefficent*geometry.SCALE;
   }
   setChord(theoryRecord, ck){
     if(theoryRecord>>>12 < 12){

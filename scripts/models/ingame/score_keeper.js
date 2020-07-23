@@ -23,6 +23,7 @@ class ScoreKeeper{
         this.keyToDisplay = CURRENT_KEY;
         this.roman = null;
         this.feedBackOrb = new TransitionOrb();
+        this.orbTypes = ['diatonic', 'common', 'preparation', 'resolution', 'emergent', 'modulation', 'modulationToHomeKey', 'newBar', 'changeOver', 'gameOver']
         this.x = this.feedBackOrb.primaryX;
         this.y = this.feedBackOrb.primaryY;
   //feedback styling
@@ -56,6 +57,7 @@ class ScoreKeeper{
       this.feedBackEventsCompleted = 0;
       this.scoreOrbs = [];
       musician.feedBackIndex = 0;
+      this.orbTypes = ['diatonic', 'common', 'preparation', 'resolution', 'emergent', 'modulation', 'modulationToHomeKey', 'newBar', 'changeOver', 'gameOver']
 
       var numberOfActiveVoices = 0;
       for(var i = 0; i < 4; i ++)
@@ -134,6 +136,15 @@ class ScoreKeeper{
         this.schedule('changeOver');
     }
 
+    //if this is the last turn change over is not happening so deal with unreleased feedback orbs
+    if(composer.turnsPrevious.length >= 2+GAME_DURATION_IN_TURNS)
+      this.schedule('gameOver')
+
+
+    //reset expected collions to zero
+    this.playerWhoseTurnIsBeingScored.orb.collisions = 0;
+    this.playerWhoseTurnIsBeingScored.orb.expectedCollisions = this.scoreOrbs.length
+    musician.prepareCollisionScore(this.playerWhoseTurnIsBeingScored.orb.expectedCollisions);
 
     }
   feedBackSettings(event){
@@ -172,18 +183,21 @@ class ScoreKeeper{
             if(event == 'resolution' || event == 'preparation') this.showRoman = true;
             if(event == 'newBar') this.showBar = true;
             if(event == 'changeOver') this.feedBackOrb.setMessage( utility.whosTurn() + this.feedBack['changeOver'].txt);
-          /* on second to last event, i.e. before changeover, we speed up rotation by a factor of 4
-             and prepare the orbs for release. prepareTangential returns an estimated rendezvous time,
-             which is ultimately used to initiate the final phase rotation that marks a turn's end*/
-            if(this.feedBackEventCount - this.feedBackEventsCompleted == 1){
 
-              for(var i = 0; i < this.scoreOrbs.length; i ++){
-                this.scoreOrbs[i].release();
+          /* taking the order of events from this.orbTypes, orbs of previous types
+             are released on the execution of a subsequent type and prepared for
+             bezier movement */
+            var typesToRelease = []
+            for(var i = 0; i < this.scoreOrbs.length; i ++){
+              if(this.orbTypes.includes(this.scoreOrbs[i].type)){
+                if( this.orbTypes.indexOf(this.scoreOrbs[i].type) < this.orbTypes.indexOf(event) ){
+                  this.scoreOrbs[i].release();
+                  if(!typesToRelease.includes(this.scoreOrbs[i].type))
+                    typesToRelease.push(this.scoreOrbs[i].type)
+                  }
               }
-              this.playerWhoseTurnIsBeingScored.orb.collisions = 0;
-              this.playerWhoseTurnIsBeingScored.orb.expectedCollisions = this.scoreOrbs.length;
-              musician.prepareCollisionScore(this.playerWhoseTurnIsBeingScored.orb.expectedCollisions);
             }
+            typesToRelease.forEach( e=> this.orbTypes.splice(this.orbTypes.indexOf(e), 1))
         } , time );
 
         /*  1 feedBackInterval later, we schedule annullment */

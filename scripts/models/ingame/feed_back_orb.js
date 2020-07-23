@@ -16,7 +16,7 @@ class FeedBackOrb extends Orb{
     this.coloric = color(this.fillColor);
     this.coloric.setAlpha(230);
     this.movementProtocol = 0;
-    this.releaseAcceleration = 3;
+    this.releaseAcceleration = 5;
 
     //bezier terms
     this.t = 0;
