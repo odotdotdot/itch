@@ -167,6 +167,7 @@ class ScoreKeeper{
       this.feedBackEventCount++;
       var time = (this.feedBackEventCount - 1)*this.feedBackInterval;
 
+        /* feed back is scheduled by event type to occur at n feedBackIntervals from interpretation */
         setTimeout( ()=> {
             this.feedBackSettings(event);
           //activate score orbs to coincide with their text. stagger the arrival of the score orbs
@@ -183,10 +184,11 @@ class ScoreKeeper{
             if(event == 'resolution' || event == 'preparation') this.showRoman = true;
             if(event == 'newBar') this.showBar = true;
             if(event == 'changeOver') this.feedBackOrb.setMessage( utility.whosTurn() + this.feedBack['changeOver'].txt);
+        } , time );
 
-          /* taking the order of events from this.orbTypes, orbs of previous types
-             are released on the execution of a subsequent type and prepared for
-             bezier movement */
+        /* taking the order of events from this.orbTypes, orbs of previous types
+           are released on the execution + half time of a subsequent type and prepared for bezier movement */
+        setTimeout( ()=> {
             var typesToRelease = []
             for(var i = 0; i < this.scoreOrbs.length; i ++){
               if(this.orbTypes.includes(this.scoreOrbs[i].type)){
@@ -198,7 +200,7 @@ class ScoreKeeper{
               }
             }
             typesToRelease.forEach( e=> this.orbTypes.splice(this.orbTypes.indexOf(e), 1))
-        } , time );
+        }, time + .5*this.feedBackInterval);
 
         /*  1 feedBackInterval later, we schedule annullment */
         setTimeout( ()=> {

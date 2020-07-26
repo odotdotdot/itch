@@ -73,6 +73,7 @@ class InGameManager{
       case 7:
         if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         this.visibles = [hexes, sectorManager, cd, voix, hexLabels, this.tutorial.mask, sd, this.tutorial.activeDirection]
+        console.log(this.clickables)
         break;
       case 8:
         this.visibles = [hexes, sectorManager, cd, sd, voix, hexLabels, opponent, this.tutorial.mask, me, this.tutorial.activeDirection]
@@ -82,12 +83,15 @@ class InGameManager{
         sectorManager.opponentHomeKeyInit()
         sectorManager.currentKeyInit()
         sectorManager.turnSignified()
-        if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
+        if(hexLabels.length != hexes.length)
+          hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         voix.forEach( (e, index) => {
-          if(e.serialRecord == null)
-            e.move(logo.x + geometry.ORB_MAX_RADIUS + index*2.5*geometry.ORB_MAX_RADIUS, logo.y + 3*geometry.ORB_MAX_RADIUS)
-        });
-
+          if(e.serialRecord == null){
+              var K = .5 * 3**.5;
+              var x = [3      , 2*K       , 2*K        , 3]
+              var y = [Math.PI, 5*Math.PI/6, -Math.PI/6, 0]
+              e.move(CX + x[index]*geometry.RADIUS*Math.cos(y[index] + geometry.OFFSET)
+                   , CY + x[index]*geometry.RADIUS*Math.sin(y[index] + geometry.OFFSET))}});
         this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
         this.repositionables.splice(this.repositionables.indexOf(this.tutorial), 1)
         TUTORIAL = false;

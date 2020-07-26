@@ -200,7 +200,7 @@ class StaffDisplay{
       else
         return false;
     }
-    replay(mX, mY){
+    onClick(mX, mY){
       var i = this.noteClicked(mX, mY);
       if(i != undefined){
           if(composer.turnsPrevious.length < 7)

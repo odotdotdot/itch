@@ -73,4 +73,19 @@ class Token {
             this.x = this.x * W/Xo;
             this.y = this.y * H/Yo;
           }
+          onClick(){
+            VOICE_MOVEMENT = true;
+            ACTIVE_VOICE = this.id;
+            if(TUTORIAL)
+              igmgr.tutorial.hideText()
+          }
+          onRelease(){
+            if(VOICE_MOVEMENT){
+              VOICE_MOVEMENT = false;
+              if(PLAY_BY_EAR)
+                musician.scoreVoiceMovement(ACTIVE_VOICE)
+              if(TUTORIAL)
+                igmgr.tutorial.showText()
+            }
+          }
   }

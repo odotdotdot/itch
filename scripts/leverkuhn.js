@@ -15,10 +15,11 @@ let SERIAL_RECORD,
     IN_GAME = false,
     END_GAME = false,
     GAME_IS_NOT_YET_OVER = true,
-    TPN = 3;
-    PLAY_BY_EAR = true;
-    SHOW_DIATONICS = false;
-    TUTORIAL = true;
+    TPN = 3,
+    PLAY_BY_EAR = true,
+    SHOW_DIATONICS = false,
+    TUTORIAL = true,
+    ACTIVE_VOICE = null;
 
 let W, H, CX, CY, Xo, Yo;
 let fonts;
@@ -52,8 +53,6 @@ let igmgr;
 
     if(IN_GAME){
         background(colors.background);
-        //orbs
-          //keyOrbs.forEach(e => e.orbit())
         if(cpu.CPU_MOVING_TOKENS)
           cpu.move_tokens();
         for(var i = 0; i < igmgr.visibles.length; i ++)
@@ -101,7 +100,6 @@ let igmgr;
     }
   }
   function mousePressed(){
-
     if(PRE_GAME){
       if(pgmgr.centerText.userNameCreated == true)
         pgmgr.clickables.forEach( e => {
@@ -114,24 +112,16 @@ let igmgr;
 
     if(IN_GAME){
       if(me.isMyTurn){
-        //voice movement
-        for(var i = 0; i < voix.length; i ++)
-          if( voix[i].isInside(mouseX, mouseY) ){
-            VOICE_MOVEMENT = true;
-            ACTIVE_VOICE = i;
-            if(TUTORIAL)
-              igmgr.tutorial.hideText()
-          }
-        //staff wheel chord clicks
-        if(sd.isInside(mouseX, mouseY))
-          sd.replay(mouseX, mouseY);
+
+      for(var i = 0; i < igmgr.clickables.length; i ++)
+        if(Array.isArray(igmgr.clickables[i]))
+          igmgr.clickables[i].forEach( e => {
+            if(e.isInside(mouseX, mouseY))
+              e.onClick();});
+        else
+          if(igmgr.clickables[i].isInside(mouseX, mouseY))
+            igmgr.clickables[i].onClick();
       }
-
-      igmgr.clickables.forEach( e => {
-          if(e.isInside(mouseX, mouseY))
-            e.onClick();
-      });
-
     }
 
     if(END_GAME){
@@ -166,20 +156,15 @@ let igmgr;
           pgmgr.continueOrb.onRelease();
     }
     if(IN_GAME){
-      if(VOICE_MOVEMENT){
-        VOICE_MOVEMENT = false;
-        if(PLAY_BY_EAR)
-          musician.scoreVoiceMovement(ACTIVE_VOICE)
-        if(TUTORIAL)
-          igmgr.tutorial.showText()
-      }
-
       blossom.blossom();
-
-      igmgr.clickables.forEach( e => {
-        if(e.isInside(mouseX, mouseY))
-            e.onRelease();
-      });
+      for(var i = 0; i < igmgr.clickables.length; i ++)
+        if(Array.isArray(igmgr.clickables[i]))
+          igmgr.clickables[i].forEach( e => {
+            if(e.isInside(mouseX, mouseY))
+              e.onRelease();});
+        else
+          if(igmgr.clickables[i].isInside(mouseX, mouseY))
+            igmgr.clickables[i].onRelease();
       //one of those releases has to turnSignified(me)
     }
 
@@ -338,6 +323,7 @@ let igmgr;
     theoretician = new Theoretician(STARTING_KEY, composer.turnsPrevious);
     cd = new ChordDisplay({rootsize:100});
     sd = new StaffDisplay();
+    igmgr.clickables.push(sd)
     logo = new Logo(50,50);
 
     currentKeyOrb = new LesserKeyOrb({id:CURRENT_KEY, fillColor:colors.blue, textColor:colors.white});
@@ -369,6 +355,7 @@ let igmgr;
     voix.push(new Token({id:3
                         , color:colors.soprano
                         , message:'soprano'}));
+    igmgr.clickables.push(voix)
   }
   function _init_hexes(){
     blossom = new Blossom();
