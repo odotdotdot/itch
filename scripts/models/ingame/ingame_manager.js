@@ -69,14 +69,19 @@ class InGameManager{
         this.voicesHaveBeenIntroduced = true;}
         this.tutorial.showText();
         this.visibles = [hexes, sectorManager, this.tutorial.keyWheelMask, cd, sd, this.tutorial.staffWheelMask, voix, hexLabels, this.tutorial.activeDirection]
+        if(!this.clickables.includes(voix))
+          this.clickables.push(voix)
         break;
       case 7:
         if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         this.visibles = [hexes, sectorManager, cd, voix, hexLabels, this.tutorial.mask, sd, this.tutorial.activeDirection]
-        console.log(this.clickables)
+        if(this.clickables.includes(voix))
+          this.clickables.splice(this.clickables.indexOf(voix), 1)
         break;
       case 8:
         this.visibles = [hexes, sectorManager, cd, sd, voix, hexLabels, opponent, this.tutorial.mask, me, this.tutorial.activeDirection]
+        if(!this.clickables.includes(voix))
+          this.clickables.push(voix)
         break;
       default:
         sectorManager.homeKeyInit()
@@ -94,6 +99,8 @@ class InGameManager{
                    , CY + x[index]*geometry.RADIUS*Math.sin(y[index] + geometry.OFFSET))}});
         this.visibles = [hexes, this.buttons, sectorManager, cd, sd, logo, voix, hexLabels, me, opponent]
         this.repositionables.splice(this.repositionables.indexOf(this.tutorial), 1)
+        if(!this.clickables.includes(voix))
+          this.clickables.push(voix)
         TUTORIAL = false;
     }
   }

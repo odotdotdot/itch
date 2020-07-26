@@ -200,7 +200,7 @@ class StaffDisplay{
       else
         return false;
     }
-    onClick(mX, mY){
+    onClick(mX = mouseX, mY = mouseY){
       var i = this.noteClicked(mX, mY);
       if(i != undefined){
           if(composer.turnsPrevious.length < 7)
@@ -213,6 +213,9 @@ class StaffDisplay{
 
           musician.kalimba.triggerAttackRelease(musician.makeChord(mR), "4n");
     }
+  }
+  onRelease(){
+
   }
     display(){
       this.displayStaff();
