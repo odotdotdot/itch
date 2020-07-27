@@ -227,6 +227,9 @@ let igmgr;
   function diagonal(x){
     return -.5*H/W * x + .75*H;
   }
+  function orthagonal(x){
+    return  .5*H/W * x + .25*H;
+  }
   function turnSignified(playerWhoTookTurn){
       /* first, the theoretician conducts analysis.  this could result in a modulation
          the results of the analysis are applied to the player's score and all the feed back orbs are prepared

@@ -147,7 +147,6 @@ class ComputerOpponent{
         var q = easy_targets[2][i] > 11 ? 1 : 0;
         var would_be_tonic = this.zip_theory(r,q)
           if(options.includes(would_be_tonic) ){
-            console.log('preparing easy target');
             theoretical_decision = would_be_tonic;
             break;}
         }
@@ -194,7 +193,7 @@ class ComputerOpponent{
 
       var decision = this.make_random_choice_from_list(economic);
       if(!decision) decision = this.make_random_choice_from_list(perms);
-      console.log('decision', decision)
+      //console.log('decision', decision)
 
     return {  td: theoretical_decision
             , mrr: incoming_cardinal_repr
@@ -671,12 +670,12 @@ class ComputerOpponent{
     for(var i = 0; i < key_filters.length; i ++){
       filtered_options = this.seive(key_filters[i], expanded_options);
       if(filtered_options.length >= this.N_MIN){
-        console.log('running on ', (key_filters[i]&0xf00)>>>8, (key_filters[i]&0xf0)>>>4, (key_filters[i]&0xf) )
+        //console.log('running on ', (key_filters[i]&0xf00)>>>8, (key_filters[i]&0xf0)>>>4, (key_filters[i]&0xf) )
         break;
       }
     }
     if(filtered_options.length == 0){
-      console.log('running on default')
+      //console.log('running on default')
       filtered_options = expanded_options;}
 
     /* here we make a modal adjustment. e.g. if we're trying to get to d minor take the -1 filter and look for a c# */
