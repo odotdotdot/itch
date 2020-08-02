@@ -154,6 +154,8 @@ let igmgr;
     if(PRE_GAME){
         if(pgmgr.continueOrb.state == true)
           pgmgr.continueOrb.onRelease();
+        if(pgmgr.durationOrb.state == true)
+          pgmgr.durationOrb.onRelease();
     }
     if(IN_GAME){
       blossom.blossom();

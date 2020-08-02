@@ -10,12 +10,10 @@ class PregameManager{
     this.firstTime = true;
     this.mask = new Mask({parent: this, type: 'rect'});
     this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:7 });
-
+    this.durationOrb = new DurationOrb({parent:this})
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
     this.majorScaleIndex = 0;
-
-
 
     for(var i = 0; i < 24; i ++)
       this.orbs.push( new KeyOrb(i, this) );
@@ -28,6 +26,11 @@ class PregameManager{
 
     setTimeout( ()=> {this.centerText.currentText = this.centerText.commands[1]}, 1500);
 
+  }
+
+  durationChange(n){
+    GAME_DURATION_IN_TURNS = 4*n;
+    TOTAL_BARS = n;
   }
 
   transition_to_in_game(){
@@ -55,6 +58,9 @@ class PregameManager{
       this.visibles.push(this.continueOrb);
       this.clickables.push(this.continueOrb);
       this.repositionables.push(this.continueOrb);
+
+      this.visibles.push(this.durationOrb);
+      this.clickables.push(this.durationOrb);
     }
 
     this.centerMask.fade_down( ()=> {this.centerMask.color.setAlpha(0xff)} );
