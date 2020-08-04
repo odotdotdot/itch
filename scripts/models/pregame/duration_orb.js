@@ -30,6 +30,7 @@ class DurationOrb extends Orb{
     this.message = this.bars + ' bars'
     this.tS = utility.setTextSize(fonts.letters, this.message, 24, 2*this.radius - 5)
     this.parent.durationChange(this.bars)
+    musician.scoreDuration(this.bars)
     this.invertColors();
     this.state = true;
   }
@@ -46,8 +47,8 @@ class DurationOrb extends Orb{
   }
 
   resize(){
-          this.primaryX = parent.continueOrb.u
-          this.primaryY = parent.continueOrb.v
+          this.primaryX = this.parent.continueOrb.u
+          this.primaryY = this.parent.continueOrb.v
           this.radius = .75*geometry.ORB_MAX_RADIUS
           this.semiMajorAxis =  1.5*geometry.RADIUS
           this.tS = utility.setTextSize(fonts.letters, this.message, 24, 2*this.radius - 5)

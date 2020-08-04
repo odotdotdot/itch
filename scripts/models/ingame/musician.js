@@ -23,12 +23,14 @@ class Musician{
   makeTone(midiByte){
     return Tone.Frequency(midiByte, "midi");
   }
+
   makeChord(midiRecord){
     let chord = [];
     for(var i = 0; i < 4; i ++)
       chord.push(this.makeTone(utility.getByte(i,midiRecord)));
     return chord;
   }
+
   scoreTutorial(message, index){
     var tutorialChords = [
        [61, 63, 66]
@@ -54,6 +56,15 @@ class Musician{
     if(message =='done' || message == 'skip')
       this.kalimba.triggerAttackRelease([66, 68, 70, 73, 75, 78].map(e=>this.makeTone(e)), '16n')
   }
+
+  scoreDuration(bars){
+    // 2, 4, 8, 16
+    var blackKeys = [54, 56, 58, 61, 63, 66, 68, 70, 73, 75, 78, 80, 82, 85]
+    var index = Math.log2(bars) - 1 + Math.floor(bars/4)
+    var theseBlackKeys = blackKeys.slice(index, index+5)
+      this.kalimba.triggerAttackRelease(theseBlackKeys.map(e=>this.makeTone(e)), '16n')
+  }
+
   scoreFeedback(message){
     var duree = Tone.Time('32n')
     var score = parseInt(message, 10)
@@ -81,10 +92,12 @@ class Musician{
 
     this.feedBackIndex ++
   }
+
   turnSignified(){
       var notes = utility.byteToList(MIDI_RECORD).map(e=>this.makeTone(e))
       this.medieval.triggerAttackRelease(notes, '1n');
   }
+
   scoreVoiceMovement(activeVoice){
     if(utility.getByte(activeVoice, MIDI_RECORD) != 0xff){
         this.kalimba.triggerAttackRelease(this.makeTone(utility.getByte(activeVoice,MIDI_RECORD)), "8n");
@@ -92,6 +105,7 @@ class Musician{
     else
       return false;
   }
+
   prepareCollisionScore(exCols){
     this.collisionArray = [];
     var direction = 1;
@@ -110,6 +124,7 @@ class Musician{
           direction*=-1;
     }
   }
+
   scoreCollision(n, cols){
     this.kalimba.triggerAttackRelease(this.makeTone(this.collisionArray[cols]), "8n");
   }
