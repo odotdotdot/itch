@@ -11,13 +11,14 @@ class Musician{
     //EFFECTS
         this.delay = new Tone.FeedbackDelay(.05, .2);
         this.chorus = new Tone.Chorus();
-        this.lightChorus = new Tone.Chorus({depth: .2})
+        this.lightChorus = new Tone.Chorus({depth: .2});
+        this.compressor = new Tone.Compressor();
     //PATCHES
         this.kalimba.set(this.program[0]);
         this.medieval.set(this.program[0]);
     //ROUTING
-        this.medieval.chain(this.delay, this.chorus, Tone.Master);
-        this.kalimba.chain(this.lightChorus, Tone.Master)
+        this.medieval.chain(this.delay, this.chorus, this.compressor, Tone.Master);
+        this.kalimba.chain(this.lightChorus, this.compressor, Tone.Master);
 }
 
   makeTone(midiByte){
