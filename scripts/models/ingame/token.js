@@ -76,7 +76,7 @@ class Token {
           onClick(){
             VOICE_MOVEMENT = true;
             ACTIVE_VOICE = this.id;
-            if(TUTORIAL)
+            if(TUTORIAL && igmgr.tutorial.activeDirection.id == 6)
               igmgr.tutorial.hideText()
           }
           onRelease(){
@@ -84,7 +84,7 @@ class Token {
               VOICE_MOVEMENT = false;
               if(PLAY_BY_EAR)
                 musician.scoreVoiceMovement(ACTIVE_VOICE)
-              if(TUTORIAL)
+              if(TUTORIAL && igmgr.tutorial.activeDirection.id == 6)
                 igmgr.tutorial.showText()
             }
           }

@@ -57,7 +57,7 @@ let igmgr;
           cpu.move_tokens();
         for(var i = 0; i < igmgr.visibles.length; i ++)
           if(Array.isArray(igmgr.visibles[i]))
-            igmgr.visibles[i].forEach( e => e.display() )
+            igmgr.visibles[i].forEach(e => e.display() )
           else
             igmgr.visibles[i].display();
 

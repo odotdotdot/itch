@@ -58,7 +58,8 @@ class InGameManager{
         break;
       case 5:
         sectorManager.currentKeyInit()
-        if(hexLabels.length != hexes.length) hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
+        if(hexLabels.length != hexes.length)
+          hexLabels.splice(0, 0, this.tutorial.hexLabelRemoved)
         this.visibles = [hexes, hexLabels, this.tutorial.mask, sectorManager, cd, this.tutorial.activeDirection]
         break;
       case 6:
