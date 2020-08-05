@@ -17,11 +17,12 @@ class InGameManager{
     this.buttons.push(new Button({parent:this
                                   ,id: 0
                                   ,message: 'tutorial'
-                                  ,callback: ()=>{TUTORIAL = true; this.tutorial = new Tutorial(this); this.ping(0)}}))
+                                  ,callback: ()=>{TUTORIAL = true; this.tutorial = new Tutorial(this); this.ping(0); musician.scoreButton();}}))
     this.buttons.push(new Button({parent:this
                                  ,id: 1
                                  ,message: 'diatonics'
                                  ,callback: ()=>{
+                                   musician.scoreButton();
                                    SHOW_DIATONICS = !SHOW_DIATONICS
                                    if(SHOW_DIATONICS){hexes.filter( e => isDiatonic(e.pitchChromatic) ).forEach( e => e.fillColor = colors.outline_plus);}
                                    if(!SHOW_DIATONICS)hexes.forEach( e => {e.fillColor = colors.outline}, RIGHT);}}))

@@ -57,6 +57,11 @@ class Musician{
       this.kalimba.triggerAttackRelease([66, 68, 70, 73, 75, 78].map(e=>this.makeTone(e)), '16n')
   }
 
+  scoreButton(){
+    var blackKeys = [61, 63, 66, 68].map(e=>this.makeTone(e));
+    this.kalimba.triggerAttackRelease(blackKeys, '16n')
+  }
+
   scoreDuration(bars){
     // 2, 4, 8, 16
     var blackKeys = [54, 56, 58, 61, 63, 66, 68, 70, 73, 75, 78, 80, 82, 85]
