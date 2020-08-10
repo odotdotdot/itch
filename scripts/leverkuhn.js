@@ -261,7 +261,8 @@ let igmgr;
 
       //update keyOrbs
       var loi = score.loi;
-      keyOrbs.splice(keyOrbs.indexOf(homeKeyOrb) + 1, keyOrbs.length - 3)
+
+      //sectorManager.handleLOI(loi);
 
       var current_key_init = ( (CURRENT_KEY*7)%12)*2*Math.PI/12 - Math.PI/2 - (Math.PI/2)*Math.floor(CURRENT_KEY/12);
       var rotation_from_init = currentKeyOrb.theta - current_key_init;
@@ -275,8 +276,6 @@ let igmgr;
       musician.turnSignified();
       me.isMyTurn = !me.isMyTurn;
       opponent.isMyTurn = !opponent.isMyTurn;
-
-
 
 }
   function checkIfGameIsOver(){

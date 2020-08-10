@@ -45,6 +45,25 @@ class SectorManager{
   turnSignified(){
     this.sectors.forEach(e => {e.setAlphas()} )
   }
+
+  handleLOI(loi){
+    /* this function alerts the players to which keys are on the horizon.  Seems a little too useful. */
+    //default style everything
+      this.sectors.forEach( e => {
+        e.fillColor = color(colors.outline);
+        e.textColor = color(colors.pink); });
+    //get the three special ones
+      this.homeKeyInit()
+      this.currentKeyInit()
+      this.opponentHomeKeyInit()
+    //text color loi sectors blue
+      for(var i = 0; i < 24; i ++)
+        if(loi.flat().includes(i))
+          this.sectors[i].textColor = color(colors.blue)
+
+
+  }
+
   updateCurrentKey(){
     //default style the old current key
     this.sectors[this.currentKey].fillColor = color(colors.outline)
