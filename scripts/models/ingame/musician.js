@@ -19,6 +19,8 @@ class Musician{
     //ROUTING
         this.medieval.chain(this.delay, this.chorus, this.compressor, Tone.Master);
         this.kalimba.chain(this.lightChorus, this.compressor, Tone.Master);
+    //I AM THEREFORE I AM
+        this.scoreCreation()
 }
 
   makeTone(midiByte){
@@ -30,6 +32,13 @@ class Musician{
     for(var i = 0; i < 4; i ++)
       chord.push(this.makeTone(utility.getByte(i,midiRecord)));
     return chord;
+  }
+
+  scoreCreation(){
+    var duree = Tone.Time('32n')
+    var blackKeys = [61, 63, 66, 68, 70, 73].map(e=>this.makeTone(e));
+    for(var i = 0; i < blackKeys.length; i ++)
+      this.medieval.triggerAttackRelease(blackKeys[i], duree, '+' + i*duree)
   }
 
   scoreTutorial(message, index){
