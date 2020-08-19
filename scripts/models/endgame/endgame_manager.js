@@ -135,7 +135,7 @@ class EndGameMgmt{
 
   }
   playAgain(){
-    var url = "https://peter-bradley.itch.io/leverkuhn";
+    var url = "https://leverkuhn.app/";
     window.location.href = url;
   }
   dlreq(){
