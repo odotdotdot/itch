@@ -188,6 +188,7 @@ let igmgr;
         if(keyCode === ENTER){
           pgmgr.centerText.soundCardInit = true;
           pgmgr.centerText.currentText = pgmgr.centerText.commands[1];// welcome to leverkuhn
+          musician.scoreCreation()
           setTimeout( ()=> {pgmgr.centerText.currentText = pgmgr.centerText.commands[2]}, 1500);
         }
       }

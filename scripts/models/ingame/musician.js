@@ -19,8 +19,6 @@ class Musician{
     //ROUTING
         this.medieval.chain(this.delay, this.chorus, this.compressor, Tone.Master);
         this.kalimba.chain(this.lightChorus, this.compressor, Tone.Master);
-    //I AM THEREFORE I AM
-        this.scoreCreation()
 }
 
   makeTone(midiByte){
