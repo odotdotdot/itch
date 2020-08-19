@@ -4,7 +4,8 @@ class CenterText{
     this.command_index = 0;
 
     this.commands = [
-       "welcome to leverkuhn"
+       "press any key to begin"
+      ,"welcome to leverkuhn"
       ,"enter a user name"
       ,"select your home key"
     ];
@@ -12,6 +13,7 @@ class CenterText{
     this.userName = "";
     this.userNameCreated = false;
     this.enteringUserName = false;
+    this.soundCardInit = false;
 
     this.currentText = this.commands[0];
 

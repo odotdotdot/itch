@@ -183,18 +183,29 @@ let igmgr;
   }
   function keyPressed(){
     if(PRE_GAME){
-      if(pgmgr.centerText.userNameCreated == false){
 
-          if(pgmgr.centerText.currentText == pgmgr.centerText.commands[1]){
+      if(pgmgr.centerText.soundCardInit == false){
+        if(keyCode === ENTER){
+          pgmgr.centerText.soundCardInit = true;
+          pgmgr.centerText.currentText = pgmgr.centerText.commands[1];// welcome to leverkuhn
+          setTimeout( ()=> {pgmgr.centerText.currentText = pgmgr.centerText.commands[2]}, 1500);
+        }
+      }
+
+      if(pgmgr.centerText.soundCardInit == true){
+
+        if(pgmgr.centerText.userNameCreated == false){
+
+          if(pgmgr.centerText.currentText == pgmgr.centerText.commands[2]){
              pgmgr.centerText.currentText = pgmgr.centerText.userName;
              pgmgr.centerText.enteringUserName = true;
           }
 
         if(pgmgr.centerText.enteringUserName){
+
           if(keyCode >= 48 && keyCode <= 90 && pgmgr.centerText.currentText.length <=8){
             pgmgr.charAdded();
-            pgmgr.centerText.currentText += key;;
-          }
+            pgmgr.centerText.currentText += key;}
 
           if(keyCode === BACKSPACE){
             pgmgr.charDelted();
@@ -206,16 +217,12 @@ let igmgr;
             pgmgr.centerText.userName = pgmgr.centerText.currentText;
             pgmgr.centerText.currentText = pgmgr.centerText.commands[2];
             pgmgr.centerText.resize();
-            pgmgr.revealOrbs();
-
-          }
+            pgmgr.revealOrbs();}
         }
     }
   }
-
-    //if(keyCode === TAB){
-      //saveCanvas();}
-  return false;
+  }
+return false;
 }
 
 //global scope

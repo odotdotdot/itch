@@ -24,8 +24,6 @@ class PregameManager{
       this.repositionables.push(this.orbs[i])
     }
 
-    setTimeout( ()=> {this.centerText.currentText = this.centerText.commands[1]}, 1500);
-
   }
 
   durationChange(n){
