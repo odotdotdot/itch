@@ -42,6 +42,7 @@ let igmgr;
     let p = createCanvas(windowWidth, windowHeight); p.id('p');
     _init_welcome();
     _init_styling();
+    console.log(navigator.userAgent)
   }
 
   function draw(){
@@ -214,7 +215,7 @@ let igmgr;
             pgmgr.centerText.userNameCreated = true;
             pgmgr.centerText.enteringUserName = false;
             pgmgr.centerText.userName = pgmgr.centerText.currentText;
-            pgmgr.centerText.currentText = pgmgr.centerText.commands[2];
+            pgmgr.centerText.currentText = pgmgr.centerText.commands[3];
             pgmgr.centerText.resize();
             pgmgr.revealOrbs();}
         }
