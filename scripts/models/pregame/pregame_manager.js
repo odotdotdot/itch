@@ -11,6 +11,7 @@ class PregameManager{
     this.mask = new Mask({parent: this, type: 'rect'});
     this.centerMask = new Mask({parent: this, type: 'circle', init_alpha: 0xff, mask_color: colors.background, speed:7 });
     this.durationOrb = new DurationOrb({parent:this})
+    this.notMobile = true
 
     this.majorScale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
     this.majorScaleIndex = 0;
@@ -96,9 +97,11 @@ class PregameManager{
       this.orbs[major].appearAtTime(time)
       this.orbs[relative].appearAtTime(time)
 
+    if(this.notMobile){
       if(i < 6){
         musician.kalimba.triggerAttackRelease(musician.makeTone( (7*i) + 48), '4n', t );
       }
+    }
 
     }
   }

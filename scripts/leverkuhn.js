@@ -41,8 +41,8 @@ let igmgr;
   function setup(){
     let p = createCanvas(windowWidth, windowHeight); p.id('p');
     _init_welcome();
+    detectUserAgent();
     _init_styling();
-    console.log(navigator.userAgent)
   }
 
   function draw(){
@@ -224,6 +224,10 @@ let igmgr;
   }
 return false;
 }
+  function touchStarted(){
+    mousePressed()
+    return false
+  }
 
 //global scope
   function serial(){
@@ -410,4 +414,26 @@ return false;
         ,!IS_MY_TURN);
     me.orb.setTwin(opponent.orb);
     opponent.orb.setTwin(me.orb);
+  }
+  function detectUserAgent(){
+    if(navigator.userAgent.match(/iPhone/i)
+    || navigator.userAgent.match(/Android/i)
+    || navigator.userAgent.match(/webOS/i)
+    || navigator.userAgent.match(/iPad/i)
+    || navigator.userAgent.match(/iPod/i)
+    || navigator.userAgent.match(/BlackBerry/i)
+    || navigator.userAgent.match(/Windows Phone/i) ){
+      pgmgr.notMobile = false;
+      window.addEventListener("orientationchange", function(event){
+        windowResized()
+        });
+      pgmgr.centerText.userNameCreated = true;
+      pgmgr.centerText.enteringUserName = false;
+      pgmgr.centerText.userName = 'player 1';
+      pgmgr.centerText.currentText = pgmgr.centerText.commands[1];
+      pgmgr.centerText.resize()// welcome to leverkuhn
+      setTimeout( ()=> {pgmgr.centerText.currentText = 'make sure your phone\'s not on silent';pgmgr.centerText.resize();}, 1500);
+      setTimeout( ()=> {pgmgr.centerText.currentText = pgmgr.centerText.commands[3];pgmgr.centerText.resize();}, 3000);
+      pgmgr.revealOrbs();
+    }
   }
