@@ -416,6 +416,7 @@ return false;
     opponent.orb.setTwin(me.orb);
   }
   function detectUserAgent(){
+    //bypasses username entry for mobile browsers.  window resize could work better
     if(navigator.userAgent.match(/iPhone/i)
     || navigator.userAgent.match(/Android/i)
     || navigator.userAgent.match(/webOS/i)
