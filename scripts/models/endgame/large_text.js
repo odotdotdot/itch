@@ -39,7 +39,7 @@ class LargeText{
       this.tS = utility.setTextSize(fonts.letters, textSetMessage, 40, 4*geometry.RADIUS);
     }, n);
   }
-  
+
   turnOffDisplayAtTime(n){
     setTimeout( ()=>{this.show = false;}, n);
   }

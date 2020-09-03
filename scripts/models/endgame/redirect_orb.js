@@ -1,23 +1,32 @@
-class DownloadOrb extends Orb{
-  constructor(i, parent, theta){
+class RedirectOrb extends Orb{
+  constructor({i
+              ,parent
+              ,url
+              ,message
+              ,semiMajorConstant = 8
+              ,semiMajorAxis = 8*geometry.RADIUS
+              ,tab = false}={}){
     super({
-      message: "download"
+      message: message
     , fillColor: colors.alto
     , textColor: colors.black
-    , theta: theta
+    , theta: 0
     , show: true
     , radius: 1.25*geometry.ORB_MAX_RADIUS
-    , semiMajorAxis: 6*geometry.RADIUS
-    , primaryY : H - 2.25*geometry.ORB_MAX_RADIUS
+    , semiMajorAxis: semiMajorAxis
+    , semiMajorConstant: semiMajorConstant
+    , primaryY: H - 2.25*geometry.ORB_MAX_RADIUS
     });
 
     this.outlineColor = colors.outline;
     this.parent = parent;
     this.state = false;
-    this.parent.orbs.push(this);
+    this.url = url;
+    this.tab = tab;
+    this.tS = utility.setTextSize(fonts.letters, this.parent.redirectOrbTextSizeTest, 24, this.radius * 2 - 5)
+
     this.parent.clickables.push(this);
     this.parent.repositionables.push(this);
-    this.tS = utility.setTextSize(fonts.letters, this.parent.redirectOrbTextSizeTest, 24, this.radius * 2 - 5)
 
 
   }
@@ -35,7 +44,7 @@ class DownloadOrb extends Orb{
 
   onRelease(){
     this.invertColors();
-    this.parent.dlreq();
+    this.parent.redirect(this.url, this.tab);
     this.state = false;
   }
 
@@ -46,7 +55,7 @@ class DownloadOrb extends Orb{
   }
 
   resize(){
-    this.semiMajorAxis = 6*geometry.RADIUS;
+    this.semiMajorAxis = this.semiMajorConstant*geometry.RADIUS;
     this.radius = 1.25*geometry.ORB_MAX_RADIUS;
     this.tS = utility.setTextSize(fonts.letters, this.parent.redirectOrbTextSizeTest, 24, this.radius * 2 - 5)
     this.primaryX = CX;

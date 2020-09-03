@@ -8,83 +8,51 @@ class EndGameMgmt{
     this.visibles = [];
     this.clickables = [];
     this.repositionables = [];
+    this.redirectOrbTextSizeTest = 'play again';
+    this.firstClick = false;
 
-    this.tempoOrb = new TempoOrb(0, this);
-    this.orbs.push(this.tempoOrb);
-    this.visibles.push(this.tempoOrb);
-    this.clickables.push(this.tempoOrb);
-    this.repositionables.push(this.tempoOrb);
+    this.tempoOrb = new TempoOrb(0, this, 0);
+    this.downloadOrb = new DownloadOrb(1, this, 0);
+    this.playAgainOrb = new RedirectOrb({i:2
+                                       , parent:this
+                                       , message:'play again'
+                                       , url:""});
+    this.contactOrb = new RedirectOrb({i:3,
+                                       parent:this,
+                                       message:'about',
+                                       url:"about.html",
+                                       semiMajorConstant:10,
+                                       semiMajorAxis:10*geometry.RADIUS,
+                                       tab: true});
 
-    this.downloadOrb = new DownloadOrb(1, this);
-    this.orbs.push(this.downloadOrb);
-    this.visibles.push(this.downloadOrb);
-    this.clickables.push(this.downloadOrb);
-    this.repositionables.push(this.downloadOrb);
 
-    this.playAgainOrb = new PlayAgainOrb(2, this);
-    this.orbs.push(this.playAgainOrb);
-    this.visibles.push(this.playAgainOrb);
-    this.clickables.push(this.playAgainOrb);
-    this.repositionables.push(this.playAgainOrb);
-
-    this.endGameOrbs[0] = new EndGameOrb({i:3
+    this.endGameOrbs[0] = new EndGameOrb({i:2
+                                        , theta: Math.PI
                                         , egoi : 0
-                                        , m:"16th"
-                                        , bpm:70
-                                        , tickLength: (4*GAME_DURATION_IN_TURNS).toString() + "i"
+                                        , m:"arpeggio"
+                                        , bpm:85
+                                        , tickLength: (8*GAME_DURATION_IN_TURNS).toString() + "i"
                                         , parent: this
                                         , patch: 0
-                                        , parts:[ new Part(new NoteEventList({vN:0, duration:1, n:4}).eventList)
-                                                , new Part(new NoteEventList({vN:1, duration:1, n:4}).eventList, "1i")
-                                                , new Part(new NoteEventList({vN:2, duration:1, n:4}).eventList, "2i")
-                                                , new Part(new NoteEventList({vN:3, duration:1, n:4}).eventList, "3i")
+                                        , parts:[ new Part(new NoteEventList({vN:0, duration:2, n:8}).eventList)
+                                                , new Part(new NoteEventList({vN:1, duration:2, n:8}).eventList, "2i")
+                                                , new Part(new NoteEventList({vN:2, duration:2, n:8}).eventList, "4i")
+                                                , new Part(new NoteEventList({vN:3, duration:2, n:8}).eventList, "6i")
                                                   ]});
-    this.endGameOrbs[1] = new EndGameOrb({i:4
-                                        , m:"qtr"
+    this.endGameOrbs[1] = new EndGameOrb({i:3
+                                        , theta: 0
                                         , egoi : 1
-                                        , bpm:120
-                                        , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
-                                        , parent: this
-                                        , patch: 0
-                                        , parts:[ new Part(new NoteEventList({vN:0, duration:4, n:16}).eventList)
-                                                , new Part(new NoteEventList({vN:1, duration:4, n:16}).eventList, "4i")
-                                                , new Part(new NoteEventList({vN:2, duration:4, n:16}).eventList, "8i")
-                                                , new Part(new NoteEventList({vN:3, duration:4, n:16}).eventList, "12i")
-                                                  ]});
-    this.endGameOrbs[2] = new EndGameOrb({i:5
-                                        , m:"alberti"
-                                        , egoi : 2
-                                        , bpm:110
-                                        , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
-                                        , parent: this
-                                        , patch:0
-                                        , parts:[ new Part(new NoteEventList({vN:0, duration:4,  n:16}).eventList)
-                                                , new Part(new NoteEventList({vN:2, duration:4,  n:16}).eventList, "4i")
-                                                , new Part(new NoteEventList({vN:1, duration:4,  n:16}).eventList, "8i")
-                                                , new Part(new NoteEventList({vN:2, duration:4,  n:16}).eventList, "12i")
-
-                                                , new Part(new NoteEventList({vN:3, duration:8,  n:16}).eventList, "4i")
-                                                , new Part(new NoteEventList({vN:3, duration:8,  n:16}).eventList, "8i")
-                                                , new Part(new NoteEventList({vN:2, duration:8,  n:16}).eventList, "6i")
-                                                , new Part(new NoteEventList({vN:1, duration:8,  n:16}).eventList, "12i")
-                                                  ]});
-    this.endGameOrbs[3] = new EndGameOrb({i:6
-                                        , egoi : 3
                                         , m:"pad"
-                                        , bpm:120
-                                        , tickLength:(16*GAME_DURATION_IN_TURNS).toString() + "i"
+                                        , bpm:85
+                                        , tickLength:(8*GAME_DURATION_IN_TURNS).toString() + "i"
                                         , parent: this
                                         , patch: 0
-                                        , parts:[ new Part(new NoteEventList({vN:0, duration:16,  n:16}).eventList)
-                                                , new Part(new NoteEventList({vN:1, duration:16,  n:16}).eventList)
-                                                , new Part(new NoteEventList({vN:2, duration:16,  n:16}).eventList)
-                                                , new Part(new NoteEventList({vN:3, duration:16,  n:16}).eventList)
+                                        , parts:[ new Part(new NoteEventList({vN:0, duration:8,  n:8}).eventList)
+                                                , new Part(new NoteEventList({vN:1, duration:8,  n:8}).eventList)
+                                                , new Part(new NoteEventList({vN:2, duration:8,  n:8}).eventList)
+                                                , new Part(new NoteEventList({vN:3, duration:8,  n:8}).eventList)
                                               ]});
-    for(var i = 0; i < this.endGameOrbs.length; i ++){
-      this.orbs.push(this.endGameOrbs[i]);
-      this.visibles.push(this.endGameOrbs[i]);
-      this.clickables.push(this.endGameOrbs[i]);
-      this.repositionables.push(this.endGameOrbs[i]);}
+
 
   //end game chord display requires a list of theory encoded chords
     var trecs  = []; for(var i = TPN; i < composer.turnsPrevious.length; i ++)
@@ -111,7 +79,10 @@ class EndGameMgmt{
     this.got.updateMessageAtTime(utility.whosWinning().userName + ' wins', 1500);
     this.got.updateMessageAtTime(utility.whosWinning().orb.score + ' to ' + utility.getOtherPlayer(utility.whosWinning()).orb.score, 3000 );
     this.got.updateMessageAtTime('select an arrangement\nand enjoy the music', 4500);
-    this.got.turnOffDisplayAtTime(6000);
+    setTimeout( ()=> {
+        for(var i = 0; i < this.endGameOrbs.length; i ++)
+          this.visibles.push(this.endGameOrbs[i])}, 4500);
+
     this.visibles.push(this.got);
     this.repositionables.push(this.got);
 
@@ -127,16 +98,17 @@ class EndGameMgmt{
   }
   display(){
 
-    for(var i = 0; i < this.orbs.length; i ++)
-      this.orbs[i].orbit();
+    this.tempoOrb.orbit();
 
     for(var i = 0; i < this.visibles.length; i ++)
         this.visibles[i].display();
 
   }
-  playAgain(){
-    var url = "https://leverkuhn.app/";
-    window.location.href = url;
+  redirect(url, tab){
+    if(tab)
+      window.open(window.location+url, '_blank')
+    else
+      window.location.href = window.location+url;
   }
   dlreq(){
     /* this functions prepares a data packet for midi.js, serverside.  for each end game orb (provided it's on) we go through each of its parts
@@ -166,16 +138,26 @@ class EndGameMgmt{
             foundHotEndGameOrb = true;}
 
     if(foundHotEndGameOrb == false){
-    this.got.updateMessageAtTime('select an arrangement', 0);
-    this.got.turnOffDisplayAtTime(1500);}
-
-
+      this.got.message = 'select an arrangement';
+      this.visibles.push(this.got)
+      setTimeout( ()=> {this.visibles.splice(this.visibles.indexOf(this.got), 1)}, 1500);}
   }
   ping(egoi){
+    if(!this.firstClick){
+      this.visibles.splice(this.visibles.indexOf(this.got), 1)
+      setTimeout( ()=> {this.visibles.push(this.downloadOrb)}, 100)
+      setTimeout( ()=> {this.visibles.push(this.playAgainOrb)}, 200)
+      setTimeout( ()=> {this.visibles.push(this.contactOrb)}, 300)
+      this.firstClick = true;
+    }
+
+
     for(var i = 0; i < this.endGameOrbs.length; i ++){
       if(i != egoi)
         this.endGameOrbs[i].deactivate();
       }
       this.endGameOrbs[egoi].activate();
+      if(!this.visibles.includes(this.tempoOrb))
+        this.visibles.push(this.tempoOrb)
   }
 }

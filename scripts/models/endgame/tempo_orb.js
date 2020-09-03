@@ -1,18 +1,22 @@
 class TempoOrb extends Orb{
-  constructor(i, parent){
+  constructor(i, parent, theta){
       super({
           message: "tempo"
         , fillColor: "#353535"
         , textColor: "#fa9b9b"
-        , theta: i*2*Math.PI/7
+        , theta: theta
         , show: true
         , radius: 1.25*geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS
+        , velocity: Math.PI/1028
     });
       this.outlineColor = colors.outline;
       this.bpm = Tone.Transport.bpm.value;
       this.bpmAugment = .25;
       this.parent = parent;
+      this.parent.orbs.push(this);
+      this.parent.clickables.push(this);
+      this.parent.repositionables.push(this);
 
   }
   invertColors(){
@@ -66,7 +70,6 @@ class TempoOrb extends Orb{
 
     if(frameCount%10 == 0){
       Tone.Transport.bpm.rampTo(this.bpm, 2);
-
     }
 
   }

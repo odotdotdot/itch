@@ -7,12 +7,13 @@ class EndGameOrb extends Orb{
                 , parts
                 , bpm = 96
                 , parent
-                , patch = 3}){
+                , patch = 3
+                , theta = 0}){
       super({
           message: m
         , fillColor: colors.background
         , textColor: colors.pink
-        , theta: i*2*Math.PI/7
+        , theta: theta
         , show: true
         , radius: 1.25*geometry.ORB_MAX_RADIUS
         , semiMajorAxis: 4*geometry.RADIUS
@@ -26,6 +27,9 @@ class EndGameOrb extends Orb{
     this.chordDisplayID = null;
     this.patch = patch;
     this.egoi = egoi;
+    this.parent.orbs.push(this);
+    this.parent.clickables.push(this);
+    this.parent.repositionables.push(this);
 
 
   }
@@ -51,6 +55,7 @@ class EndGameOrb extends Orb{
     switch(this.state){
       case true:
         this.deactivate();
+        this.parent.visibles.splice(this.parent.visibles.indexOf(this.parent.tempoOrb), 1)
         break;
       case false:
         this.invertColors();

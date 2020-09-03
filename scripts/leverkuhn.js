@@ -8,7 +8,7 @@ let SERIAL_RECORD,
     TEMPO_DRAG = false,
     THROW_ACTION = false,
     IS_MY_TURN = true,
-    GAME_DURATION_IN_TURNS = 8,
+    GAME_DURATION_IN_TURNS = 2,
     TOTAL_BARS = 2,
     VOICE_MOVEMENT = false,
     PRE_GAME = true,
@@ -126,12 +126,10 @@ let igmgr;
     }
 
     if(END_GAME){
-      if(!egmgr.got.show){
         for(var i = 0; i < egmgr.clickables.length; i ++)
           if(egmgr.clickables[i].isInside(mouseX, mouseY))
             egmgr.clickables[i].onClick();
       }
-    }
 
     }
   function mouseDragged(){
@@ -179,6 +177,8 @@ let igmgr;
         egmgr.downloadOrb.onRelease();
       if(egmgr.playAgainOrb.state == true)
         egmgr.playAgainOrb.onRelease();
+      if(egmgr.contactOrb.state == true)
+        egmgr.contactOrb.onRelease();
     }
 
   }
